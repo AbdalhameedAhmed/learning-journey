@@ -5,8 +5,6 @@ from controllers.auth import (
 )
 from db.database import get_supabase_client
 from fastapi import APIRouter, Depends
-from fastapi.security import HTTPBearer
-from passlib.context import CryptContext
 from schemas.auth import (
     RefreshTokenRequest,
     Token,
@@ -19,25 +17,10 @@ from services.auth import (
 )
 from supabase import Client
 
-# Password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# JWT Bearer token
-security = HTTPBearer()
-
 auth_router = APIRouter(
     prefix="/auth",
     tags=["Auth"],
 )
-
-
-# Utility functions
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
 
 
 # API Endpoints

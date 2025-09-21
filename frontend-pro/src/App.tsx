@@ -29,13 +29,13 @@ const App = () => {
         <Route element={<RoleBasedRoute allowedRoles={[UserRole.ADMIN]} />}>
           <Route path="/admin/dashboard" element={<DashboardPage />} />
         </Route>
+
+        {/* Unauthorized route */}
+        <Route path="/unauthorized" element={<UnauthorizedPage />} />
+
+        {/* Notfound route */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
-
-      {/* Unauthorized route */}
-      <Route path="/unauthorized" element={<UnauthorizedPage />} />
-
-      {/* Notfound route */}
-      <Route path="*" element={<NotFoundPage />} />
 
       <ToastContainer
         position="top-right"
