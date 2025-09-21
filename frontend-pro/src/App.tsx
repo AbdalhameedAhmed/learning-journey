@@ -20,10 +20,11 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
         </Route>
 
+        <Route path="/" element={<HomePage />} />
         {/* PRO-only routes */}
-        <Route element={<RoleBasedRoute allowedRoles={[UserRole.PRO]} />}>
-          <Route path="/" element={<HomePage />} />
-        </Route>
+        <Route
+          element={<RoleBasedRoute allowedRoles={[UserRole.PRO]} />}
+        ></Route>
 
         {/* ADMIN-only routes */}
         <Route element={<RoleBasedRoute allowedRoles={[UserRole.ADMIN]} />}>
@@ -38,7 +39,7 @@ const App = () => {
       </Routes>
 
       <ToastContainer
-        position="top-right"
+        position="top-left"
         autoClose={5000}
         hideProgressBar
         newestOnTop={false}
