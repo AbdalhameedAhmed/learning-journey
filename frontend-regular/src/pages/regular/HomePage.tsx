@@ -6,13 +6,16 @@ import HomeCard from "@/components/HomeCard";
 
 const HomePage = () => {
   return (
-    <div className="flex h-screen items-center justify-center px-10">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {homeCardItems.map((item, index) => (
-          <HomeCard key={index} {...item} />
-        ))}
+    <>
+      <div className="bg-primary z-50 h-12 w-full"></div>
+      <div className="relative mx-25 flex min-h-screen items-center justify-center dark:bg-black">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
+          {homeCardItems.map((item, index) => (
+            <HomeCard key={index} {...item} />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
