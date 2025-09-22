@@ -1,5 +1,6 @@
-const LoginPage = () => {
-  return <div>LoginPage</div>;
-};
+import Navbar from "@/components/navbar";
 
+const LoginPage = () => {
+  return <Navbar />;
+};
 export default LoginPage;
