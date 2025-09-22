@@ -22,14 +22,12 @@ from utils.auth import create_token, get_password_hash
 
 
 async def register_user_controller(user_data: UserRegister, supabase: Client):
-    # Check if user already exists
     existing_user = await get_user_by_email(user_data.email, supabase)
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered"
         )
 
-    # Hash password
     hashed_password = get_password_hash(user_data.password)
 
     try:
@@ -114,20 +112,12 @@ async def login_user_controller(user_credentials: UserLogin, supabase: Client):
 async def refresh_token_controller(
     refresh_request: RefreshTokenRequest, supabase: Client
 ):
-    """
-    Refresh token endpoint that:
-    1. Validates refresh token exists in sessions table
-    2. Decodes token to get user_id, created_at, expires_at
-    3. Checks if token is not expired
-    4. Creates new access token with the same info
-    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Invalid refresh token",
         headers={"WWW-Authenticate": "Bearer"},
     )
 
-    # Step 1: Ensure refresh token exists in sessions table
     session = await get_session_by_refresh_token(
         refresh_request.refresh_token, supabase
     )
@@ -135,7 +125,6 @@ async def refresh_token_controller(
         raise credentials_exception
 
     try:
-        # Step 2: Decode token and extract info (user_id, created_at, expires_at)
         payload = jwt.decode(
             refresh_request.refresh_token,
             settings.JWT_SECRET_KEY,
@@ -149,14 +138,12 @@ async def refresh_token_controller(
         if not user_id or not created_at_str or not expires_at_str:
             raise credentials_exception
 
-        # Check if it's a refresh token
         if payload.get("type") != "refresh":
             raise credentials_exception
 
     except JWTError:
         raise credentials_exception
 
-    # Step 3: Ensure token is not expired
     try:
         expires_at = datetime.fromisoformat(expires_at_str.replace("Z", "+00:00"))
         if datetime.now() > expires_at:
@@ -164,12 +151,10 @@ async def refresh_token_controller(
     except ValueError:
         raise credentials_exception
 
-    # Verify user still exists
     user = await get_user_by_id(user_id, supabase)
     if not user:
         raise credentials_exception
 
-    # Step 4: Create new access token with same info
     now = datetime.now()
     access_token_expires = now + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 
@@ -182,6 +167,12 @@ async def refresh_token_controller(
     )
 
     return Token(
-        access_token=new_access_token,
-        refresh_token=refresh_request.refresh_token,  # Keep same refresh token
+        access_token=new_access_token, refresh_token=refresh_request.refresh_token
     )
+
+
+async def logout_user_controller(refresh_token: str, supabase: Client):
+    supabase.table("sessions").delete().eq("refresh_token", refresh_token).execute()
+
+    return {"message": "Logout successful"}
+
