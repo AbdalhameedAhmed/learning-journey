@@ -1,4 +1,5 @@
 from typing import Optional
+from datetime import datetime
 
 from config import settings
 from db.database import get_supabase_client
@@ -93,6 +94,9 @@ async def get_current_user(
 
         # Check if it's an access token
         if payload.get("type") != "access":
+            raise credentials_exception
+
+        if datetime.fromisoformat(expires_at) < datetime.now():
             raise credentials_exception
 
         token_data = TokenData(
