@@ -1,22 +1,24 @@
+import { useAddNote } from "@/hooks/courseContent/useAddNote";
+import type { Note } from "@schemas/course";
 import { useEffect, useState } from "react";
-import type { Note } from "./VideoViewer";
 import NoteItem from "./NoteItem";
 
 type NotesSidebarProps = {
-  notes: Note[];
-  onAddNote: (content: string, time: number) => void;
+  notes: Note[] | undefined;
   onNoteClick: (time: number) => void;
   videoCurrentTime: number;
   videoDuration: number;
+  lessonId: number;
 };
 
 export default function NotesSidebar({
   notes,
-  onAddNote,
   onNoteClick,
   videoCurrentTime,
   videoDuration,
+  lessonId,
 }: NotesSidebarProps) {
+  const { addNote } = useAddNote(lessonId);
   const [newNote, setNewNote] = useState("");
   const [noteTime, setNoteTime] = useState("00:00");
   const [timeError, setTimeError] = useState<string | null>(null);
@@ -34,20 +36,26 @@ export default function NotesSidebar({
   const handleAddNote = () => {
     const timeRegex = /^[0-5]?\d:[0-5]\d$/;
     if (!timeRegex.test(noteTime)) {
-      setTimeError("Invalid time format. Use mm:ss.");
+      setTimeError("تنسيق الوقت غير صحيح, تسنخدم mm:ss.");
       return;
     }
 
     const timeInSeconds = parseTime(noteTime);
     if (timeInSeconds > videoDuration) {
-      setTimeError("Time cannot be greater than video duration.");
+      setTimeError("الوقت المختار لا يجب ان يتعدى الوقت الكلى للدرس.");
       return;
     }
 
     setTimeError(null);
     if (newNote.trim()) {
-      onAddNote(newNote, timeInSeconds);
-      setNewNote("");
+      addNote(
+        { note: newNote, time: timeInSeconds, lesson_id: lessonId },
+        {
+          onSuccess: () => {
+            setNewNote("");
+          },
+        },
+      );
     }
   };
 
@@ -87,7 +95,7 @@ export default function NotesSidebar({
       </div>
       <div className="flex max-h-full flex-col gap-2 overflow-y-auto">
         {notes
-          .sort((a, b) => a.time - b.time)
+          ?.sort((a, b) => a.time - b.time)
           .map((note) => (
             <NoteItem key={note.id} note={note} onNoteClick={onNoteClick} />
           ))}

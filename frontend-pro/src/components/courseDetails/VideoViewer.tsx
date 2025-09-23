@@ -1,14 +1,16 @@
+import { useGetNotes } from "@/hooks/courseContent/useGetNotes";
 import { Fullscreen, Minimize, NotebookText, Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import NotesSidebar from "./NotesSidebar";
 
-export type Note = {
-  id: number;
-  time: number;
-  content: string;
-};
-
-export default function VideoViewer({ url }: { url: string }) {
+export default function VideoViewer({
+  url,
+  lessonId,
+}: {
+  url: string;
+  lessonId: number;
+}) {
+  const { notes } = useGetNotes(lessonId);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const progressContainerRef = useRef<HTMLDivElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -16,7 +18,7 @@ export default function VideoViewer({ url }: { url: string }) {
   const [volume, setVolume] = useState(1);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const videoContainerRef = useRef<HTMLDivElement | null>(null);
-  const [notes, setNotes] = useState<Note[]>([]);
+  //   const [notes, setNotes] = useState<Note[]>([]);
   const [showNotes, setShowNotes] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -94,15 +96,6 @@ export default function VideoViewer({ url }: { url: string }) {
     }
   };
 
-  const handleAddNote = (content: string, time: number) => {
-    const newNote: Note = {
-      id: Date.now(),
-      time: time,
-      content,
-    };
-    setNotes([...notes, newNote]);
-  };
-
   const handleNoteClick = (time: number) => {
     if (videoRef.current) {
       videoRef.current.currentTime = time;
@@ -133,8 +126,8 @@ export default function VideoViewer({ url }: { url: string }) {
       />
       {showNotes && (
         <NotesSidebar
+          lessonId={lessonId}
           notes={notes}
-          onAddNote={handleAddNote}
           onNoteClick={handleNoteClick}
           videoCurrentTime={videoRef.current?.currentTime ?? 0}
           videoDuration={videoRef.current?.duration ?? 0}
@@ -151,7 +144,7 @@ export default function VideoViewer({ url }: { url: string }) {
             className="h-full rounded-lg bg-[#FFB732]"
             style={{ width: `${progress}%` }}
           ></div>
-          {notes.map((note) => {
+          {notes?.map((note) => {
             if (!videoRef.current?.duration) return null;
             const notePosition = (note.time / videoRef.current.duration) * 100;
             return (
@@ -162,7 +155,7 @@ export default function VideoViewer({ url }: { url: string }) {
               >
                 <div className="h-full w-1 rounded-full bg-white"></div>
                 <div className="invisible absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform rounded bg-black px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity group-hover/note-indicator:visible group-hover/note-indicator:opacity-100">
-                  {note.content}
+                  {note.note}
                 </div>
               </div>
             );
@@ -171,7 +164,11 @@ export default function VideoViewer({ url }: { url: string }) {
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-4">
             <button onClick={togglePlayPause}>
-              {isPlaying ? <Pause color="white" /> : <Play color="white" />}
+              {isPlaying ? (
+                <Pause color="white" />
+              ) : (
+                <Play color="white" className="-scale-x-100" />
+              )}
             </button>
             <span className="text-white">
               {formatTime(currentTime)} / {formatTime(duration)}
@@ -180,7 +177,10 @@ export default function VideoViewer({ url }: { url: string }) {
 
           <div className="flex items-center gap-4">
             <button onClick={() => setShowNotes(!showNotes)}>
-              <NotebookText color={!showNotes ? "white" : "#FFB732"} />
+              <NotebookText
+                color={!showNotes ? "white" : "#FFB732"}
+                className="-scale-x-100"
+              />
             </button>
             <input
               type="range"

@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
 import apiReq from "@/services/apiReq";
 import type { Course } from "@schemas/course";
+import { useQuery } from "@tanstack/react-query";
 
 export const useGetCourseDetails = (courseId: string | undefined) => {
   const {
