@@ -82,6 +82,7 @@ async def login_user_controller(user_credentials: UserLogin, supabase: Client):
     access_token = create_token(
         user_id=user["id"],
         email=user["email"],
+        role=user["role"],
         created_at=now,
         expires_at=access_token_expires,
         type=TokenType.access,
@@ -90,6 +91,7 @@ async def login_user_controller(user_credentials: UserLogin, supabase: Client):
     refresh_token = create_token(
         user_id=user["id"],
         email=user["email"],
+        role=user["role"],
         created_at=now,
         expires_at=refresh_token_expires,
         type=TokenType.refresh,
@@ -161,6 +163,7 @@ async def refresh_token_controller(
     new_access_token = create_token(
         user_id=user_id,
         email=user["email"],
+        role=user["role"],
         created_at=datetime.fromisoformat(created_at_str.replace("Z", "+00:00")),
         expires_at=access_token_expires,
         type=TokenType.access,
@@ -175,4 +178,3 @@ async def logout_user_controller(refresh_token: str, supabase: Client):
     supabase.table("sessions").delete().eq("refresh_token", refresh_token).execute()
 
     return {"message": "Logout successful"}
-
