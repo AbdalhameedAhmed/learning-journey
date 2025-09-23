@@ -1,5 +1,17 @@
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { originalCssValues } from "@/constants/cssConstants";
+import {
+  deleteSettingsStorage,
+  getSettingsStorage,
+  setSettingsStorage,
+} from "@/utils/helpers";
 import clsx from "clsx";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+} from "react";
 
 interface SettingsSliderProps {
   isOpen: boolean;
@@ -7,60 +19,85 @@ interface SettingsSliderProps {
 }
 
 const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
-  const sidebarRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
-  const originalColors = useRef({
-    primary: "",
-    text: "",
-  });
-
-  const originalFontSize = useRef("");
-  const [fontSize, setFontSize] = useState(() => originalFontSize.current);
-
-  const [primaryColor, setPrimaryColor] = useState(
-    () => originalColors.current.primary,
-  );
-  const [textColor, setTextColor] = useState(() => originalColors.current.text);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [primaryColor, setPrimaryColor] = useState("");
+  const [textColor, setTextColor] = useState("");
+  const [fontSize, setFontSize] = useState("");
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
-  useEffect(() => {
-    originalColors.current.primary = window
-      .getComputedStyle(document.documentElement)
-      .getPropertyValue("--color-primary");
-    originalColors.current.text = window
-      .getComputedStyle(document.documentElement)
-      .getPropertyValue("--color-text");
-    originalFontSize.current = window
-      .getComputedStyle(document.documentElement)
-      .getPropertyValue("--text-text-size");
+  useLayoutEffect(() => {
+    const savedSettings = getSettingsStorage();
 
-    setPrimaryColor(originalColors.current.primary);
-    setTextColor(originalColors.current.text);
-    setFontSize(originalFontSize.current);
+    if (savedSettings) {
+      setPrimaryColor(savedSettings.primaryColor);
+      setTextColor(savedSettings.textColor);
+      setFontSize(savedSettings.fontSize);
+      setTheme(savedSettings.theme);
+
+      document.documentElement.style.setProperty(
+        "--color-primary",
+        savedSettings.primaryColor,
+      );
+      document.documentElement.style.setProperty(
+        "--color-text",
+        savedSettings.textColor,
+      );
+      document.documentElement.style.setProperty(
+        "--text-text-size",
+        savedSettings.fontSize,
+      );
+
+      if (savedSettings.theme === "dark") {
+        document.documentElement.classList.add("dark");
+      }
+    } else {
+      setPrimaryColor(originalCssValues.primary);
+      setTextColor(originalCssValues.text);
+      setFontSize(originalCssValues.fontSize);
+      setTheme(originalCssValues.theme);
+    }
+
+    setIsInitialized(true);
   }, []);
 
+  useEffect(() => {
+    if (isInitialized && primaryColor && textColor && fontSize) {
+      setSettingsStorage({ primaryColor, textColor, fontSize, theme });
+    }
+  }, [primaryColor, textColor, fontSize, theme, isInitialized]);
+
   const handlePrimaryColorChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!isInitialized) return;
+
     const newColor = event.target.value;
     setPrimaryColor(newColor);
     document.documentElement.style.setProperty("--color-primary", newColor);
   };
+
   const handleTextColorChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!isInitialized) return;
+
     const newColor = event.target.value;
     setTextColor(newColor);
     document.documentElement.style.setProperty("--color-text", newColor);
   };
 
-  const handleFontSizeChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
+  const handleFontSizeChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    if (!isInitialized) return;
+
     const newSize = event.target.value;
     setFontSize(newSize);
     document.documentElement.style.setProperty("--text-text-size", newSize);
-    console.log(document.documentElement.style);
   };
 
-  const handleThemeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newTheme = event.target.value;
+  const handleThemeChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    if (!isInitialized) return;
+
+    const newTheme = event.target.value as "light" | "dark";
+    setTheme(newTheme);
+
     if (newTheme === "dark") {
       document.documentElement.classList.add("dark");
     } else {
@@ -70,32 +107,36 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
 
   const resetChanges = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    setPrimaryColor(originalColors.current.primary);
-    setTextColor(originalColors.current.text);
-    setFontSize(originalFontSize.current);
-    setTheme("light");
+    if (!isInitialized) return;
 
-    // Also reset the CSS variables
+    deleteSettingsStorage();
+
     document.documentElement.style.setProperty(
       "--color-primary",
-      originalColors.current.primary,
+      originalCssValues.primary,
     );
     document.documentElement.style.setProperty(
       "--color-text",
-      originalColors.current.text,
+      originalCssValues.text,
     );
     document.documentElement.style.setProperty(
       "--text-text-size",
-      originalFontSize.current,
+      originalCssValues.fontSize,
     );
+
     document.documentElement.classList.remove("dark");
+
+    setPrimaryColor(originalCssValues.primary);
+    setTextColor(originalCssValues.text);
+    setFontSize(originalCssValues.fontSize);
+    setTheme(originalCssValues.theme);
   };
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (
-        sidebarRef.current &&
-        !sidebarRef.current.contains(event.target as Node)
+        sliderRef.current &&
+        !sliderRef.current.contains(event.target as Node)
       ) {
         onClose();
       }
@@ -110,12 +151,31 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
     };
   }, [isOpen, onClose]);
 
+  if (!isInitialized) {
+    return (
+      <div
+        ref={sliderRef}
+        className={clsx(
+          "fixed top-0 left-0 z-40 h-screen w-96 max-w-96 transform bg-white p-4 shadow-xl transition-transform duration-300 ease-in-out",
+          {
+            "translate-x-0": isOpen,
+            "-translate-x-full": !isOpen,
+          },
+        )}
+      >
+        <div className="flex h-full items-center justify-center">
+          <span>Loading settings...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       {isOpen && <div onClick={onClose}></div>}
-      {/* Sidebar */}
+
       <div
-        ref={sidebarRef}
+        ref={sliderRef}
         className={clsx(
           "fixed top-0 left-0 z-40 h-screen w-96 max-w-96 transform bg-white p-4 shadow-xl transition-transform duration-300 ease-in-out",
           {
@@ -164,7 +224,7 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
           <select
             id="font-size"
             name="font-size"
-            className="sm: mt-1 w-full rounded-md border-gray-300 shadow-sm focus:outline-none"
+            className="sm: mt-1 h-10 w-full rounded-md border-gray-300 shadow-sm focus:outline-none"
             value={fontSize}
             onChange={handleFontSizeChange}
           >
@@ -182,7 +242,7 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
           <select
             id="theme"
             name="theme"
-            className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:outline-none"
+            className="mt-1 h-10 w-full rounded-md border-gray-300 shadow-sm focus:outline-none"
             value={theme}
             onChange={handleThemeChange}
           >
