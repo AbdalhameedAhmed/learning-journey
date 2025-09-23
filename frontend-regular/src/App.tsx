@@ -9,6 +9,7 @@ import UnauthorizedPage from "@/pages/UnauthorizedPage";
 import { UserRole } from "@schemas/User";
 import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
+import LandingPage from "./pages/regular/LandingPage";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route element={<GuestOnlyRoute />}>
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<LandingPage />} />
         </Route>
 
         {/* PRO-only routes */}
