@@ -3,7 +3,7 @@ from typing import Optional
 
 from config import settings
 from fastapi import HTTPException, status
-from jose import JWTError, jwt
+import jwt
 from schemas.auth import (
     RefreshTokenRequest,
     Token,
@@ -82,6 +82,7 @@ async def login_user_controller(user_credentials: UserLogin, supabase: Client):
     access_token = create_token(
         user_id=user["id"],
         email=user["email"],
+        role=user["role"],
         created_at=now,
         expires_at=access_token_expires,
         type=TokenType.access,
@@ -90,6 +91,7 @@ async def login_user_controller(user_credentials: UserLogin, supabase: Client):
     refresh_token = create_token(
         user_id=user["id"],
         email=user["email"],
+        role=user["role"],
         created_at=now,
         expires_at=refresh_token_expires,
         type=TokenType.refresh,
@@ -133,7 +135,9 @@ async def refresh_token_controller(
 
         user_id: Optional[int] = payload.get("user_id")
         created_at_str: Optional[str] = payload.get("created_at")
-        expires_at_str: Optional[str] = payload.get("expires_at")
+        expires_at_str: Optional[int] = payload.get(
+            "exp"
+        )  # PyJWT decodes this to an int
 
         if not user_id or not created_at_str or not expires_at_str:
             raise credentials_exception
@@ -141,14 +145,11 @@ async def refresh_token_controller(
         if payload.get("type") != "refresh":
             raise credentials_exception
 
-    except JWTError:
-        raise credentials_exception
-
-    try:
-        expires_at = datetime.fromisoformat(expires_at_str.replace("Z", "+00:00"))
-        if datetime.now() > expires_at:
-            raise credentials_exception
-    except ValueError:
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token has expired"
+        )
+    except jwt.InvalidTokenError:
         raise credentials_exception
 
     user = await get_user_by_id(user_id, supabase)
@@ -161,6 +162,7 @@ async def refresh_token_controller(
     new_access_token = create_token(
         user_id=user_id,
         email=user["email"],
+        role=user["role"],
         created_at=datetime.fromisoformat(created_at_str.replace("Z", "+00:00")),
         expires_at=access_token_expires,
         type=TokenType.access,
@@ -175,4 +177,3 @@ async def logout_user_controller(refresh_token: str, supabase: Client):
     supabase.table("sessions").delete().eq("refresh_token", refresh_token).execute()
 
     return {"message": "Logout successful"}
-

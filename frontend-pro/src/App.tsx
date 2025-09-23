@@ -9,6 +9,7 @@ import UnauthorizedPage from "@/pages/UnauthorizedPage";
 import { UserRole } from "@schemas/User";
 import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
+import CourseDetails from "./pages/pro/CourseDetails";
 
 const App = () => {
   return (
@@ -19,12 +20,12 @@ const App = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Route>
-
-        <Route path="/" element={<HomePage />} />
+        
         {/* PRO-only routes */}
-        <Route
-          element={<RoleBasedRoute allowedRoles={[UserRole.PRO]} />}
-        ></Route>
+        <Route element={<RoleBasedRoute allowedRoles={[UserRole.PRO]} />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/course/:courseId" element={<CourseDetails />} />
+        </Route>
 
         {/* ADMIN-only routes */}
         <Route element={<RoleBasedRoute allowedRoles={[UserRole.ADMIN]} />}>
