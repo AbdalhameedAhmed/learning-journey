@@ -2,11 +2,11 @@ from typing import Any
 
 from supabase import Client
 
-from schemas.exam import ExamRequest
-from services.exam import insert_exam, insert_questions
+from schemas.exam import PostExamRequest
+from services.exam import insert_exam, insert_questions, get_exam_and_questions_by_id
 
 
-async def create_exam_controller(exam_data: ExamRequest, supabase: Client) -> Any:
+async def create_exam_controller(exam_data: PostExamRequest, supabase: Client) -> Any:
     exam_insert_data = {
         "module_id": exam_data.module_id,
         "course_id": exam_data.course_id,
@@ -27,3 +27,7 @@ async def create_exam_controller(exam_data: ExamRequest, supabase: Client) -> An
     question_response = insert_questions(supabase, questions_to_insert)
 
     return {"exam_id": exam_id, "questions": question_response.data}
+
+
+def get_exam_controller(exam_id: str, supabase: Client) -> Any:
+    return get_exam_and_questions_by_id(exam_id, supabase)

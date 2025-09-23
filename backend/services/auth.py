@@ -60,7 +60,7 @@ async def authenticate_user(email: str, password: str, supabase: Client):
     return user
 
 
-def validate_token(
+def get_token_data(
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
     token_data = decode_token(credentials.credentials)
@@ -68,7 +68,7 @@ def validate_token(
 
 
 async def get_current_user(
-    token_data=Depends(validate_token),
+    token_data=Depends(get_token_data),
     supabase: Client = Depends(get_supabase_client),
 ):
     credentials_exception = HTTPException(
@@ -83,8 +83,19 @@ async def get_current_user(
     return user
 
 
-async def get_admin_user(
-    token_data=Depends(validate_token),
+async def validate_student_user(
+    token_data=Depends(get_token_data),
+):
+    if token_data.role != UserRole.regular and token_data.role != UserRole.pro:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not have permission to perform this action.",
+        )
+    return token_data
+
+
+async def validate_admin_user(
+    token_data=Depends(get_token_data),
 ):
     if token_data.role != UserRole.admin:
         raise HTTPException(
