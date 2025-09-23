@@ -1,9 +1,10 @@
+from db.database import get_supabase_client
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials
+from schemas.auth import (
+    UserRole,
+)
 from supabase import Client
-
-from db.database import get_supabase_client
-from schemas.auth import UserRole
 from utils.auth import decode_token, security, verify_password
 
 

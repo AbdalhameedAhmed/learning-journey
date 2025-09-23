@@ -1,13 +1,17 @@
 from datetime import datetime
 from typing import Optional
 
+import jwt
 from fastapi import HTTPException, status
 from fastapi.security import HTTPBearer
-from jose import JWTError, jwt
 from passlib.context import CryptContext
 
 from config import settings
-from schemas.auth import TokenData, TokenType, UserRole
+from schemas.auth import (
+    TokenData,
+    TokenType,
+    UserRole,
+)
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -30,7 +34,7 @@ def create_token(
         "user_id": user_id,
         "role": role,
         "created_at": created_at.isoformat(),
-        "expires_at": expires_at.isoformat(),
+        "exp": int(expires_at.timestamp()),
         "type": type.value,
     }
     encoded_jwt = jwt.encode(
@@ -46,41 +50,34 @@ def decode_token(token: str):
         headers={"WWW-Authenticate": "Bearer"},
     )
 
-    try:
-        payload = jwt.decode(
-            token,
-            settings.JWT_SECRET_KEY,
-            algorithms=[settings.JWT_ALGORITHM],
-        )
-        print(payload, "✨✨")
-        email: Optional[str] = payload.get("sub")
-        user_id: Optional[int] = payload.get("user_id")
-        role: Optional[UserRole] = payload.get("role")
-        created_at: Optional[str] = payload.get("created_at")
-        expires_at: Optional[str] = payload.get("expires_at")
+    payload = jwt.decode(
+        token,
+        settings.JWT_SECRET_KEY,
+        algorithms=[settings.JWT_ALGORITHM],
+    )
 
-        if (
-            email is None
-            or user_id is None
-            or role is None
-            or created_at is None
-            or expires_at is None
-        ):
-            raise credentials_exception
+    print(payload, "✨✨")
+    email: Optional[str] = payload.get("sub")
+    user_id: Optional[int] = payload.get("user_id")
+    role: UserRole = payload.get("role")
+    created_at: Optional[str] = payload.get("created_at")
+    expires_at: Optional[int] = payload.get("exp")
 
-        # Check if it's an access token
-        if payload.get("type") != "access":
-            raise credentials_exception
-
-        return TokenData(
-            email=email,
-            user_id=user_id,
-            role=role,
-            created_at=created_at,
-            expires_at=expires_at,
-        )
-    except JWTError:
+    if email is None or user_id is None or created_at is None or expires_at is None:
         raise credentials_exception
+
+    # Check if it's an access token
+    if payload.get("type") != "access":
+        raise credentials_exception
+
+    token_data = TokenData(
+        email=email,
+        user_id=user_id,
+        role=role,
+        created_at=created_at,
+        exp=expires_at,
+    )
+    return token_data
 
 
 # Utility functions

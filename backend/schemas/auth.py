@@ -47,7 +47,7 @@ class TokenData(BaseModel):
     user_id: int
     role: UserRole
     created_at: str
-    expires_at: str
+    exp: int
 
 
 class UserResponse(BaseModel):
