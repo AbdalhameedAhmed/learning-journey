@@ -1,5 +1,5 @@
+import { Fullscreen, Minimize, NotebookText, Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
-import { Play, Pause, Fullscreen, Minimize, NotebookText } from "lucide-react";
 import NotesSidebar from "./NotesSidebar";
 
 export type Note = {
@@ -94,11 +94,10 @@ export default function VideoViewer({ url }: { url: string }) {
     }
   };
 
-  const handleAddNote = (content: string) => {
-    if (!videoRef.current) return;
+  const handleAddNote = (content: string, time: number) => {
     const newNote: Note = {
       id: Date.now(),
-      time: videoRef.current.currentTime,
+      time: time,
       content,
     };
     setNotes([...notes, newNote]);
@@ -138,6 +137,7 @@ export default function VideoViewer({ url }: { url: string }) {
           onAddNote={handleAddNote}
           onNoteClick={handleNoteClick}
           videoCurrentTime={videoRef.current?.currentTime ?? 0}
+          videoDuration={videoRef.current?.duration ?? 0}
         />
       )}
 
@@ -180,7 +180,7 @@ export default function VideoViewer({ url }: { url: string }) {
 
           <div className="flex items-center gap-4">
             <button onClick={() => setShowNotes(!showNotes)}>
-              <NotebookText color="white" />
+              <NotebookText color={!showNotes ? "white" : "#FFB732"} />
             </button>
             <input
               type="range"
