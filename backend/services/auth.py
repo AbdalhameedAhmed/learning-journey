@@ -4,8 +4,8 @@ from datetime import datetime
 from config import settings
 from db.database import get_supabase_client
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPAuthorizationCredentials
-from jose import JWTError, jwt
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+import jwt
 from schemas.auth import (
     TokenData,
 )
@@ -77,36 +77,31 @@ async def get_current_user(
         headers={"WWW-Authenticate": "Bearer"},
     )
 
-    try:
-        payload = jwt.decode(
-            credentials.credentials,
-            settings.JWT_SECRET_KEY,
-            algorithms=[settings.JWT_ALGORITHM],
-        )
-        print(payload, "✨✨")
-        email: Optional[str] = payload.get("sub")
-        user_id: Optional[int] = payload.get("user_id")
-        created_at: Optional[str] = payload.get("created_at")
-        expires_at: Optional[str] = payload.get("expires_at")
+    payload = jwt.decode(
+        credentials.credentials,
+        settings.JWT_SECRET_KEY,
+        algorithms=[settings.JWT_ALGORITHM],
+    )
 
-        if email is None or user_id is None or created_at is None or expires_at is None:
-            raise credentials_exception
+    print(payload, "✨✨")
+    email: Optional[str] = payload.get("sub")
+    user_id: Optional[int] = payload.get("user_id")
+    created_at: Optional[str] = payload.get("created_at")
+    expires_at: Optional[int] = payload.get("exp")
 
-        # Check if it's an access token
-        if payload.get("type") != "access":
-            raise credentials_exception
-
-        if datetime.fromisoformat(expires_at) < datetime.now():
-            raise credentials_exception
-
-        token_data = TokenData(
-            email=email,
-            user_id=user_id,
-            created_at=created_at,
-            expires_at=expires_at,
-        )
-    except JWTError:
+    if email is None or user_id is None or created_at is None or expires_at is None:
         raise credentials_exception
+
+    # Check if it's an access token
+    if payload.get("type") != "access":
+        raise credentials_exception
+
+    token_data = TokenData(
+        email=email,
+        user_id=user_id,
+        created_at=created_at,
+        exp=expires_at,
+    )
 
     user = await get_user_by_id(user_id=token_data.user_id, supabase=supabase)
     print(user, "😈")

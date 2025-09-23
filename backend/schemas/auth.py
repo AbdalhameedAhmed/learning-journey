@@ -46,7 +46,7 @@ class TokenData(BaseModel):
     email: str
     user_id: int
     created_at: str
-    expires_at: str
+    exp: int
 
 
 class UserResponse(BaseModel):

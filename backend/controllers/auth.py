@@ -3,7 +3,7 @@ from typing import Optional
 
 from config import settings
 from fastapi import HTTPException, status
-from jose import JWTError, jwt
+import jwt
 from schemas.auth import (
     RefreshTokenRequest,
     Token,
@@ -144,7 +144,9 @@ async def refresh_token_controller(
 
         user_id: Optional[int] = payload.get("user_id")
         created_at_str: Optional[str] = payload.get("created_at")
-        expires_at_str: Optional[str] = payload.get("expires_at")
+        expires_at_str: Optional[int] = payload.get(
+            "exp"
+        )  # PyJWT decodes this to an int
 
         if not user_id or not created_at_str or not expires_at_str:
             raise credentials_exception
@@ -153,15 +155,11 @@ async def refresh_token_controller(
         if payload.get("type") != "refresh":
             raise credentials_exception
 
-    except JWTError:
-        raise credentials_exception
-
-    # Step 3: Ensure token is not expired
-    try:
-        expires_at = datetime.fromisoformat(expires_at_str.replace("Z", "+00:00"))
-        if datetime.now() > expires_at:
-            raise credentials_exception
-    except ValueError:
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token has expired"
+        )
+    except jwt.InvalidTokenError:
         raise credentials_exception
 
     # Verify user still exists

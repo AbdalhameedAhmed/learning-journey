@@ -2,7 +2,7 @@ from datetime import datetime
 
 from config import settings
 from fastapi.security import HTTPBearer
-from jose import jwt
+import jwt
 from passlib.context import CryptContext
 from schemas.auth import (
     TokenType,
@@ -28,7 +28,7 @@ def create_token(
         "sub": email,
         "user_id": user_id,
         "created_at": created_at.isoformat(),
-        "expires_at": expires_at.isoformat(),
+        "exp": int(expires_at.timestamp()),
         "type": type.value,
     }
     encoded_jwt = jwt.encode(
