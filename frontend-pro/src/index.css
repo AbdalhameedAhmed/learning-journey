@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #ffb732;
+  --color-text: #35389b;
+  --text-text-size: 22px;
+}
+
 ::-webkit-scrollbar {
   display: none;
 }

@@ -20,7 +20,7 @@ const App = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Route>
-
+        
         {/* PRO-only routes */}
         <Route element={<RoleBasedRoute allowedRoles={[UserRole.PRO]} />}>
           <Route path="/" element={<HomePage />} />
@@ -40,7 +40,7 @@ const App = () => {
       </Routes>
 
       <ToastContainer
-        position="top-right"
+        position="top-left"
         autoClose={5000}
         hideProgressBar
         newestOnTop={false}
