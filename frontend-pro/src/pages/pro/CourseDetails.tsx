@@ -2,9 +2,9 @@ import AssetResource from "@/components/courseDetails/AssetsRresource";
 import ModuleMenu from "@/components/courseDetails/ModuleMenu";
 import { useGetCourseDetails } from "@/hooks/courseContent/useGetCourseDetails";
 import type { Lesson } from "@schemas/course";
+import { Clipboard, HardDriveDownload, Heart } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Heart, Clipboard, HardDriveDownload } from "lucide-react";
 export default function CourseDetails() {
   const courseId = useParams().courseId;
   const [activeLesson, setActiveLesson] = useState<Lesson>();
@@ -37,7 +37,12 @@ export default function CourseDetails() {
         </div>
         <div className="flex h-full flex-1 flex-col items-center justify-center gap-12 overflow-auto p-12">
           <div className="flex w-full max-w-[800px] flex-1 items-center justify-center p-4">
-            {activeLesson && <AssetResource asset={activeLesson.assets[0]} />}
+            {activeLesson && (
+              <AssetResource
+                lessonId={activeLesson.id}
+                asset={activeLesson.assets[0]}
+              />
+            )}
             {!activeLesson && <p>برجاء اختيار الدرس</p>}
           </div>
           {activeLesson && (

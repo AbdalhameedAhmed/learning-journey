@@ -6,4 +6,10 @@
   --color-primary: #ffb732;
   --color-text: #35389b;
   --text-text-size: 22px;
+
+}
+
+
+::-webkit-scrollbar {
+  display: none;
 }

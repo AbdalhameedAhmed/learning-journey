@@ -1,4 +1,4 @@
-import type { Note } from "./VideoViewer";
+import type { Note } from "@schemas/course";
 
 type NoteItemProps = {
   note: Note;
@@ -14,7 +14,7 @@ function formatTime(seconds: number) {
 export default function NoteItem({ note, onNoteClick }: NoteItemProps) {
   return (
     <div className="rounded bg-gray-700 p-2">
-      <p className="text-sm">{note.content}</p>
+      <p className="text-sm">{note.note}</p>
       <button
         onClick={() => onNoteClick(note.time)}
         className="text-xs text-[#FFB732] hover:underline"

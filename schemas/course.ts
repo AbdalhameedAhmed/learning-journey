@@ -21,3 +21,15 @@ export interface Asset {
   url: string;
   type: string;
 }
+
+export interface Note {
+  note: string;
+  time: number;
+  id: number;
+}
+
+export interface AddNote {
+  note: string;
+  time: number;
+  lesson_id: number;
+}
