@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Search, Home } from "lucide-react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function Navbar() {
   const [search, setSearch] = useState("");
@@ -17,8 +17,6 @@ export default function Navbar() {
         className="text-white px-4 py-2 flex items-center justify-between relative"
         style={{ backgroundColor: "#FFB732" }}
       >
-
-
         {/* Center: Search */}
         <form
           onSubmit={handleSearch}
@@ -48,25 +46,61 @@ export default function Navbar() {
         {/* Home link with icon close to text */}
         <div className="flex items-center gap-1">
           <Home className="w-5 h-5 text-black" />
-          <Link
+          <NavLink
             to="/"
-            className="px-3 py-1 rounded-md bg-[#FFB732] text-white"
+            className={({ isActive }) =>
+              isActive
+                ? "px-3 py-1 rounded-md bg-[#FFB732] text-white"
+                : "hover:text-orange-600"
+            }
           >
             الصفحة الرئيسية
-          </Link>
+          </NavLink>
         </div>
-        <Link to="/instructions" className="hover:text-orange-600">
+
+        <NavLink
+          to="/instructions"
+          className={({ isActive }) =>
+            isActive
+              ? "px-3 py-1 rounded-md bg-[#FFB732] text-white"
+              : "hover:text-orange-600"
+          }
+        >
           التعليمات
-        </Link>
-        <Link to="/goals" className="hover:text-orange-600">
+        </NavLink>
+
+        <NavLink
+          to="/goals"
+          className={({ isActive }) =>
+            isActive
+              ? "px-3 py-1 rounded-md bg-[#FFB732] text-white"
+              : "hover:text-orange-600"
+          }
+        >
           الأهداف
-        </Link>
-        <Link to="/content-map" className="hover:text-orange-600">
+        </NavLink>
+
+        <NavLink
+          to="/content-map"
+          className={({ isActive }) =>
+            isActive
+              ? "px-3 py-1 rounded-md bg-[#FFB732] text-white"
+              : "hover:text-orange-600"
+          }
+        >
           خريطة المحتوى
-        </Link>
-        <Link to="/course" className="hover:text-orange-600">
+        </NavLink>
+
+        <NavLink
+          to="/course"
+          className={({ isActive }) =>
+            isActive
+              ? "px-3 py-1 rounded-md bg-[#FFB732] text-white"
+              : "hover:text-orange-600"
+          }
+        >
           الكورس
-        </Link>
+        </NavLink>
       </nav>
     </div>
   );
