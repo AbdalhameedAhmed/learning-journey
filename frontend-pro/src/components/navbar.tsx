@@ -12,16 +12,13 @@ export default function Navbar() {
 
   return (
     <div>
-      {/* ---------------- NAVBAR ---------------- */}
       <header
         className="text-white px-4 py-2 flex items-center justify-between relative"
         style={{ backgroundColor: "#FFB732" }}
+      >        <form
+        onSubmit={handleSearch}
+        className="absolute left-1/2 transform -translate-x-1/2 flex items-center bg-white rounded-lg overflow-hidden"
       >
-        {/* Center: Search */}
-        <form
-          onSubmit={handleSearch}
-          className="absolute left-1/2 transform -translate-x-1/2 flex items-center bg-white rounded-lg overflow-hidden"
-        >
           <input
             type="text"
             placeholder="بحث"
@@ -33,17 +30,12 @@ export default function Navbar() {
             <Search className="w-4 h-4 text-white" />
           </button>
         </form>
-
-        {/* Right: Logo/Title */}
         <div className="text-right">
           <h1 className="font-bold text-lg">رحلة تعلّم</h1>
           <p className="text-xs">Learn Journey</p>
         </div>
       </header>
-
-      {/* ---------------- TABS SECTION ---------------- */}
       <nav className="flex justify-center gap-12 mt-8 text-sm font-bold text-purple-900">
-        {/* Home link with icon close to text */}
         <div className="flex items-center gap-1">
           <Home className="w-5 h-5 text-black" />
           <NavLink
@@ -57,7 +49,6 @@ export default function Navbar() {
             الصفحة الرئيسية
           </NavLink>
         </div>
-
         <NavLink
           to="/instructions"
           className={({ isActive }) =>
@@ -68,7 +59,6 @@ export default function Navbar() {
         >
           التعليمات
         </NavLink>
-
         <NavLink
           to="/goals"
           className={({ isActive }) =>
@@ -90,7 +80,6 @@ export default function Navbar() {
         >
           خريطة المحتوى
         </NavLink>
-
         <NavLink
           to="/course"
           className={({ isActive }) =>
