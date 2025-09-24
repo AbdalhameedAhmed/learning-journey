@@ -31,11 +31,25 @@ class UserRegister(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+    role: UserRole
 
 
 class Token(BaseModel):
     access_token: str
     refresh_token: str
+
+
+class UserResponse(BaseModel):
+    id: int
+    email: str
+    first_name: str
+    last_name: str
+    role: UserRole
+
+
+class LoginResponse(BaseModel):
+    user: UserResponse
+    tokens: Token
 
 
 class RefreshTokenRequest(BaseModel):
@@ -48,10 +62,3 @@ class TokenData(BaseModel):
     role: UserRole
     created_at: str
     exp: int
-
-
-class UserResponse(BaseModel):
-    id: int
-    email: str
-    first_name: str
-    last_name: str

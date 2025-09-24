@@ -1,7 +1,7 @@
+import apiReq from "@/services/apiReq";
 import type { AddNote } from "@schemas/course";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import apiReq from "../../services/apiReq";
 
 export const useAddNote = (lessonId: number) => {
   const queryClient = useQueryClient();

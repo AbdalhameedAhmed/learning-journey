@@ -25,9 +25,9 @@ const App = () => {
           <Route path="/" element={<LandingPage />} />
         </Route>
 
-          <Route path="/" element={<HomePage />} />
         {/* REGULAR-only routes */}
         <Route element={<RoleBasedRoute allowedRoles={[UserRole.REGULAR]} />}>
+          <Route path="/home" element={<HomePage />} />
         </Route>
 
         {/* ADMIN-only routes */}
@@ -44,7 +44,6 @@ const App = () => {
         <Route path="/info" element={<InfoPage />} />
         <Route path="/goals" element={<GoalsPage />} />
         <Route path="/content" element={<ContentPage />} />
-         
       </Routes>
 
       <ToastContainer

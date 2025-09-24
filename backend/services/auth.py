@@ -8,9 +8,15 @@ from supabase import Client
 from utils.auth import decode_token, security, verify_password
 
 
-async def get_user_by_email(email: str, supabase: Client):
+async def get_user_by_email_and_role(email: str, role: UserRole, supabase: Client):
     try:
-        response = supabase.table("users").select("*").eq("email", email).execute()
+        response = (
+            supabase.table("users")
+            .select("*")
+            .eq("email", email)
+            .in_("role", [role.value, "admin"])
+            .execute()
+        )
         if response.data:
             return response.data[0]
         return None
@@ -18,6 +24,27 @@ async def get_user_by_email(email: str, supabase: Client):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Database error: {str(e)}",
+        )
+
+
+async def check_registration_eligibility(
+    email: str, role: UserRole, supabase: Client
+) -> bool:
+    try:
+        response = supabase.table("users").select("*").eq("email", email).execute()
+
+        for existing_user_data in response.data:
+            if existing_user_data["role"] == "admin":
+                return False
+
+            if existing_user_data["role"] == role.value:
+                return False
+
+        return True
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Database error during registration check: {str(e)}",
         )
 
 
@@ -52,12 +79,16 @@ async def get_session_by_refresh_token(refresh_token: str, supabase: Client):
         )
 
 
-async def authenticate_user(email: str, password: str, supabase: Client):
-    user = await get_user_by_email(email, supabase)
+async def authenticate_user(
+    email: str, password: str, role: UserRole, supabase: Client
+):
+    user = await get_user_by_email_and_role(email, role, supabase)
     if not user:
         return False
     if not verify_password(password, user["password"]):
         return False
+
+    user.pop("password")
     return user
 
 

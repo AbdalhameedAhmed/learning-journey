@@ -14,7 +14,6 @@ const apiReq = async (method: string, endpoint: string, body?: unknown) => {
 
     if (accessToken && refreshToken) {
       const decodedToken = jwtDecode(accessToken);
-      console.log(decodedToken, "decoded");
 
       if (!decodedToken.exp) throw new Error("Error in decoding token");
 

@@ -17,8 +17,8 @@ export default function CourseDetails() {
 
   return (
     <div className="flex h-screen w-screen flex-col items-center gap-4">
-      <div className="h-[80px] w-full bg-[#FFB732]"></div>
-      <div className="h-[60px] w-[700px] bg-[#FFB732]"></div>
+      <div className="bg-primary h-[80px] w-full"></div>
+      <div className="bg-primary h-[60px] w-[700px]"></div>
       <div className="flex w-full flex-1 items-center justify-center overflow-auto">
         <div className="flex h-full w-[300px] flex-col items-center gap-2 overflow-auto bg-[#E9E9E9] p-4">
           {courseDetails?.modules?.map((module) => {

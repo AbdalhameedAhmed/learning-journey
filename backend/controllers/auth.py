@@ -1,20 +1,23 @@
 from datetime import datetime, timedelta
 from typing import Optional
 
+import jwt
 from config import settings
 from fastapi import HTTPException, status
-import jwt
 from schemas.auth import (
+    LoginResponse,
     RefreshTokenRequest,
     Token,
     TokenType,
     UserLogin,
     UserRegister,
+    UserResponse,
+    UserRole,
 )
 from services.auth import (
     authenticate_user,
     get_session_by_refresh_token,
-    get_user_by_email,
+    check_registration_eligibility,
     get_user_by_id,
 )
 from supabase import Client
@@ -22,10 +25,19 @@ from utils.auth import create_token, get_password_hash
 
 
 async def register_user_controller(user_data: UserRegister, supabase: Client):
-    existing_user = await get_user_by_email(user_data.email, supabase)
-    if existing_user:
+    if user_data.role == UserRole.admin:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Can't register with admin account",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    is_registration_eligable = await check_registration_eligibility(
+        user_data.email, user_data.role, supabase
+    )
+    if not is_registration_eligable:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exists"
         )
 
     hashed_password = get_password_hash(user_data.password)
@@ -63,7 +75,10 @@ async def register_user_controller(user_data: UserRegister, supabase: Client):
 
 async def login_user_controller(user_credentials: UserLogin, supabase: Client):
     user = await authenticate_user(
-        user_credentials.email, user_credentials.password, supabase
+        user_credentials.email,
+        user_credentials.password,
+        user_credentials.role,
+        supabase,
     )
     if not user:
         raise HTTPException(
@@ -108,7 +123,10 @@ async def login_user_controller(user_credentials: UserLogin, supabase: Client):
             detail=f"Failed to create session: {str(e)}",
         )
 
-    return Token(access_token=access_token, refresh_token=refresh_token)
+    return LoginResponse(
+        user=UserResponse(**user),
+        tokens=Token(access_token=access_token, refresh_token=refresh_token),
+    )
 
 
 async def refresh_token_controller(

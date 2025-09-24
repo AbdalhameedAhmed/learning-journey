@@ -27,7 +27,7 @@ const App = () => {
         
         {/* PRO-only routes */}
         <Route element={<RoleBasedRoute allowedRoles={[UserRole.PRO]} />}>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/course/:courseId" element={<CourseDetails />} />
         </Route>
 
