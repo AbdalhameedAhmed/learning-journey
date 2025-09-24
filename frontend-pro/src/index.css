@@ -7,3 +7,28 @@
   --color-text: #35389b;
   --text-text-size: 22px;
 }
+
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; 
+
+@layer base {
+  :root {
+    --color-primary: #febc34;
+    --color-secondary: #002538;
+    --color-text-light: #000000;
+    --color-text-dark: #f0f0f0;
+    --color-background-light: #f3f4f6;
+    --color-background-dark: #1f2937;
+  }
+}
+
+//Dark Mode styles 
+.dark {
+  --color-primary: #f5a720;
+  --color-secondary: #002538;
+  --color-text-light: #f0f0f0;
+  --color-text-dark: #000000;
+  --color-background-light: #1f2937;
+  --color-background-dark: #000000;
+} */
