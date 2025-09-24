@@ -17,7 +17,7 @@ export default function NoteItem({ note, onNoteClick }: NoteItemProps) {
       <p className="text-sm">{note.note}</p>
       <button
         onClick={() => onNoteClick(note.time)}
-        className="text-xs text-[#FFB732] hover:underline"
+        className="text-primary text-xs hover:underline"
       >
         {formatTime(note.time)}
       </button>

@@ -56,7 +56,6 @@ def decode_token(token: str):
         algorithms=[settings.JWT_ALGORITHM],
     )
 
-    print(payload, "✨✨")
     email: Optional[str] = payload.get("sub")
     user_id: Optional[int] = payload.get("user_id")
     role: UserRole = payload.get("role")

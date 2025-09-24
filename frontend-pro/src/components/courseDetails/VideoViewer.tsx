@@ -18,7 +18,6 @@ export default function VideoViewer({
   const [volume, setVolume] = useState(1);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const videoContainerRef = useRef<HTMLDivElement | null>(null);
-  //   const [notes, setNotes] = useState<Note[]>([]);
   const [showNotes, setShowNotes] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -141,7 +140,7 @@ export default function VideoViewer({
           className="relative h-2 w-full cursor-pointer rounded-lg bg-gray-500"
         >
           <div
-            className="h-full rounded-lg bg-[#FFB732]"
+            className="bg-primary h-full rounded-lg"
             style={{ width: `${progress}%` }}
           ></div>
           {notes?.map((note) => {

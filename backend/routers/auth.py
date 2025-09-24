@@ -1,6 +1,3 @@
-from fastapi import APIRouter, Depends
-from supabase import Client
-
 from controllers.auth import (
     login_user_controller,
     logout_user_controller,
@@ -8,7 +5,9 @@ from controllers.auth import (
     register_user_controller,
 )
 from db.database import get_supabase_client
+from fastapi import APIRouter, Depends
 from schemas.auth import (
+    LoginResponse,
     RefreshTokenRequest,
     Token,
     UserLogin,
@@ -18,6 +17,7 @@ from schemas.auth import (
 from services.auth import (
     get_current_user,
 )
+from supabase import Client
 
 auth_router = APIRouter(
     prefix="/auth",
@@ -32,7 +32,7 @@ async def register_user(
     return await register_user_controller(user_data, supabase)
 
 
-@auth_router.post("/login", response_model=Token)
+@auth_router.post("/login", response_model=LoginResponse)
 async def login_user(
     user_credentials: UserLogin, supabase: Client = Depends(get_supabase_client)
 ):

@@ -20,7 +20,7 @@ export default function ModuleMenu({
   return (
     <div className="flex w-full flex-col gap-2 text-center" key={module.id}>
       <p
-        className="w-full cursor-pointer rounded-2xl bg-[#FFB732] p-2 text-white"
+        className="bg-primary w-full cursor-pointer rounded-2xl p-2 text-white"
         onClick={() => setOpendModule(module.id)}
       >
         {module.name}
@@ -38,9 +38,9 @@ export default function ModuleMenu({
             <p
               key={lesson.id}
               className={clsx(
-                "cursor-pointer rounded-2xl border border-[#FFB732] py-1",
+                "border-primary cursor-pointer rounded-2xl border py-1",
                 {
-                  "bg-[#FFB732] text-white": activeLesson?.id === lesson.id,
+                  "bg-primary text-white": activeLesson?.id === lesson.id,
                 },
               )}
               onClick={() => setActiveLessonHandler(lesson)}
