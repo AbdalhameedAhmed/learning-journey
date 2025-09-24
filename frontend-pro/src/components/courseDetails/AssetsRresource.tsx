@@ -1,9 +1,15 @@
 import type { Asset } from "@schemas/course";
 import VideoViewer from "./VideoViewer";
 
-export default function AssetResource({ asset }: { asset: Asset }) {
+export default function AssetResource({
+  asset,
+  lessonId,
+}: {
+  asset: Asset;
+  lessonId: number;
+}) {
   if (asset.type === "video") {
-    return <VideoViewer url={asset.url} />;
+    return <VideoViewer key={asset.id} url={asset.url} lessonId={lessonId} />;
   }
   if (asset.type === "image") {
     return <img src={asset.url} className="h-full w-full" />;
