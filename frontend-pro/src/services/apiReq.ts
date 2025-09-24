@@ -14,6 +14,7 @@ const apiReq = async (method: string, endpoint: string, body?: unknown) => {
 
     if (accessToken && refreshToken) {
       const decodedToken = jwtDecode(accessToken);
+      console.log(decodedToken, "decoded");
 
       if (!decodedToken.exp) throw new Error("Error in decoding token");
 
@@ -23,11 +24,11 @@ const apiReq = async (method: string, endpoint: string, body?: unknown) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ refreshToken }),
+          body: JSON.stringify({ refresh_token: refreshToken }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message);
-        accessToken = data.accessToken;
+        accessToken = data.access_token;
         if (accessToken) {
           setAccessToken(accessToken);
         } else {

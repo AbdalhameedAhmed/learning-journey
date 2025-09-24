@@ -12,6 +12,8 @@ import { ToastContainer } from "react-toastify";
 import InfoPage from "./pages/pro/InfoPage";
 import GoalsPage from "./pages/pro/GoalsPage";
 import ContentPage from "./pages/pro/ContentPage";
+import CourseDetails from "./pages/pro/CourseDetails";
+
 
 const App = () => {
   return (
@@ -22,10 +24,11 @@ const App = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Route>
-
+        
         {/* PRO-only routes */}
         <Route element={<RoleBasedRoute allowedRoles={[UserRole.PRO]} />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/course/:courseId" element={<CourseDetails />} />
         </Route>
 
         {/* ADMIN-only routes */}
@@ -46,7 +49,7 @@ const App = () => {
       </Routes>
 
       <ToastContainer
-        position="top-right"
+        position="top-left"
         autoClose={5000}
         hideProgressBar
         newestOnTop={false}
