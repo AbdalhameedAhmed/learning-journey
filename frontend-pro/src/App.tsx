@@ -9,7 +9,11 @@ import UnauthorizedPage from "@/pages/UnauthorizedPage";
 import { UserRole } from "@schemas/User";
 import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
+import InfoPage from "./pages/pro/InfoPage";
+import GoalsPage from "./pages/pro/GoalsPage";
+import ContentPage from "./pages/pro/ContentPage";
 import CourseDetails from "./pages/pro/CourseDetails";
+
 
 const App = () => {
   return (
@@ -37,6 +41,11 @@ const App = () => {
 
         {/* Notfound route */}
         <Route path="*" element={<NotFoundPage />} />
+
+         <Route path="/info" element={<InfoPage />} />
+         <Route path="/goals" element={<GoalsPage />} />
+         <Route path="/content" element={<ContentPage />} />
+         
       </Routes>
 
       <ToastContainer
