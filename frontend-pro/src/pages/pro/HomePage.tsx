@@ -6,6 +6,8 @@ import HomeCard from "@/components/HomeCard";
 import SettingsSlider from "@/components/SettingsSilder";
 import { Palette } from "lucide-react";
 import { useState } from "react";
+import Navbar from "@/components/navbar";
+
 
 const HomePage = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
@@ -16,7 +18,7 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="bg-primary z-50 h-12 w-full"></div>
+      <Navbar/>
       <div className="relative mx-25 flex h-full items-center justify-center dark:bg-black">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
           {homeCardItems.map((item, index) => (
