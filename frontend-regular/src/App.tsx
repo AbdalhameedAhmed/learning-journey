@@ -9,6 +9,10 @@ import UnauthorizedPage from "@/pages/UnauthorizedPage";
 import { UserRole } from "@schemas/User";
 import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
+import InfoPage from "./pages/regular/InfoPage";
+import GoalsPage from "./pages/regular/GoalsPage";
+import ContentPage from "./pages/regular/ContentPage";
+import LandingPage from "./pages/regular/LandingPage";
 
 const App = () => {
   return (
@@ -18,11 +22,12 @@ const App = () => {
         <Route element={<GuestOnlyRoute />}>
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<LandingPage />} />
         </Route>
 
-        {/* PRO-only routes */}
-        <Route element={<RoleBasedRoute allowedRoles={[UserRole.REGULAR]} />}>
           <Route path="/" element={<HomePage />} />
+        {/* REGULAR-only routes */}
+        <Route element={<RoleBasedRoute allowedRoles={[UserRole.REGULAR]} />}>
         </Route>
 
         {/* ADMIN-only routes */}
@@ -35,10 +40,15 @@ const App = () => {
 
         {/* Notfound route */}
         <Route path="*" element={<NotFoundPage />} />
+
+        <Route path="/info" element={<InfoPage />} />
+        <Route path="/goals" element={<GoalsPage />} />
+        <Route path="/content" element={<ContentPage />} />
+         
       </Routes>
 
       <ToastContainer
-        position="top-right"
+        position="top-left"
         autoClose={5000}
         hideProgressBar
         newestOnTop={false}

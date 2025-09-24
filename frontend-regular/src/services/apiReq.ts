@@ -23,7 +23,7 @@ const apiReq = async (method: string, endpoint: string, body?: unknown) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ refreshToken }),
+          body: JSON.stringify({ refresh_token: refreshToken }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message);

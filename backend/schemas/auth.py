@@ -45,8 +45,9 @@ class RefreshTokenRequest(BaseModel):
 class TokenData(BaseModel):
     email: str
     user_id: int
+    role: UserRole
     created_at: str
-    expires_at: str
+    exp: int
 
 
 class UserResponse(BaseModel):
