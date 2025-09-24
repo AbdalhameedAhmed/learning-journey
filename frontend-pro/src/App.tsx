@@ -40,10 +40,10 @@ const App = () => {
         {/* Notfound route */}
         <Route path="*" element={<NotFoundPage />} />
 
-          <Route path="/instructions" element={<Instructions />} />
-          <Route path="/goals" element={<Goals />} />
-          <Route path="/content-map" element={<ContentMap />} />
-          <Route path="/course" element={<Course />} />
+        <Route path="/instructions" element={<Instructions />} />
+        <Route path="/goals" element={<Goals />} />
+        <Route path="/content-map" element={<ContentMap />} />
+        <Route path="/course" element={<Course />} />
       </Routes>
 
       <ToastContainer
