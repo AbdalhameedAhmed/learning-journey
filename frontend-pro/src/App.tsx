@@ -6,6 +6,10 @@ import RegisterPage from "@/pages/auth/RegisterPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import HomePage from "@/pages/pro/HomePage";
 import UnauthorizedPage from "@/pages/UnauthorizedPage";
+import Instructions from "@/pages/Instructions";
+import Goals from "@/pages/Goals";
+import ContentMap from "@/pages/ContentMap";
+import Course from "@/pages/Course";
 import { UserRole } from "@schemas/User";
 import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
@@ -35,6 +39,11 @@ const App = () => {
 
         {/* Notfound route */}
         <Route path="*" element={<NotFoundPage />} />
+
+          <Route path="/instructions" element={<Instructions />} />
+          <Route path="/goals" element={<Goals />} />
+          <Route path="/content-map" element={<ContentMap />} />
+          <Route path="/course" element={<Course />} />
       </Routes>
 
       <ToastContainer
