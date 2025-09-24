@@ -67,8 +67,8 @@ export default function LoginPage() {
   const labelRight = "right-16 sm:right-12"; 
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
-      <div className="bg-white shadow-2xl rounded-2xl p-6 sm:p-10 w-full max-w-md md:max-w-3xl text-right">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-[#002538] px-4">
+      <div className="bg-white dark:bg-[#0c1e2b] shadow-2xl rounded-2xl p-6 sm:p-10 w-full max-w-md md:max-w-3xl text-right">
         <p className="text-2xl text-center font-semibold text-[#febc34] mb-4 sm:mb-6 leading-relaxed">
             قم بتسجيل الدخول للوصول إلى حسابك
         </p>
@@ -82,16 +82,16 @@ export default function LoginPage() {
         <form className="space-y-6 sm:space-y-6" onSubmit={handleSubmit}>
           {/* Email input */}
           <div className="relative">
-            <div className="flex items-center bg-[#febc34] rounded-full px-3 py-2 sm:px-4 sm:py-3">
-              <FaUser className="text-black ml-2 sm:ml-3" />
+            <div className="flex items-center bg-[#febc34] dark:bg-[#ffb732] rounded-full px-3 py-2 sm:px-4 sm:py-3">
+              <FaUser className="text-black dark:text-[#35389b] ml-2 sm:ml-3" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 bg-transparent outline-none text-black text-sm sm:text-lg"
+                className="flex-1 bg-transparent outline-none text-black dark:text-white text-sm sm:text-lg"
               />
               <label
-                className={`absolute ${labelRight} text-black transition-all duration-300 pointer-events-none ${
+                className={`absolute ${labelRight} text-black dark:text-white transition-all duration-300 pointer-events-none ${
                   email ? "-top-2 text-xs sm:text-sm" : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
                 }`}
               >
@@ -103,23 +103,23 @@ export default function LoginPage() {
 
           {/* Password input */}
           <div className="relative">
-            <div className="flex items-center bg-[#febc34] rounded-full px-3 py-2 sm:px-4 sm:py-3">
-              <FaLock className="text-black ml-2 sm:ml-3" />
+            <div className="flex items-center bg-[#febc34] dark:bg-[#ffb732] rounded-full px-3 py-2 sm:px-4 sm:py-3">
+              <FaLock className="text-black dark:text-[#35389b] ml-2 sm:ml-3" />
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="flex-1 bg-transparent outline-none text-black text-sm sm:text-lg"
+                className="flex-1 bg-transparent outline-none text-black dark:text-white text-sm sm:text-lg"
               />
               <button
                 type="button"
-                className="ml-2 text-black"
+                className="ml-2 text-black dark:text-white"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
               <label
-                className={`absolute ${labelRight} text-black transition-all duration-300 pointer-events-none ${
+                className={`absolute ${labelRight} text-black dark:text-white transition-all duration-300 pointer-events-none ${
                   password ? "-top-2 text-xs sm:text-sm" : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
                 }`}
               >
@@ -133,7 +133,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-1/2 sm:w-1/3 bg-[#002538] text-white rounded-full py-2 sm:py-3 text-sm sm:text-lg font-semibold hover:opacity-90 transition cursor-pointer disabled:opacity-50"
+              className="w-1/2 sm:w-1/3 bg-[#002538] dark:bg-[#35389b] text-white rounded-full py-2 sm:py-3 text-sm sm:text-lg font-semibold hover:opacity-90 transition cursor-pointer disabled:opacity-50"
             >
               {loading ? "جاري الدخول..." : "دخول"}
             </button>
@@ -141,12 +141,12 @@ export default function LoginPage() {
         </form>
 
         <div className="text-center mt-3 sm:mt-4 text-sm sm:text-base">
-          <Link to="/forgot-password" className="text-black hover:underline">
+          <Link to="/forgot-password" className="text-black dark:text-white hover:underline">
             هل نسيت كلمة المرور ؟
           </Link>
-          <p className="mt-1 sm:mt-2">
+          <p className="mt-1 sm:mt-2 text-black dark:text-white">
             ليس لديك حساب؟{" "}
-            <Link to="/register" className="text-[#002538] font-semibold">
+            <Link to="/register" className="text-[#002538] dark:text-[#febc34] font-semibold">
               سجل الآن
             </Link>
           </p>
