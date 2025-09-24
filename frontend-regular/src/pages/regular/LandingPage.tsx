@@ -146,7 +146,7 @@ const LandingPage = () => {
         {backgroundShapes.map((shape, index) => (
           <div
             key={index}
-            className={`absolute opacity-20 dark:opacity-30 rounded-${shape.type === "circle" ? "full" : "lg"} ${shape.size} ${shape.color} ${shape.animation}`}
+            className={`absolute opacity-40 dark:opacity-30 rounded-${shape.type === "circle" ? "full" : "lg"} ${shape.size} ${shape.color} ${shape.animation}`}
             style={{
               top: shape.top,
               left: shape.left,
@@ -155,7 +155,7 @@ const LandingPage = () => {
         ))}
       </div>
 
-      <header className="bg-primary relative z-10 flex items-center justify-between px-4 py-4 sm:px-6 dark:bg-amber-600">
+      <header className="bg-primary relative z-10 flex max-h-[76px] min-h-[76px] items-center justify-between px-4 py-4 sm:px-6 dark:bg-amber-600">
         <div className="flex items-center gap-4">
           {/* Dark Mode Toggle Button */}
           <button
@@ -197,8 +197,7 @@ const LandingPage = () => {
         <img
           src={Vector1}
           alt="Background wave"
-          className="absolute top-[-100px] h-[400px] w-full opacity-40 sm:top-[-150px] sm:h-[600px] md:top-[-187px] lg:top-[-200px] lg:h-[800px] dark:opacity-20"
-          style={{ top: "-125px" }}
+          className="absolute top-0 w-full opacity-40 dark:opacity-20"
         />
 
         {/* Content Container */}
