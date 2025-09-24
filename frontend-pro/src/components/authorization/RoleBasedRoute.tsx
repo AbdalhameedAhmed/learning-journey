@@ -8,15 +8,15 @@ interface RoleBasedRouteProps {
 }
 
 export default function RoleBasedRoute({ allowedRoles }: RoleBasedRouteProps) {
-  const { me, isPending } = useGetMe();
+  // const { me, isPending } = useGetMe();
 
-  if (isPending) return <Spinner />;
+  // if (isPending) return <Spinner />;
 
-  if (!me) return <Navigate to="/login" replace />;
+  // if (!me) return <Navigate to="/login" replace />;
 
-  if (!allowedRoles.includes(me.role)) {
-    return <Navigate to="/unauthorized" replace />;
-  }
+  // if (!allowedRoles.includes(me.role)) {
+  //   return <Navigate to="/unauthorized" replace />;
+  // }
 
   return <Outlet />;
 }

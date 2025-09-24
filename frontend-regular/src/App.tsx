@@ -22,9 +22,9 @@ const App = () => {
           <Route path="/" element={<LandingPage />} />
         </Route>
 
-        {/* PRO-only routes */}
-        <Route element={<RoleBasedRoute allowedRoles={[UserRole.REGULAR]} />}>
           <Route path="/" element={<HomePage />} />
+        {/* REGULAR-only routes */}
+        <Route element={<RoleBasedRoute allowedRoles={[UserRole.REGULAR]} />}>
         </Route>
 
         {/* ADMIN-only routes */}
@@ -40,7 +40,7 @@ const App = () => {
       </Routes>
 
       <ToastContainer
-        position="top-right"
+        position="top-left"
         autoClose={5000}
         hideProgressBar
         newestOnTop={false}
