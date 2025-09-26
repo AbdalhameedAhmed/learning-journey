@@ -17,7 +17,7 @@ import InfoPage from "./pages/pro/InfoPage";
 import GoalsPage from "./pages/pro/GoalsPage";
 import ContentPage from "./pages/pro/ContentPage";
 import CourseDetails from "./pages/pro/CourseDetails";
-
+import LandingPage from "./pages/LandingPage";
 
 const App = () => {
   return (
@@ -27,6 +27,7 @@ const App = () => {
         <Route element={<GuestOnlyRoute />}>
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<LandingPage />} />
         </Route>
         
         {/* PRO-only routes */}
@@ -48,7 +49,7 @@ const App = () => {
         <Route path="/instructions" element={<Instructions />} />
         <Route path="/goals" element={<Goals />} />
         <Route path="/content-map" element={<ContentMap />} />
-        <Route path="/course" element={<Course />
+        <Route path="/course" element={<Course /> } />
         <Route path="/info" element={<InfoPage />} />
         <Route path="/goals" element={<GoalsPage />} />
         <Route path="/content" element={<ContentPage />} />         
