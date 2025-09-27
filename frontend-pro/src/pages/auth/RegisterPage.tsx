@@ -158,7 +158,7 @@ export default function RegisterPage() {
                 className="flex-1 bg-transparent text-sm text-black outline-none sm:text-lg dark:text-white"
               />
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
                   email
                     ? "-top-2 text-xs sm:text-sm"
                     : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
@@ -185,7 +185,7 @@ export default function RegisterPage() {
                 className="flex-1 bg-transparent text-sm text-black outline-none sm:text-lg dark:text-white"
               />
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
                   firstName
                     ? "-top-2 text-xs sm:text-sm"
                     : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
@@ -212,7 +212,7 @@ export default function RegisterPage() {
                 className="flex-1 bg-transparent text-sm text-black outline-none sm:text-lg dark:text-white"
               />
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
                   lastName
                     ? "-top-2 text-xs sm:text-sm"
                     : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
@@ -241,13 +241,13 @@ export default function RegisterPage() {
               <button
                 type="button"
                 tabIndex={-1}
-                className="ml-2 text-black dark:text-white"
+                className="ml-2 text-black dark:text-black"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
                   password
                     ? "-top-2 text-xs sm:text-sm"
                     : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
@@ -276,13 +276,13 @@ export default function RegisterPage() {
               <button
                 type="button"
                 tabIndex={-1}
-                className="ml-2 text-black dark:text-white"
+                className="ml-2 text-black dark:text-black"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
                   confirmPassword
                     ? "-top-2 text-xs sm:text-sm"
                     : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
