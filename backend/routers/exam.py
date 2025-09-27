@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends
-from supabase import Client
-
 from controllers.exam import create_exam_controller, get_exam_controller
 from db.database import get_supabase_client
-from schemas.exam import PostExamRequest, GetExamResponse, PostExamResponse
-from services.auth import validate_admin_user, validate_student_user
+from fastapi import APIRouter, Depends, Query
+from schemas.auth import UserResponse
+from schemas.exam import ExamType, PostExamRequest, PostExamResponse
+from services.auth import get_student_user, validate_admin_user
+from supabase import Client
 
 exam_router = APIRouter(
     prefix="/exam",
@@ -21,10 +21,12 @@ async def create_exam_endpoint(
     return await create_exam_controller(exam_data, supabase)
 
 
-@exam_router.get("/{exam_id}", response_model=GetExamResponse)
+@exam_router.get("/{exam_id}")
 async def get_exam_endpoint(
     exam_id: str,
-    supabase: Client = Depends(get_supabase_client),
-    _=Depends(validate_student_user),
+    exam_type: ExamType = Query(),
+    student_user: UserResponse = Depends(get_student_user),
 ):
-    return await get_exam_controller(exam_id, supabase)
+    supabase = get_supabase_client()
+
+    return await get_exam_controller(exam_id, exam_type, student_user, supabase)

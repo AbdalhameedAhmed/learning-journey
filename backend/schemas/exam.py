@@ -1,5 +1,13 @@
-from pydantic import BaseModel
+from enum import Enum
 from typing import List, Optional
+
+from pydantic import BaseModel
+
+
+class ExamType(str, Enum):
+    PRE_EXAM = "pre_exam"
+    QUIZ = "quiz"
+    FINAL_EXAM = "final_exam"
 
 
 # without is_correct
