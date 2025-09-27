@@ -1,5 +1,7 @@
-from pydantic import BaseModel, EmailStr, field_validator
 from enum import Enum
+from typing import Any, Dict
+
+from pydantic import BaseModel, EmailStr, field_validator
 
 
 class UserRole(Enum):
@@ -19,7 +21,6 @@ class UserRegister(BaseModel):
     email: EmailStr
     password: str
     confirm_password: str
-    role: UserRole
 
     @field_validator("confirm_password")
     def passwords_match(cls, v, values):
@@ -31,7 +32,6 @@ class UserRegister(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
-    role: UserRole
 
 
 class Token(BaseModel):
@@ -45,6 +45,7 @@ class UserResponse(BaseModel):
     first_name: str
     last_name: str
     role: UserRole
+    current_progress_data: Dict[str, Any]
 
 
 class LoginResponse(BaseModel):

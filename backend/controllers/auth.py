@@ -16,24 +16,29 @@ from schemas.auth import (
 )
 from services.auth import (
     authenticate_user,
-    get_session_by_refresh_token,
     check_registration_eligibility,
+    get_session_by_refresh_token,
     get_user_by_id,
 )
 from supabase import Client
-from utils.auth import create_token, get_password_hash
+from utils.auth import create_token, create_user_progress, get_password_hash
+from utils.get_role import get_role_via_origin
 
 
-async def register_user_controller(user_data: UserRegister, supabase: Client):
-    if user_data.role == UserRole.admin:
+async def register_user_controller(
+    user_data: UserRegister, origin: str | None, supabase: Client
+):
+    role = get_role_via_origin(origin)
+
+    if role == UserRole.admin:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Can't register with admin account",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     is_registration_eligable = await check_registration_eligibility(
-        user_data.email, user_data.role, supabase
+        user_data.email, role, supabase
     )
     if not is_registration_eligable:
         raise HTTPException(
@@ -41,6 +46,8 @@ async def register_user_controller(user_data: UserRegister, supabase: Client):
         )
 
     hashed_password = get_password_hash(user_data.password)
+
+    progress_data = create_user_progress(role)
 
     try:
         response = (
@@ -51,7 +58,8 @@ async def register_user_controller(user_data: UserRegister, supabase: Client):
                     "last_name": user_data.last_name,
                     "email": user_data.email,
                     "password": hashed_password,
-                    "role": user_data.role.value,
+                    "role": role.value,
+                    "current_progress_data": progress_data,
                 }
             )
             .execute()
@@ -73,11 +81,15 @@ async def register_user_controller(user_data: UserRegister, supabase: Client):
         )
 
 
-async def login_user_controller(user_credentials: UserLogin, supabase: Client):
+async def login_user_controller(
+    user_credentials: UserLogin, origin: str | None, supabase: Client
+):
+    role = get_role_via_origin(origin)
+
     user = await authenticate_user(
         user_credentials.email,
         user_credentials.password,
-        user_credentials.role,
+        role,
         supabase,
     )
     if not user:
