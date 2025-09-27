@@ -1,26 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import registerImg from "@/assets/Image4.svg";
 import { useRegister } from "@/hooks/auth/useRegister";
 import { UserRole } from "@schemas/User";
