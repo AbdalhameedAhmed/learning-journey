@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from controllers.auth import (
     login_user_controller,
     logout_user_controller,
@@ -5,7 +7,7 @@ from controllers.auth import (
     register_user_controller,
 )
 from db.database import get_supabase_client
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header
 from schemas.auth import (
     LoginResponse,
     RefreshTokenRequest,
@@ -27,16 +29,20 @@ auth_router = APIRouter(
 
 @auth_router.post("/register", response_model=UserResponse)
 async def register_user(
-    user_data: UserRegister, supabase: Client = Depends(get_supabase_client)
+    user_data: UserRegister,
+    origin: Annotated[str | None, Header()] = None,
+    supabase: Client = Depends(get_supabase_client),
 ):
-    return await register_user_controller(user_data, supabase)
+    return await register_user_controller(user_data, origin, supabase)
 
 
 @auth_router.post("/login", response_model=LoginResponse)
 async def login_user(
-    user_credentials: UserLogin, supabase: Client = Depends(get_supabase_client)
+    user_credentials: UserLogin,
+    origin: Annotated[str | None, Header()] = None,
+    supabase: Client = Depends(get_supabase_client),
 ):
-    return await login_user_controller(user_credentials, supabase)
+    return await login_user_controller(user_credentials, origin, supabase)
 
 
 @auth_router.post("/refresh", response_model=Token)

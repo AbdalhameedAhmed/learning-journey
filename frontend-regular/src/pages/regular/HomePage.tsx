@@ -39,7 +39,7 @@ const homeCardItems = [
   },
   {
     image: examImage,
-    title: "الإمتحان القبلي",
+    title: "الامتحان القبلي",
     to: "/exam",
   },
 ];

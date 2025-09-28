@@ -1,7 +1,10 @@
+from typing import Any, Dict
+
 from db.database import get_supabase_client
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials
 from schemas.auth import (
+    UserResponse,
     UserRole,
 )
 from supabase import Client
@@ -101,7 +104,6 @@ def get_token_data(
 
 async def get_current_user(
     token_data=Depends(get_token_data),
-    supabase: Client = Depends(get_supabase_client),
 ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -109,10 +111,17 @@ async def get_current_user(
         headers={"WWW-Authenticate": "Bearer"},
     )
 
-    user = await get_user_by_id(user_id=token_data.user_id, supabase=supabase)
-    if user is None:
+    supabase = get_supabase_client()
+
+    user_dict = await get_user_by_id(user_id=token_data.user_id, supabase=supabase)
+    if user_dict is None:
         raise credentials_exception
-    return user
+
+    try:
+        user_response = UserResponse(**user_dict)
+        return user_response
+    except Exception:
+        raise credentials_exception
 
 
 async def validate_student_user(
@@ -126,6 +135,10 @@ async def validate_student_user(
     return token_data
 
 
+async def get_student_user(token_data=Depends(validate_student_user)):
+    return await get_current_user(token_data=token_data)
+
+
 async def validate_admin_user(
     token_data=Depends(get_token_data),
 ):
@@ -135,3 +148,16 @@ async def validate_admin_user(
             detail="You do not have permission to perform this action.",
         )
     return token_data
+
+
+async def get_user_progress(user_id: int, supabase: Client) -> Dict[str, Any]:
+    response = (
+        supabase.table("users")
+        .select("current_progress_data")
+        .eq("id", user_id)
+        .execute()
+    )
+
+    if response.data:
+        return response.data[0].get("current_progress_data", {})
+    return {}

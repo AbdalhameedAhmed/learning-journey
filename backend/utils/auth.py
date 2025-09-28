@@ -79,10 +79,33 @@ def decode_token(token: str):
     return token_data
 
 
-# Utility functions
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
+
+
+def create_user_progress(user_role: UserRole) -> dict:
+    base_progress = {
+        "role": user_role.value,
+        "is_final_exam_available": False,
+        "completed_modules": [],
+        "completed_lessons": [],
+    }
+
+    if user_role == UserRole.pro:
+        return {
+            **base_progress,
+            "next_available_module_id": None,
+            "next_available_exam_id": None,
+        }
+    elif user_role == UserRole.regular:
+        return {
+            **base_progress,
+            "next_available_lesson_id": None,
+            "next_available_exam_id": None,
+        }
+    else:
+        return base_progress

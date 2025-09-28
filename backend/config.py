@@ -10,6 +10,9 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 90
 
+    PRO_ORIGIN: str = Field(validation_alias="PRO_ORIGIN", default="")
+    REGULAR_ORIGIN: str = Field(validation_alias="REGULAR_ORIGIN", default="")
+
     class Config:
         env_file = ".env"
 
