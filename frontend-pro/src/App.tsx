@@ -7,6 +7,7 @@ import ContentMap from "@/pages/ContentMap";
 import Course from "@/pages/Course";
 import Goals from "@/pages/Goals";
 import Instructions from "@/pages/Instructions";
+import LandingPage from "@/pages/LandingPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import ContentPage from "@/pages/pro/ContentPage";
 import CourseDetails from "@/pages/pro/CourseDetails";
@@ -26,6 +27,7 @@ const App = () => {
         <Route element={<GuestOnlyRoute />}>
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<LandingPage />} />
         </Route>
 
         {/* PRO-only routes */}

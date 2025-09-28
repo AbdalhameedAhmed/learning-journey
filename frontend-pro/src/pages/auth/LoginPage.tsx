@@ -1,9 +1,10 @@
 import loginImg from "@/assets/Image4.svg";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { UserRole } from "@schemas/User";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash, FaLock, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { Moon, Sun } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -14,6 +15,34 @@ export default function LoginPage() {
   const [apiError, setApiError] = useState("");
 
   const { login, isPending } = useLogin();
+
+  //Dark mode state
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    const savedMode = localStorage.getItem("darkMode");
+    const systemPrefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+
+    if (savedMode !== null) {
+      setDarkMode(JSON.parse(savedMode));
+    } else {
+      setDarkMode(systemPrefersDark);
+    }
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (darkMode) {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
+  }, [darkMode]);
+
+  const toggleDarkMode = () => setDarkMode((prev) => !prev);
 
   const validateEmail = (value: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -38,7 +67,6 @@ export default function LoginPage() {
 
     try {
       setApiError("");
-
       login({ email, password, role: UserRole.PRO });
     } catch (err: unknown) {
       const errorMsg =
@@ -53,6 +81,21 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4 dark:bg-[#002538]">
       <div className="w-full max-w-md rounded-2xl bg-white p-6 text-right shadow-2xl sm:p-10 md:max-w-3xl dark:bg-[#0c1e2b]">
+        {/* Dark Mode Toggle */}
+        <div className="mb-4 flex justify-end">
+          <button
+            onClick={toggleDarkMode}
+            className="flex items-center justify-center rounded-full border-2 border-gray-800 bg-white p-2 transition-colors duration-200 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
+            aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {darkMode ? (
+              <Sun size={20} className="text-yellow-500" />
+            ) : (
+              <Moon size={20} className="text-gray-700" />
+            )}
+          </button>
+        </div>
+
         <p className="text-primary mb-4 text-center text-2xl leading-relaxed font-semibold sm:mb-6">
           قم بتسجيل الدخول للوصول إلى حسابك
         </p>
@@ -77,7 +120,7 @@ export default function LoginPage() {
                 className="flex-1 bg-transparent text-sm text-black outline-none sm:text-lg dark:text-white"
               />
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-blacks ${
                   email
                     ? "-top-2 text-xs sm:text-sm"
                     : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
@@ -106,13 +149,13 @@ export default function LoginPage() {
               <button
                 type="button"
                 tabIndex={-1}
-                className="ml-2 text-black dark:text-white"
+                className="ml-2 text-black dark:text-black"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
                   password
                     ? "-top-2 text-xs sm:text-sm"
                     : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
