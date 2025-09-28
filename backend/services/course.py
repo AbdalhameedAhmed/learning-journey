@@ -80,16 +80,15 @@ async def check_pro_user_availability(
 
     # If next_available_module_id is None, pre-exam not submitted
     if next_available_module_id is None:
-        return False, "Complete the pre-exam to start the course"
-
+        return False, "أكمل الاختبار القبلي للبدء في الكورس"
     # Lesson is available if it belongs to the next available module or completed modules
     if lesson_module_id in completed_modules:
-        return True, "Lesson available - module completed"
+        return True, "الدرس متاح - الوحدة مكتملة"
 
     if lesson_module_id == next_available_module_id:
-        return True, "Lesson available - current module"
+        return True, "الدرس متاح - الوحدة الحالية"
 
-    return False, "Lesson not available. Complete current module first."
+    return False, "الدرس غير متاح. أكمل الوحدة الحالية أولاً."
 
 
 async def check_regular_user_availability(
@@ -101,16 +100,16 @@ async def check_regular_user_availability(
 
     # If next_available_lesson_id is None, pre-exam not submitted
     if next_available_lesson_id is None:
-        return False, "Complete the pre-exam to start the course"
+        return False, "أكمل الاختبار القبلي للبدء في الكورس"
 
     # Lesson is available if it's the next available lesson or already completed
     if lesson_id in completed_lessons:
-        return True, "Lesson available - already completed"
+        return True, "الدرس متاح - مكتمل مسبقاً"
 
     if lesson_id == next_available_lesson_id:
-        return True, "Lesson available - current lesson"
+        return True, "الدرس متاح - الدرس الحالي"
 
-    return False, "Complete the current lesson first"
+    return False, "أكمل الدرس الحالي أولاً"
 
 
 async def is_lesson_available(
@@ -225,7 +224,7 @@ async def get_lesson_with_validation(
         # Get lesson details as dictionary from DB
         lesson_dict = await get_lesson_by_id(lesson_id, supabase)
         if not lesson_dict:
-            return {"error": "Lesson not found"}
+            return {"error": "الدرس غير موجود"}
 
         # Check if lesson is available
         is_available, message = await is_lesson_available(

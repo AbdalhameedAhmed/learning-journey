@@ -8,7 +8,6 @@ import { Palette } from "lucide-react";
 import { useState } from "react";
 import Navbar from "@/components/navbar";
 
-
 const HomePage = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
@@ -18,7 +17,7 @@ const HomePage = () => {
 
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <div className="relative mx-25 flex h-full items-center justify-center dark:bg-black">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
           {homeCardItems.map((item, index) => (
@@ -62,7 +61,7 @@ const homeCardItems = [
   },
   {
     image: examImage,
-    title: "الإمتحان القبلي",
+    title: "الامتحان القبلي",
     to: "/exam",
   },
 ];

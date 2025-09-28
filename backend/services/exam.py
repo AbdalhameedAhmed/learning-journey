@@ -231,7 +231,7 @@ async def update_pro_progress_after_module_quiz(
         )
 
         # Check if this was the last module
-        if await is_last_module(next_module_id, supabase):
+        if await is_last_module(current_module_id, supabase):
             progress_data["is_final_exam_available"] = True
 
     # Save progress
@@ -309,13 +309,15 @@ async def is_exam_allowed_by_progress(
 ):
     if exam_type == ExamType.FINAL_EXAM:
         return user_progress.get("is_final_exam_available", False)
+    elif exam_type == ExamType.PRE_EXAM:
+        return user_progress.get("next_available_module_id") is None
+    else:
+        next_available_exam_id = user_progress.get("next_available_exam_id")
 
-    next_available_exam_id = user_progress.get("next_available_exam_id")
+        if next_available_exam_id is None:
+            return False
 
-    if next_available_exam_id is None:
+        if exam_id == next_available_exam_id:
+            return True
+
         return False
-
-    if exam_id == next_available_exam_id:
-        return True
-
-    return False
