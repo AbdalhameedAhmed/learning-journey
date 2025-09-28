@@ -4,6 +4,8 @@ from schemas.auth import UserRole
 from schemas.course import AssetResponse, LessonResponse
 from supabase import Client
 
+from services.auth import get_user_progress
+
 
 async def get_lesson_by_id(
     lesson_id: int, supabase: Client
@@ -57,9 +59,9 @@ async def get_next_lesson(
 
         response = (
             supabase.table("lessons")
-            .select("*")
-            .gt("created_at", current_lesson["created_at"])
-            .order("created_at")
+            .select("id")
+            .gt("id", current_lesson_id)
+            .order("id")
             .limit(1)
             .execute()
         )
@@ -122,62 +124,88 @@ async def is_lesson_available(
         return await check_regular_user_availability(lesson, user_progress)
 
 
+async def is_last_lesson_in_current_module(lesson_id: int, supabase: Client) -> bool:
+    try:
+        # Get the current lesson to find its module
+        current_lesson = await get_lesson_by_id(lesson_id, supabase)
+        if not current_lesson:
+            return False
+
+        module_id = current_lesson.get("module_id")
+        if not module_id:
+            return False
+
+        # Get all lessons in this module ordered by creation
+        response = (
+            supabase.table("lessons")
+            .select("id")
+            .eq("module_id", module_id)
+            .order("id")
+            .execute()
+        )
+
+        if not response.data:
+            return False
+
+        lesson_ids = [lesson["id"] for lesson in response.data]
+
+        # Check if this is the last lesson in the module
+        return lesson_id == lesson_ids[-1] if lesson_ids else False
+
+    except Exception:
+        return False
+
+
+async def get_exam_by_previous_lesson(
+    lesson_id: int, supabase: Client
+) -> Optional[int]:
+    try:
+        response = (
+            supabase.table("exams")
+            .select("id")
+            .eq("previous_lesson", lesson_id)
+            .execute()
+        )
+
+        return response.data[0]["id"] if response.data else None
+    except Exception:
+        return None
+
+
 async def update_progress_after_lesson_completion(
     user_id: int, user_role: UserRole, completed_lesson_id: int, supabase: Client
 ) -> Dict[str, Any]:
-    user_response = supabase.table("users").select("*").eq("id", user_id).execute()
-    if not user_response.data:
-        return {"error": "User not found"}
-
-    user = user_response.data[0]
-    progress_data = user.get("current_progress_data", {})
+    progress_data = await get_user_progress(user_id, supabase)
+    completed_lessons = progress_data.get("completed_lessons", [])
 
     if user_role == UserRole.pro:
         # For PRO users, lessons within a module are freely accessible
         # Progress is mainly module-based
-        completed_lessons = progress_data.get("completed_lessons", [])
         if completed_lesson_id not in completed_lessons:
             completed_lessons.append(completed_lesson_id)
             progress_data["completed_lessons"] = completed_lessons
-
-        # Check if all lessons in current module are completed
-        current_module_id = progress_data.get("next_available_module_id")
-        if current_module_id:
-            progress_data["next_available_exam_id"] = await get_first_exam_for_module(
-                current_module_id, supabase
-            )
-
-        if await is_module_completed(current_module_id, completed_lessons, supabase):
-            # Move to next module
-            next_module_id = current_module_id + 1
-            progress_data["next_available_module_id"] = next_module_id
-            progress_data["completed_modules"] = progress_data.get(
-                "completed_modules", []
-            ) + [current_module_id]
-
-            # Check if this was the last module
-            if await is_last_module(next_module_id, supabase):
-                progress_data["is_final_exam_available"] = True
 
     else:
         # For REGULAR users, linear progression
-        completed_lessons = progress_data.get("completed_lessons", [])
         if completed_lesson_id not in completed_lessons:
             completed_lessons.append(completed_lesson_id)
             progress_data["completed_lessons"] = completed_lessons
 
-        # Set next available lesson
-        next_lesson_id = await get_next_lesson_id(completed_lesson_id, supabase)
-        progress_data["next_available_lesson_id"] = next_lesson_id
+        # Check if this is the last lesson in the current module
+        is_last_lesson_in_module = await is_last_lesson_in_current_module(
+            completed_lesson_id, supabase
+        )
 
-        # Check if this was the last lesson
-        if not next_lesson_id:
-            progress_data["is_final_exam_available"] = True
-        else:
-            # Set next available exam
-            progress_data["next_available_exam_id"] = await get_first_exam_after_lesson(
-                next_lesson_id, supabase
+        if is_last_lesson_in_module:
+            # Don't update next_available_lesson_id
+            # Set next_available_exam_id
+            progress_data["next_available_exam_id"] = await get_exam_by_previous_lesson(
+                completed_lesson_id, supabase
             )
+        else:
+            # Normal progression - set next available lesson
+            next_lesson_id = await get_next_lesson_id(completed_lesson_id, supabase)
+            progress_data["next_available_lesson_id"] = next_lesson_id
 
     # Save progress
     supabase.table("users").update({"current_progress_data": progress_data}).eq(

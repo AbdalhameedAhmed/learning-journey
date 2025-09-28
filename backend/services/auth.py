@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 from db.database import get_supabase_client
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials
@@ -146,3 +148,16 @@ async def validate_admin_user(
             detail="You do not have permission to perform this action.",
         )
     return token_data
+
+
+async def get_user_progress(user_id: int, supabase: Client) -> Dict[str, Any]:
+    response = (
+        supabase.table("users")
+        .select("current_progress_data")
+        .eq("id", user_id)
+        .execute()
+    )
+
+    if response.data:
+        return response.data[0].get("current_progress_data", {})
+    return {}

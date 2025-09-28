@@ -98,6 +98,8 @@ async def should_update_lesson_progress(
 ) -> bool:
     user_progress = student_user.current_progress_data
     completed_lessons = user_progress.get("completed_lessons", [])
+    next_available_lesson_id = user_progress.get("next_available_lesson_id")
+    next_available_module_id = user_progress.get("next_available_module_id")
 
     # Don't update if lesson is already completed
     if lesson_id in completed_lessons:
@@ -105,7 +107,6 @@ async def should_update_lesson_progress(
 
     # For regular users: update if this is the next available lesson
     if student_user.role == UserRole.regular:
-        next_available_lesson_id = user_progress.get("next_available_lesson_id")
         return lesson_id == next_available_lesson_id
 
     # For pro users: update if lesson belongs to current module and not completed
@@ -115,7 +116,6 @@ async def should_update_lesson_progress(
         if not lesson:
             return False
 
-        next_available_module_id = user_progress.get("next_available_module_id")
         return lesson.get("module_id") == next_available_module_id
 
     return False

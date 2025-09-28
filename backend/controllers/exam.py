@@ -1,8 +1,23 @@
-from typing import Any
+from typing import Any, Dict
 
 from schemas.auth import UserResponse, UserRole
-from schemas.exam import ExamType, PostExamRequest
-from services.exam import get_exam_and_questions_by_id, insert_exam, insert_questions
+from schemas.exam import (
+    ExamSubmissionRequest,
+    ExamSubmissionResponse,
+    ExamType,
+    PostExamRequest,
+)
+from services.auth import get_user_progress
+from services.exam import (
+    calculate_exam_score,
+    get_exam_and_questions_by_id,
+    insert_exam,
+    insert_questions,
+    is_exam_allowed_by_progress,
+    is_exam_previously_submitted,
+    save_exam_submission,
+    update_progress_after_exam,
+)
 from supabase import Client
 
 
@@ -59,24 +74,28 @@ async def get_exam_controller(
 
     # Validate exam access based on type and progress
     if student_user.role == UserRole.pro:
-        return await handle_pro_user_exam(exam_data, progress_data, exam_type, supabase)
+        return await validate_pro_user_getting_exam(
+            exam_data, progress_data, exam_type, supabase
+        )
     elif student_user.role == UserRole.regular:
-        return await handle_regular_user_exam(
+        return await validate_regular_user_getting_exam(
             exam_data, progress_data, exam_type, supabase
         )
     else:
         return {"error": "Invalid user role for exam access"}
 
 
-async def handle_pro_user_exam(
+async def validate_pro_user_getting_exam(
     exam_data: dict, progress_data: dict, exam_type: ExamType, supabase: Client
 ) -> Any:
     module_id = exam_data["module_id"]
-    current_module_id = progress_data.get("current_module_id")
+    next_available_module_id = progress_data.get("next_available_module_id")
+    next_available_exam_id = progress_data.get("next_available_exam_id")
+    is_final_exam_available = progress_data.get("is_final_exam_available", False)
 
     if exam_type == ExamType.PRE_EXAM:
         # Pre-exam: must be course-level exam and no progress yet
-        if not module_id and current_module_id is None:
+        if not module_id and next_available_module_id is None:
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {
@@ -84,15 +103,15 @@ async def handle_pro_user_exam(
             }
 
     elif exam_type == ExamType.QUIZ:
-        # Quiz: must be module-level exam and match current module
-        if module_id and current_module_id == module_id:
+        # Quiz: match the next available exam ID
+        if exam_data["id"] == next_available_exam_id:
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {"error": "Quiz not available for current progress"}
 
     elif exam_type == ExamType.FINAL_EXAM:
-        # Final exam: must be course-level exam and all modules completed
-        if not module_id and progress_data.get("is_final_exam_available"):
+        # Final exam: must be course-level exam and final exam available
+        if not module_id and is_final_exam_available:
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {
@@ -102,15 +121,17 @@ async def handle_pro_user_exam(
     return {"error": "Invalid exam type"}
 
 
-async def handle_regular_user_exam(
+async def validate_regular_user_getting_exam(
     exam_data: dict, progress_data: dict, exam_type: ExamType, supabase: Client
 ) -> Any:
     module_id = exam_data["module_id"]
-    current_lesson_id = progress_data.get("current_lesson_id")
+    next_available_lesson_id = progress_data.get("next_available_lesson_id")
+    next_available_exam_id = progress_data.get("next_available_exam_id")
+    is_final_exam_available = progress_data.get("is_final_exam_available", False)
 
     if exam_type == ExamType.PRE_EXAM:
         # Pre-exam: must be course-level exam and no progress yet
-        if not module_id and current_lesson_id is None:
+        if not module_id and next_available_lesson_id is None:
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {
@@ -118,15 +139,15 @@ async def handle_regular_user_exam(
             }
 
     elif exam_type == ExamType.QUIZ:
-        # Quiz: must be module-level exam and match current lesson
-        if module_id and exam_data.get("previous_lesson") == current_lesson_id:
+        # Quiz: match the next available exam ID
+        if exam_data["id"] == next_available_exam_id:
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {"error": "Quiz not available for current progress"}
 
     elif exam_type == ExamType.FINAL_EXAM:
-        # Final exam: must be course-level exam and all lessons completed
-        if not module_id and progress_data.get("is_final_exam_available"):
+        # Final exam: must be course-level exam and final exam available
+        if not module_id and is_final_exam_available:
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {
@@ -134,3 +155,87 @@ async def handle_regular_user_exam(
             }
 
     return {"error": "Invalid exam type"}
+
+
+async def submit_exam_controller(
+    submission_data: ExamSubmissionRequest,
+    user_id: int,
+    user_role: UserRole,
+    user_progress: Dict[str, Any],
+    supabase: Client,
+):
+    try:
+        # 1. Check if exam was previously submitted
+        existing_submission = await is_exam_previously_submitted(
+            exam_id=submission_data.exam_id,
+            user_id=user_id,
+            exam_type=submission_data.exam_type,
+            supabase=supabase,
+        )
+
+        if existing_submission:
+            return {
+                "error": "Exam already submitted. You cannot submit the same exam again."
+            }
+
+        # 2. Check if exam is allowed based on progress data
+        is_exam_allowed = await is_exam_allowed_by_progress(
+            exam_id=submission_data.exam_id,
+            exam_type=submission_data.exam_type,
+            user_progress=user_progress,
+        )
+
+        if not is_exam_allowed:
+            return {"error": "Exam not available for current progress."}
+
+        # 2. Calculate score with detailed results
+        score_result = await calculate_exam_score(
+            submission_data.exam_id, submission_data.answers, supabase
+        )
+
+        if "error" in score_result:
+            return {"error": "Error calculating score"}
+
+        # 3. Save submission to database with all grade details
+        await save_exam_submission(
+            user_id=user_id,
+            user_role=user_role,
+            exam_id=submission_data.exam_id,
+            exam_type=submission_data.exam_type,
+            answers=submission_data.answers,
+            score=score_result["score"],
+            total_questions=score_result["total_questions"],
+            correct_answers=score_result["correct_answers"],
+            passing_score=score_result["passing_score"],
+            passed=score_result["passed"],
+            supabase=supabase,
+        )
+
+        # 4. Update user progress
+        progress_update_result = await update_progress_after_exam(
+            user_id=user_id,
+            user_role=user_role,
+            exam_type=submission_data.exam_type,
+            current_progress=user_progress,
+            supabase=supabase,
+        )
+        progress_updated = "success" in progress_update_result
+
+        # 5. Get updated progress for response
+        updated_progress = await get_user_progress(user_id, supabase)
+
+        return ExamSubmissionResponse(
+            success=True,
+            score=score_result["score"],
+            total_questions=score_result["total_questions"],
+            correct_answers=score_result["correct_answers"],
+            passed=score_result["passed"],
+            progress_updated=progress_updated,
+            message="Exam submitted successfully",
+            next_available_lesson_id=updated_progress.get("next_available_lesson_id"),
+            next_available_module_id=updated_progress.get("next_available_module_id"),
+            next_available_exam_id=updated_progress.get("next_available_exam_id"),
+        )
+
+    except Exception as e:
+        return {"error": f"Error submitting exam: {str(e)}"}

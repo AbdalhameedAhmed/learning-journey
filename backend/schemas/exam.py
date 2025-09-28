@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 
@@ -61,3 +61,22 @@ class GetExamResponse(BaseModel):
     module_id: Optional[int]
     course_id: Optional[int]
     questions: List[Question]
+
+
+class ExamSubmissionRequest(BaseModel):
+    exam_id: int
+    exam_type: ExamType
+    answers: List[Dict[str, Any]]  # [{"question_id": 1, "selected_option_id": 3}, ...]
+
+
+class ExamSubmissionResponse(BaseModel):
+    success: bool
+    score: int
+    total_questions: int
+    correct_answers: int
+    passed: bool
+    progress_updated: bool
+    message: str
+    next_available_lesson_id: int | None = None
+    next_available_module_id: int | None = None
+    next_available_exam_id: int | None = None
