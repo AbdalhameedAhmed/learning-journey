@@ -10,7 +10,6 @@ import VideoViewer from "./VideoViewer";
 
 export default function AssetResource({ lessonId }: { lessonId: number }) {
   const { lesson, isPending } = useGetLesson(lessonId);
-  console.log(lesson);
 
   const isLessonResponse = (
     data: LessonResponse | ErrorResponse | undefined,
