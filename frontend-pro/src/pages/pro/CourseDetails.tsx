@@ -7,14 +7,14 @@ import { useGetMe } from "@/hooks/auth/useGetMe";
 import { useGetCourseDetails } from "@/hooks/courseContent/useGetCourseDetails";
 import type { ExamHeader, LessonHeader } from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
-import { Clipboard, HardDriveDownload, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+import AssetsViewerFooter from "./AssetsViewerFooter";
+import Navbar from "@/components/navbar";
 
 export default function CourseDetails() {
   const courseId = useParams().courseId;
   const [searchParams, setSearchParams] = useSearchParams();
-
   const [activeLesson, setActiveLesson] = useState<LessonHeader>();
   const [activeExam, setActiveExam] = useState<ExamHeader>();
   const [openedModule, setOpendModule] = useState<number>();
@@ -82,10 +82,8 @@ export default function CourseDetails() {
   const courseCompleted = progressData?.course_completed;
 
   return (
-    <div className="flex min-h-screen w-screen flex-col items-center gap-4">
-      <div className="bg-primary h-[80px] w-full"></div>
-      <div className="bg-primary h-[60px] w-[700px]"></div>
-      {/* <Navbar /> */}
+    <div className="flex min-h-screen w-screen flex-col items-center gap-4 dark:bg-slate-900">
+      <Navbar />
 
       <div className="flex w-full flex-1 items-center justify-center overflow-auto">
         <div className="flex w-[300px] flex-col items-center gap-2 self-stretch overflow-auto rounded-tl-lg rounded-bl-lg bg-[#E9E9E9] p-4">
@@ -135,19 +133,12 @@ export default function CourseDetails() {
             {!activeLesson && !activeExam && <p>برجاء اختيار الدرس</p>}
           </div>
           {activeLesson && (
-            <>
-              <div className="flex w-full max-w-[800px] items-center justify-between">
-                <button>التالى</button>
-                <div className="flex items-center justify-center gap-6">
-                  <button>السابق</button>
-                  <div className="flex items-center gap-2">
-                    <HardDriveDownload color="#3138A0" />
-                    <Clipboard color="#3138A0" />
-                    <Heart color="#3138A0" />
-                  </div>
-                </div>
-              </div>
-            </>
+            <AssetsViewerFooter
+              lessonId={activeLesson.id}
+              setActiveLessonHandler={setActiveLessonHandler}
+              setActiveExamHandler={setActiveExamHandler}
+              courseDetails={courseDetails}
+            />
           )}
         </div>
       </div>

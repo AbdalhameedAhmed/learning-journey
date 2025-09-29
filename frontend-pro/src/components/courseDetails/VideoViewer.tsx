@@ -2,6 +2,7 @@ import { useGetNotes } from "@/hooks/courseContent/useGetNotes";
 import { Fullscreen, Minimize, NotebookText, Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import NotesSidebar from "./NotesSidebar";
+import clsx from "clsx";
 
 export default function VideoViewer({
   url,
@@ -177,8 +178,10 @@ export default function VideoViewer({
           <div className="flex items-center gap-4">
             <button onClick={() => setShowNotes(!showNotes)}>
               <NotebookText
-                color={!showNotes ? "white" : "#FFB732"}
-                className="-scale-x-100"
+                className={clsx({
+                  "text-white": !showNotes,
+                  "text-primary": showNotes,
+                })}
               />
             </button>
             <input

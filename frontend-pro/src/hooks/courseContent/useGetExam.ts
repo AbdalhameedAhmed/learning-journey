@@ -9,7 +9,7 @@ export const useGetExam = (examId: number, exam_type: ExamType) => {
     isPending,
     error,
   } = useQuery<Exam | ErrorResponse>({
-    queryKey: ["exam", examId],
+    queryKey: ["exam", examId, exam_type],
     queryFn: async () => {
       return await apiReq("GET", `/exam/${examId}?exam_type=${exam_type}`);
     },

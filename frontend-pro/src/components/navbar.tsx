@@ -11,14 +11,13 @@ export default function Navbar() {
   };
 
   return (
-    <div>
-      <header
-        className="text-white px-4 py-2 flex items-center justify-between relative"
-        style={{ backgroundColor: "#FFB732" }}
-      >        <form
-        onSubmit={handleSearch}
-        className="absolute left-1/2 transform -translate-x-1/2 flex items-center bg-white rounded-lg overflow-hidden"
-      >
+    <div className="w-full">
+      <header className="bg-primary relative flex items-center justify-between px-4 py-2 text-white">
+        {" "}
+        <form
+          onSubmit={handleSearch}
+          className="absolute left-1/2 flex -translate-x-1/2 transform items-center overflow-hidden rounded-lg bg-white"
+        >
           <input
             type="text"
             placeholder="بحث"
@@ -26,23 +25,23 @@ export default function Navbar() {
             onChange={(e) => setSearch(e.target.value)}
             className="px-3 py-1 text-black outline-none"
           />
-          <button type="submit" className="bg-[#FFB732] p-2">
-            <Search className="w-4 h-4 text-white" />
+          <button type="submit" className="bg-primary p-2">
+            <Search className="h-4 w-4 text-white" />
           </button>
         </form>
         <div className="text-right">
-          <h1 className="font-bold text-lg">رحلة تعلّم</h1>
+          <h1 className="text-lg font-bold">رحلة تعلّم</h1>
           <p className="text-xs">Learn Journey</p>
         </div>
       </header>
-      <nav className="flex justify-center gap-12 mt-8 text-sm font-bold text-purple-900">
+      <nav className="mt-8 flex items-center justify-center gap-12 text-sm font-bold text-purple-900">
         <div className="flex items-center gap-1">
-          <Home className="w-5 h-5 text-black" />
+          <Home className="h-5 w-5 text-black" />
           <NavLink
             to="/"
             className={({ isActive }) =>
               isActive
-                ? "px-3 py-1 rounded-md bg-[#FFB732] text-white"
+                ? "bg-primary rounded-md px-3 py-1 text-white"
                 : "hover:text-orange-600"
             }
           >
@@ -53,7 +52,7 @@ export default function Navbar() {
           to="/instructions"
           className={({ isActive }) =>
             isActive
-              ? "px-3 py-1 rounded-md bg-[#FFB732] text-white"
+              ? "bg-primary rounded-md px-3 py-1 text-white"
               : "hover:text-orange-600"
           }
         >
@@ -63,7 +62,7 @@ export default function Navbar() {
           to="/goals"
           className={({ isActive }) =>
             isActive
-              ? "px-3 py-1 rounded-md bg-[#FFB732] text-white"
+              ? "bg-primary rounded-md px-3 py-1 text-white"
               : "hover:text-orange-600"
           }
         >
@@ -74,7 +73,7 @@ export default function Navbar() {
           to="/content-map"
           className={({ isActive }) =>
             isActive
-              ? "px-3 py-1 rounded-md bg-[#FFB732] text-white"
+              ? "bg-primary rounded-md px-3 py-1 text-white"
               : "hover:text-orange-600"
           }
         >
@@ -84,7 +83,7 @@ export default function Navbar() {
           to="/course"
           className={({ isActive }) =>
             isActive
-              ? "px-3 py-1 rounded-md bg-[#FFB732] text-white"
+              ? "bg-primary rounded-md px-3 py-1 text-white"
               : "hover:text-orange-600"
           }
         >
