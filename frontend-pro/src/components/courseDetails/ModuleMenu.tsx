@@ -1,6 +1,5 @@
 import type {
   ExamHeader,
-  Favorite,
   LessonHeader,
   Module,
 } from "@schemas/course";
@@ -9,6 +8,7 @@ import clsx from "clsx";
 import { Heart, Lock } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
 import HeaderButton from "./HeaderButton";
+import { useGetFavorites } from "@/hooks/courseContent/useGetFavorites";
 
 type ModuleMenuProps = {
   module: Module;
@@ -20,7 +20,6 @@ type ModuleMenuProps = {
   setOpendModule: Dispatch<SetStateAction<number | undefined>>;
   nextAvailableModuleId?: number | null;
   nextAvailableExamId?: number | null;
-  favorites?: Favorite[];
 };
 
 export default function ModuleMenu({
@@ -32,8 +31,8 @@ export default function ModuleMenu({
   openedModule,
   setOpendModule,
   nextAvailableModuleId,
-  favorites,
 }: ModuleMenuProps) {
+  const { favorites } = useGetFavorites();
   const isModuleLocked =
     nextAvailableModuleId === null ||
     (typeof nextAvailableModuleId === "number" &&

@@ -98,8 +98,15 @@ async def authenticate_user(
 def get_token_data(
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
-    token_data = decode_token(credentials.credentials)
-    return token_data
+    try:
+        token_data = decode_token(credentials.credentials)
+        return token_data
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
 
 async def get_current_user(
