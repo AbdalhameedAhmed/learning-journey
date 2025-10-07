@@ -10,6 +10,7 @@ import type {
   ErrorResponse,
 } from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
+import clsx from "clsx";
 import { HardDriveDownload, Heart } from "lucide-react";
 import { useSearchParams } from "react-router";
 
@@ -206,7 +207,7 @@ export default function AssetsViewerFooter({
             }}
             className="cursor-pointer"
           >
-            <HardDriveDownload color="#3138A0" />
+            <HardDriveDownload className="text-text dark:text-dark-text" />
           </button>
           <button
             onClick={handleToggleFavorite}
@@ -218,9 +219,12 @@ export default function AssetsViewerFooter({
             }`}
           >
             <Heart
-              color={isCurrentLessonFavorited ? "#ff0000" : "#3138A0"}
-              fill={isCurrentLessonFavorited ? "#ff0000" : "none"}
-              className="cursor-pointer transition-colors"
+              className={clsx(
+                "text-text dark:text-dark-text cursor-pointer transition-colors",
+                {
+                  "fill-[#ff0000] !text-[#ff0000]": isCurrentLessonFavorited,
+                },
+              )}
             />
           </button>
         </div>

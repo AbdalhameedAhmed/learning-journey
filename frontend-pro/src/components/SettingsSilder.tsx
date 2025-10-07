@@ -23,7 +23,11 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
 
   const [isInitialized, setIsInitialized] = useState(false);
   const [primaryColor, setPrimaryColor] = useState("");
+  const [darkPrimaryColor, setDarkPrimaryColor] = useState("");
+
   const [textColor, setTextColor] = useState("");
+  const [darkTextColor, setDarkTextColor] = useState("");
+
   const [fontSize, setFontSize] = useState("");
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
@@ -32,7 +36,9 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
 
     if (savedSettings) {
       setPrimaryColor(savedSettings.primaryColor);
+      setDarkPrimaryColor(savedSettings.darkPrimaryColor);
       setTextColor(savedSettings.textColor);
+      setDarkTextColor(savedSettings.darkTextColor);
       setFontSize(savedSettings.fontSize);
       setTheme(savedSettings.theme);
 
@@ -41,8 +47,16 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
         savedSettings.primaryColor,
       );
       document.documentElement.style.setProperty(
+        "--color-dark-primary",
+        savedSettings.darkPrimaryColor,
+      );
+      document.documentElement.style.setProperty(
         "--color-text",
         savedSettings.textColor,
+      );
+      document.documentElement.style.setProperty(
+        "--color-dark-text",
+        savedSettings.darkTextColor,
       );
       document.documentElement.style.setProperty(
         "--text-text-size",
@@ -63,25 +77,60 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
   }, []);
 
   useEffect(() => {
-    if (isInitialized && primaryColor && textColor && fontSize) {
-      setSettingsStorage({ primaryColor, textColor, fontSize, theme });
+    if (
+      isInitialized &&
+      primaryColor &&
+      textColor &&
+      fontSize &&
+      darkPrimaryColor &&
+      darkTextColor
+    ) {
+      setSettingsStorage({
+        primaryColor,
+        textColor,
+        fontSize,
+        theme,
+        darkPrimaryColor,
+        darkTextColor,
+      });
     }
-  }, [primaryColor, textColor, fontSize, theme, isInitialized]);
+  }, [
+    primaryColor,
+    textColor,
+    fontSize,
+    theme,
+    isInitialized,
+    darkPrimaryColor,
+    darkTextColor,
+  ]);
 
   const handlePrimaryColorChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!isInitialized) return;
 
     const newColor = event.target.value;
-    setPrimaryColor(newColor);
-    document.documentElement.style.setProperty("--color-primary", newColor);
+    if (theme === "dark") {
+      setDarkPrimaryColor(newColor);
+      document.documentElement.style.setProperty(
+        "--color-dark-primary",
+        newColor,
+      );
+    } else {
+      setPrimaryColor(newColor);
+      document.documentElement.style.setProperty("--color-primary", newColor);
+    }
   };
 
   const handleTextColorChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!isInitialized) return;
 
     const newColor = event.target.value;
-    setTextColor(newColor);
-    document.documentElement.style.setProperty("--color-text", newColor);
+    if (theme === "dark") {
+      setDarkTextColor(newColor);
+      document.documentElement.style.setProperty("--color-dark-text", newColor);
+    } else {
+      setTextColor(newColor);
+      document.documentElement.style.setProperty("--color-text", newColor);
+    }
   };
 
   const handleFontSizeChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -116,8 +165,16 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
       originalCssValues.primary,
     );
     document.documentElement.style.setProperty(
+      "--color-dark-primary",
+      originalCssValues.darkPrimary,
+    );
+    document.documentElement.style.setProperty(
       "--color-text",
       originalCssValues.text,
+    );
+    document.documentElement.style.setProperty(
+      "--color-dark-text",
+      originalCssValues.darkText,
     );
     document.documentElement.style.setProperty(
       "--text-text-size",
@@ -127,7 +184,9 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
     document.documentElement.classList.remove("dark");
 
     setPrimaryColor(originalCssValues.primary);
+    setDarkPrimaryColor(originalCssValues.darkPrimary);
     setTextColor(originalCssValues.text);
+    setDarkTextColor(originalCssValues.darkText);
     setFontSize(originalCssValues.fontSize);
     setTheme(originalCssValues.theme);
   };
@@ -177,18 +236,21 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
       <div
         ref={sliderRef}
         className={clsx(
-          "fixed top-0 left-0 z-40 h-screen w-96 max-w-96 transform bg-white p-4 shadow-xl transition-transform duration-300 ease-in-out",
+          "fixed top-0 left-0 z-40 h-screen w-96 max-w-96 transform bg-white p-4 shadow-xl transition-transform duration-300 ease-in-out dark:bg-slate-800",
           {
             "translate-x-0": isOpen,
             "-translate-x-full": !isOpen,
           },
         )}
       >
-        <h2 className="mb-6 text-2xl font-bold">الإعدادات</h2>
+        <h2 className="mb-6 text-2xl font-bold dark:text-white">الإعدادات</h2>
 
         {/* Site Color */}
         <div className="mb-4">
-          <label htmlFor="site-color" className="text-text font-medium">
+          <label
+            htmlFor="site-color"
+            className="text-text dark:text-dark-text font-medium"
+          >
             لون الموقع
           </label>
           <input
@@ -196,14 +258,17 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
             id="site-color"
             name="site-color"
             className="mt-1 h-10 w-full rounded-md border-gray-300 shadow-sm"
-            value={primaryColor}
+            value={theme == "dark" ? darkPrimaryColor : primaryColor}
             onChange={handlePrimaryColorChange}
           />
         </div>
 
         {/* Font Color */}
         <div className="mb-4">
-          <label htmlFor="font-color" className="text-text font-medium">
+          <label
+            htmlFor="font-color"
+            className="text-text dark:text-dark-text font-medium"
+          >
             لون الخط
           </label>
           <input
@@ -211,43 +276,59 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
             id="font-color"
             name="font-color"
             className="mt-1 h-10 w-full rounded-md border-gray-300 shadow-sm"
-            value={textColor}
+            value={theme == "dark" ? darkTextColor : textColor}
             onChange={handleTextColorChange}
           />
         </div>
 
         {/* Font Size */}
         <div className="mb-4">
-          <label htmlFor="font-size" className="text-text font-medium">
+          <label
+            htmlFor="font-size"
+            className="text-text dark:text-dark-text font-medium"
+          >
             حجم الخط
           </label>
           <select
             id="font-size"
             name="font-size"
-            className="sm: mt-1 h-10 w-full rounded-md border-gray-300 shadow-sm focus:outline-none"
+            className="sm: text-text dark:text-dark-text mt-1 h-10 w-full rounded-md border-gray-300 shadow-sm focus:outline-none dark:shadow-white"
             value={fontSize}
             onChange={handleFontSizeChange}
           >
-            <option value="14px">صغير </option>
-            <option value="22px">عادي</option>
-            <option value="30px">كبير</option>
+            <option value="14px" className="text-black">
+              صغير{" "}
+            </option>
+            <option value="22px" className="text-black">
+              عادي
+            </option>
+            <option value="30px" className="text-black">
+              كبير
+            </option>
           </select>
         </div>
 
         {/* Theme */}
         <div className="mb-4">
-          <label htmlFor="theme" className="text-text font-medium">
+          <label
+            htmlFor="theme"
+            className="text-text dark:text-dark-text font-medium"
+          >
             الوضع
           </label>
           <select
             id="theme"
             name="theme"
-            className="mt-1 h-10 w-full rounded-md border-gray-300 shadow-sm focus:outline-none"
+            className="text-text dark:text-dark-text mt-1 h-10 w-full rounded-md border-gray-300 shadow-sm focus:outline-none dark:shadow-white"
             value={theme}
             onChange={handleThemeChange}
           >
-            <option value="light">فاتح</option>
-            <option value="dark">داكن</option>
+            <option value="light" className="text-black">
+              فاتح
+            </option>
+            <option value="dark" className="text-black">
+              داكن
+            </option>
           </select>
         </div>
 

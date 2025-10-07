@@ -1,8 +1,4 @@
-import type {
-  ExamHeader,
-  LessonHeader,
-  Module,
-} from "@schemas/course";
+import type { ExamHeader, LessonHeader, Module } from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
 import clsx from "clsx";
 import { Heart, Lock } from "lucide-react";
@@ -79,7 +75,7 @@ export default function ModuleMenu({
             <div key={lesson.id} className="relative">
               <p
                 className={clsx(
-                  "border-primary flex items-center justify-between rounded-2xl border px-4 py-1",
+                  "border-primary dark:text-dark-text text-text flex items-center justify-between rounded-2xl border px-4 py-1",
                   {
                     "cursor-pointer": !isLessonLocked,
                     "cursor-not-allowed opacity-50": isLessonLocked,
@@ -118,7 +114,7 @@ export default function ModuleMenu({
             <p
               key={quiz.id}
               className={clsx(
-                "border-primary flex items-center justify-between rounded-2xl border px-4 py-1",
+                "border-primary text-text dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
                 {
                   "cursor-pointer": !isQuizLocked,
                   "cursor-not-allowed opacity-50": isQuizLocked,

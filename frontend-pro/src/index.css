@@ -4,7 +4,9 @@
 
 @theme {
   --color-primary: #ffb732;
+  --color-dark-primary: #ffb732;
   --color-text: #35389b;
+  --color-dark-text: #ffffff;
   --text-text-size: 22px;
 }
 

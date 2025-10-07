@@ -34,9 +34,9 @@ export default function Navbar() {
           <p className="text-xs">Learn Journey</p>
         </div>
       </header>
-      <nav className="mt-8 flex items-center justify-center gap-12 text-sm font-bold text-purple-900">
+      <nav className="text-text dark:text-dark-text mt-8 flex items-center justify-center gap-12 text-sm font-bold">
         <div className="flex items-center gap-1">
-          <Home className="h-5 w-5 text-black" />
+          <Home className="text-text dark:text-dark-text h-5 w-5" />
           <NavLink
             to="/"
             className={({ isActive }) =>
@@ -80,7 +80,7 @@ export default function Navbar() {
           خريطة المحتوى
         </NavLink>
         <NavLink
-          to="/course"
+          to="/course/1"
           className={({ isActive }) =>
             isActive
               ? "bg-primary rounded-md px-3 py-1 text-white"
