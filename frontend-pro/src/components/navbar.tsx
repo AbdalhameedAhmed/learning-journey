@@ -35,19 +35,17 @@ export default function Navbar() {
         </div>
       </header>
       <nav className="text-text dark:text-dark-text mt-8 flex items-center justify-center gap-12 text-sm font-bold">
-        <div className="flex items-center gap-1">
+        <NavLink
+          to="/home"
+          className={({ isActive }) =>
+            isActive
+              ? "bg-primary flex items-center gap-1 rounded-md px-3 py-1"
+              : "flex items-center gap-1 px-3 py-1 hover:text-orange-600"
+          }
+        >
           <Home className="text-text dark:text-dark-text h-5 w-5" />
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              isActive
-                ? "bg-primary rounded-md px-3 py-1 text-white"
-                : "hover:text-orange-600"
-            }
-          >
-            الصفحة الرئيسية
-          </NavLink>
-        </div>
+          الصفحة الرئيسية
+        </NavLink>
         <NavLink
           to="/instructions"
           className={({ isActive }) =>

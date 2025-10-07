@@ -300,7 +300,7 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
               صغير{" "}
             </option>
             <option value="22px" className="text-black">
-              عادي
+              متوسط
             </option>
             <option value="30px" className="text-black">
               كبير

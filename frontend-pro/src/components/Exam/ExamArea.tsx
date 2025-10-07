@@ -158,9 +158,11 @@ const ExamArea = ({
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
       {/* Questions Navigation Panel */}
       <div className="w-full">
-        <div className="rounded-lg bg-white p-4 shadow-lg">
+        <div className="rounded-lg bg-white p-4 shadow-lg dark:bg-slate-800">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-semibold">الأسئلة</h3>
+            <h3 className="text-text dark:text-dark-text text-lg font-semibold">
+              الأسئلة
+            </h3>
             <button
               onClick={() => setShowMarkedQuestions(!showMarkedQuestions)}
               className={`rounded-full px-3 py-1 text-sm ${
@@ -245,19 +247,21 @@ const ExamArea = ({
             <div className="flex items-center justify-center gap-6 text-sm">
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded border border-green-500 bg-green-100"></div>
-                <span>تم الإجابة</span>
+                <span className="text-text dark:text-dark-text">
+                  تم الإجابة
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded border border-gray-300 bg-gray-50"></div>
-                <span>لم يتم</span>
+                <span className="text-text dark:text-dark-text">لم يتم</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="border-primary bg-primary h-3 w-3 rounded border"></div>
-                <span>الحالي</span>
+                <span className="text-text dark:text-dark-text">الحالي</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-purple-500">★</span>
-                <span>موسوم</span>
+                <span className="text-text dark:text-dark-text">موسوم</span>
               </div>
             </div>
           </div>
@@ -266,7 +270,7 @@ const ExamArea = ({
 
       {/* Exam Content - Fixed Width */}
       <div className="w-full">
-        <div className="exam-area rounded-lg bg-white p-6 shadow-lg">
+        <div className="exam-area rounded-lg bg-white p-6 shadow-lg dark:bg-slate-800">
           {/* Progress Bar and Header */}
           <div className="mb-6">
             <div className="mb-2 flex items-center justify-between">
@@ -312,7 +316,7 @@ const ExamArea = ({
                     className={`font-inherit w-full rounded-full border-2 p-4 text-right text-lg transition-all duration-300 hover:cursor-pointer ${
                       findSelectedOptionId(currentQuestion.id) === option.id
                         ? "border-primary bg-primary -translate-x-4 transform text-white"
-                        : "border-gray-300 bg-gray-100 text-gray-800 hover:border-gray-400"
+                        : "dark:!text-dark-text border-gray-300 bg-gray-100 text-gray-800 hover:border-gray-400 dark:bg-slate-900"
                     } ${
                       !isPendingSubmittingExam &&
                       "hover:-translate-x-4 hover:transform"
