@@ -45,8 +45,7 @@ export default function ModuleMenu({
         onClick={handleHeaderClick}
         title={module.name}
         disabled={isModuleLocked}
-      >
-      </HeaderButton>
+      ></HeaderButton>
       <div
         className={clsx(
           "flex max-h-[0px] w-full flex-col gap-2 overflow-hidden px-6 transition-all duration-300",
@@ -69,7 +68,7 @@ export default function ModuleMenu({
             <p
               key={lesson.id}
               className={clsx(
-                "border-primary flex items-center justify-between rounded-2xl border px-4 py-1",
+                "border-primary dark:text-dark-text text-text flex items-center justify-between rounded-2xl border px-4 py-1",
                 {
                   "cursor-pointer": !isLessonLocked,
                   "cursor-not-allowed opacity-50": isLessonLocked,
@@ -98,7 +97,7 @@ export default function ModuleMenu({
             <p
               key={quiz.id}
               className={clsx(
-                "border-primary flex items-center justify-between rounded-2xl border px-4 py-1",
+                "border-primary text-text dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
                 {
                   "cursor-pointer": !isQuizLocked,
                   "cursor-not-allowed opacity-50": isQuizLocked,

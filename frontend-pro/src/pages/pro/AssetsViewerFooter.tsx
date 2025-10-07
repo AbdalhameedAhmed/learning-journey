@@ -192,9 +192,9 @@ export default function AssetsViewerFooter({
             }}
             className="cursor-pointer"
           >
-            <HardDriveDownload color="#3138A0" />
+            <HardDriveDownload className="text-text dark:text-dark-text" />
           </button>
-          <Heart color="#3138A0" />
+          <Heart className="text-text dark:text-dark-text" />
         </div>
       </div>
     </div>

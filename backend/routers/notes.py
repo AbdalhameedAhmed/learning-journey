@@ -1,7 +1,7 @@
 from db.database import get_supabase_client
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from schemas.notes import AddNote, NoteResponse
-from services.auth import get_current_user
+from services.auth import UserResponse, get_current_user
 from supabase import Client
 
 notes_router = APIRouter(
@@ -14,18 +14,20 @@ notes_router = APIRouter(
 async def get_lesson_notes(
     lesson_id: int,
     supabase: Client = Depends(get_supabase_client),
-    user: dict = Depends(get_current_user),
+    user: UserResponse = Depends(get_current_user),
 ):
     """
     Get notes for a specific lesson.
     """
+    print(user.id, "✨✨")
     query = (
         supabase.table("notes")
         .select("*")
         .eq("lesson_id", lesson_id)
-        .eq("user_id", user["id"])
+        .eq("user_id", user.id)
     )
     response = query.execute()
+    print(response, "🥳")
 
     return response.data
 
@@ -34,10 +36,10 @@ async def get_lesson_notes(
 async def add_note(
     note_data: AddNote,
     supabase: Client = Depends(get_supabase_client),
-    user: dict = Depends(get_current_user),
+    user: UserResponse = Depends(get_current_user),
 ):
     query = supabase.table("notes").insert(
-        {**note_data.model_dump(), "user_id": user.get("id")}
+        {**note_data.model_dump(), "user_id": user.id}
     )
     response = query.execute()
 

@@ -86,7 +86,7 @@ export default function CourseDetails() {
       <Navbar />
 
       <div className="flex w-full flex-1 items-center justify-center overflow-auto">
-        <div className="flex w-[300px] flex-col items-center gap-2 self-stretch overflow-auto rounded-tl-lg rounded-bl-lg bg-[#E9E9E9] p-4">
+        <div className="flex w-[300px] flex-col items-center gap-2 self-stretch overflow-auto rounded-tl-lg rounded-bl-lg bg-[#E9E9E9] p-4 dark:bg-slate-800">
           <div className="flex w-full flex-col gap-4 text-center">
             {/* Pre-exam */}
             <HeaderButton
@@ -130,7 +130,11 @@ export default function CourseDetails() {
             {activeExam && examType && (
               <ExamArea examId={activeExam?.id} examType={examType} />
             )}
-            {!activeLesson && !activeExam && <p>برجاء اختيار الدرس</p>}
+            {!activeLesson && !activeExam && (
+              <p className="text-text dark:text-dark-text">
+                برجاء اختيار الدرس
+              </p>
+            )}
           </div>
           {activeLesson && (
             <AssetsViewerFooter
