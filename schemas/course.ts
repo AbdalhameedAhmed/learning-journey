@@ -54,3 +54,9 @@ export interface AddNote {
   time: number;
   lesson_id: number;
 }
+
+export interface Favorite {
+  id: number;
+  user_id: number;
+  lesson_id: number;
+}

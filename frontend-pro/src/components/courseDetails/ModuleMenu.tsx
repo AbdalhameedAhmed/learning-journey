@@ -1,7 +1,12 @@
-import type { ExamHeader, LessonHeader, Module } from "@schemas/course";
+import type {
+  ExamHeader,
+  Favorite,
+  LessonHeader,
+  Module,
+} from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
 import clsx from "clsx";
-import { Lock } from "lucide-react";
+import { Heart, Lock } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
 import HeaderButton from "./HeaderButton";
 
@@ -15,6 +20,7 @@ type ModuleMenuProps = {
   setOpendModule: Dispatch<SetStateAction<number | undefined>>;
   nextAvailableModuleId?: number | null;
   nextAvailableExamId?: number | null;
+  favorites?: Favorite[];
 };
 
 export default function ModuleMenu({
@@ -26,11 +32,16 @@ export default function ModuleMenu({
   openedModule,
   setOpendModule,
   nextAvailableModuleId,
+  favorites,
 }: ModuleMenuProps) {
   const isModuleLocked =
     nextAvailableModuleId === null ||
     (typeof nextAvailableModuleId === "number" &&
       module.id > nextAvailableModuleId);
+
+  const isLessonFavorited = (lessonId: number) => {
+    return favorites?.some((fav) => fav.lesson_id === lessonId) || false;
+  };
 
   // Handler for the module title button
   const handleHeaderClick = () => {
@@ -45,8 +56,7 @@ export default function ModuleMenu({
         onClick={handleHeaderClick}
         title={module.name}
         disabled={isModuleLocked}
-      >
-      </HeaderButton>
+      ></HeaderButton>
       <div
         className={clsx(
           "flex max-h-[0px] w-full flex-col gap-2 overflow-hidden px-6 transition-all duration-300",
@@ -58,6 +68,7 @@ export default function ModuleMenu({
       >
         {module.lessons.map((lesson) => {
           const isLessonLocked = isModuleLocked;
+          const isFavorited = isLessonFavorited(lesson.id);
 
           const handleLessonClick = () => {
             if (!isLessonLocked) {
@@ -66,22 +77,32 @@ export default function ModuleMenu({
           };
 
           return (
-            <p
-              key={lesson.id}
-              className={clsx(
-                "border-primary flex items-center justify-between rounded-2xl border px-4 py-1",
-                {
-                  "cursor-pointer": !isLessonLocked,
-                  "cursor-not-allowed opacity-50": isLessonLocked,
-                  "bg-primary text-white":
-                    activeLesson?.id === lesson.id && !isLessonLocked,
-                },
+            <div key={lesson.id} className="relative">
+              <p
+                className={clsx(
+                  "border-primary flex items-center justify-between rounded-2xl border px-4 py-1",
+                  {
+                    "cursor-pointer": !isLessonLocked,
+                    "cursor-not-allowed opacity-50": isLessonLocked,
+                    "bg-primary text-white":
+                      activeLesson?.id === lesson.id && !isLessonLocked,
+                  },
+                )}
+                onClick={handleLessonClick}
+              >
+                <span className="flex-1 text-center">{lesson.name}</span>
+                {isLessonLocked && <Lock size={14} className="text-gray-400" />}
+              </p>
+
+              {isFavorited && (
+                <div className="absolute top-1/2 left-2 -translate-y-1/2">
+                  <Heart
+                    size={14}
+                    className="fill-red-500 text-red-500 drop-shadow-sm"
+                  />
+                </div>
               )}
-              onClick={handleLessonClick}
-            >
-              <span className="flex-1 text-center">{lesson.name}</span>
-              {isLessonLocked && <Lock size={14} className="text-gray-400" />}
-            </p>
+            </div>
           );
         })}
 

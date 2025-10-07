@@ -5,6 +5,8 @@ import ExamArea from "@/components/Exam/ExamArea";
 import Spinner from "@/components/Spinner";
 import { useGetMe } from "@/hooks/auth/useGetMe";
 import { useGetCourseDetails } from "@/hooks/courseContent/useGetCourseDetails";
+import { useGetFavorites } from "@/hooks/courseContent/useGetFavorites";
+import { useToggleFavorite } from "@/hooks/courseContent/useToggleFavorite";
 import type { ExamHeader, LessonHeader } from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
 import { Clipboard, HardDriveDownload, Heart } from "lucide-react";
@@ -21,6 +23,21 @@ export default function CourseDetails() {
   const [examType, setExamType] = useState<ExamType>();
   const { courseDetails, isPending } = useGetCourseDetails(courseId);
   const { me, isPending: isUserPending } = useGetMe();
+
+  const { favorites } = useGetFavorites();
+  const { toggleFavorite, isPending: isTogglePending } = useToggleFavorite();
+
+  const isCurrentLessonFavorited = activeLesson
+    ? favorites?.some((fav) => fav.lesson_id === activeLesson.id)
+    : false;
+
+  const handleToggleFavorite = () => {
+    if (!activeLesson) return;
+
+    console.log(activeLesson.id)
+
+    toggleFavorite(activeLesson.id);
+  };
 
   useEffect(() => {
     if (!courseDetails) return;
@@ -110,10 +127,11 @@ export default function CourseDetails() {
                   setOpendModule={setOpendModule}
                   nextAvailableModuleId={nextAvailableModuleId}
                   nextAvailableExamId={nextAvailableExamId}
+                  favorites={favorites}
                 />
               );
             })}
-            {/* Post-exam */}
+            {/* Final-exam */}
             <HeaderButton
               title="الامتحان البعدي"
               disabled={!isFinalExamAvailable && !courseCompleted}
@@ -143,7 +161,21 @@ export default function CourseDetails() {
                   <div className="flex items-center gap-2">
                     <HardDriveDownload color="#3138A0" />
                     <Clipboard color="#3138A0" />
-                    <Heart color="#3138A0" />
+                    <button
+                      onClick={handleToggleFavorite}
+                      disabled={isTogglePending}
+                      className={`rounded-full p-1 transition-colors ${
+                        isTogglePending
+                          ? "cursor-not-allowed opacity-50"
+                          : "hover:bg-gray-100"
+                      }`}
+                    >
+                      <Heart
+                        color={isCurrentLessonFavorited ? "#ff0000" : "#3138A0"}
+                        fill={isCurrentLessonFavorited ? "#ff0000" : "none"}
+                        className="transition-colors"
+                      />
+                    </button>
                   </div>
                 </div>
               </div>
