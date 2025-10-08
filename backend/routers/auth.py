@@ -1,24 +1,24 @@
-from typing import Annotated
+from typing import Annotated, Optional
 
 from controllers.auth import (
     login_user_controller,
     logout_user_controller,
     refresh_token_controller,
     register_user_controller,
+    update_profile_controller,
 )
 from db.database import get_supabase_client
-from fastapi import APIRouter, Depends, Header
+from fastapi import APIRouter, Depends, File, Form, Header, UploadFile
 from schemas.auth import (
     LoginResponse,
     RefreshTokenRequest,
     Token,
+    TokenData,
     UserLogin,
     UserRegister,
     UserResponse,
 )
-from services.auth import (
-    get_current_user,
-)
+from services.auth import get_current_user, get_token_data
 from supabase import Client
 
 auth_router = APIRouter(
@@ -63,3 +63,16 @@ async def logout_user(
     request_body: RefreshTokenRequest, supabase: Client = Depends(get_supabase_client)
 ):
     return await logout_user_controller(request_body.refresh_token, supabase)
+
+
+@auth_router.patch("/profile")
+async def update_profile(
+    first_name: Optional[str] = Form(None),
+    last_name: Optional[str] = Form(None),
+    profile_picture: Optional[UploadFile] = File(None),
+    current_user: TokenData = Depends(get_token_data),
+    supabase: Client = Depends(get_supabase_client),
+):
+    return await update_profile_controller(
+        first_name, last_name, profile_picture, current_user, supabase
+    )

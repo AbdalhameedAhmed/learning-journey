@@ -2,12 +2,14 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 import jwt
+from utils.cloudinary import upload_image
 from config import settings
-from fastapi import HTTPException, status
+from fastapi import HTTPException, UploadFile, status
 from schemas.auth import (
     LoginResponse,
     RefreshTokenRequest,
     Token,
+    TokenData,
     TokenType,
     UserLogin,
     UserRegister,
@@ -207,3 +209,88 @@ async def logout_user_controller(refresh_token: str, supabase: Client):
     supabase.table("sessions").delete().eq("refresh_token", refresh_token).execute()
 
     return {"message": "Logout successful"}
+
+
+async def update_profile_controller(
+    first_name: str | None,
+    last_name: str | None,
+    profile_picture: UploadFile | None,
+    current_user: TokenData,
+    supabase: Client,
+):
+    user_id = current_user.user_id
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="User not authenticated."
+        )
+
+    update_data = {}
+
+    # Update first_name if provided
+    if first_name is not None:
+        if not first_name.strip():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="First name cannot be empty.",
+            )
+        update_data["first_name"] = first_name.strip()
+
+    # Update last_name if provided
+    if last_name is not None:
+        if not last_name.strip():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Last name cannot be empty.",
+            )
+        update_data["last_name"] = last_name.strip()
+
+    # Handle profile picture upload to Cloudinary
+    if profile_picture:
+        try:
+
+            # Upload new image to Cloudinary
+            cloudinary_url = await upload_image(profile_picture)
+            update_data["profile_picture"] = cloudinary_url
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to process profile picture: {str(e)}",
+            )
+
+    # If no data to update, return error
+    if not update_data:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No valid data provided for update.",
+        )
+
+    try:
+        # Update user in Supabase
+        response = (
+            supabase.table("users").update(update_data).eq("id", user_id).execute()
+        )
+
+        if not response.data:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="User not found."
+            )
+
+        updated_user = response.data[0]
+        return {
+            "message": "Profile updated successfully",
+            "user": {
+                "id": updated_user["id"],
+                "first_name": updated_user["first_name"],
+                "last_name": updated_user["last_name"],
+                "profile_picture": updated_user.get("profile_picture"),
+            },
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to update profile in database: {str(e)}",
+        )
