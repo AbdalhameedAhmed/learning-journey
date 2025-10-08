@@ -46,6 +46,7 @@ class UserResponse(BaseModel):
     last_name: str
     role: UserRole
     current_progress_data: Dict[str, Any]
+    profile_image: str | None = None
 
 
 class LoginResponse(BaseModel):

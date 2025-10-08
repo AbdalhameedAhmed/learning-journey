@@ -11,6 +11,7 @@ export interface IUser {
   last_name: string;
   role: UserRole;
   current_progress_data: IProgress;
+  profile_picture: string | null;
 }
 
 export interface IProgress {

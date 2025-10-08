@@ -60,6 +60,6 @@ async def get_current_user_info(current_user: dict = Depends(get_current_user)):
 
 @auth_router.post("/logout")
 async def logout_user(
-    refresh_token: str, supabase: Client = Depends(get_supabase_client)
+    request_body: RefreshTokenRequest, supabase: Client = Depends(get_supabase_client)
 ):
-    return await logout_user_controller(refresh_token, supabase)
+    return await logout_user_controller(request_body.refresh_token, supabase)
