@@ -22,7 +22,7 @@ export default function LoginPage() {
   useEffect(() => {
     const savedMode = localStorage.getItem("darkMode");
     const systemPrefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
+      "(prefers-color-scheme: dark)",
     ).matches;
 
     if (savedMode !== null) {
@@ -86,7 +86,9 @@ export default function LoginPage() {
           <button
             onClick={toggleDarkMode}
             className="flex items-center justify-center rounded-full border-2 border-gray-800 bg-white p-2 transition-colors duration-200 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
-            aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={
+              darkMode ? "Switch to light mode" : "Switch to dark mode"
+            }
           >
             {darkMode ? (
               <Sun size={20} className="text-yellow-500" />
@@ -111,16 +113,16 @@ export default function LoginPage() {
         <form className="space-y-6 sm:space-y-6" onSubmit={handleSubmit}>
           {/* Email input */}
           <div className="relative">
-            <div className="bg-primary dark:bg-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
-              <FaUser className="dark:text-text ml-2 text-black sm:ml-3" />
+            <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
+              <FaUser className="dark:text-dark-text text-text ml-2 sm:ml-3" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 bg-transparent text-sm text-black outline-none sm:text-lg dark:text-white"
+                className="text-text flex-1 bg-transparent text-sm outline-none sm:text-lg dark:text-white"
               />
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-blacks ${
+                className={`absolute ${labelRight} dark:text-dark-text text-text pointer-events-none transition-all duration-300 ${
                   email
                     ? "-top-2 text-xs sm:text-sm"
                     : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
@@ -138,8 +140,8 @@ export default function LoginPage() {
 
           {/* Password input */}
           <div className="relative">
-            <div className="bg-primary dark:bg-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
-              <FaLock className="dark:text-text ml-2 text-black sm:ml-3" />
+            <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
+              <FaLock className="dark:text-dark-text ml-2 text-black sm:ml-3" />
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}

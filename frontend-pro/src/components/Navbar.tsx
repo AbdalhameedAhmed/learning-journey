@@ -19,7 +19,7 @@ export default function Navbar() {
 
   return (
     <div className="w-full">
-      <header className="bg-primary relative flex items-center justify-between px-8 py-2 text-white">
+      <header className="bg-primary dark:bg-dark-primary relative flex items-center justify-between px-8 py-2 text-white">
         <form
           onSubmit={handleSearch}
           className="absolute left-1/2 flex -translate-x-1/2 transform items-center overflow-hidden rounded-2xl border-2 border-white bg-white shadow-xl"
@@ -31,7 +31,7 @@ export default function Navbar() {
             onChange={(e) => setSearch(e.target.value)}
             className="px-3 py-1 text-black outline-none"
           />
-          <button type="submit" className="bg-primary p-2">
+          <button type="submit" className="bg-primary dark:bg-dark-primary p-2">
             <Search className="h-4 w-4 text-white" />
           </button>
         </form>
@@ -67,7 +67,7 @@ export default function Navbar() {
           to="/home"
           className={({ isActive }) =>
             isActive
-              ? "bg-primary flex items-center justify-center gap-2 rounded-md px-3 py-1"
+              ? "bg-primary dark:bg-dark-primary flex items-center justify-center gap-2 rounded-md px-3 py-1"
               : "flex items-center gap-1 px-3 py-1"
           }
         >
@@ -77,7 +77,9 @@ export default function Navbar() {
         <NavLink
           to="/instructions"
           className={({ isActive }) =>
-            isActive ? "bg-primary rounded-md px-3 py-1 text-white" : ""
+            isActive
+              ? "bg-primary dark:bg-dark-primary rounded-md px-3 py-1 text-white"
+              : ""
           }
         >
           <span>التعليمات</span>
@@ -85,7 +87,9 @@ export default function Navbar() {
         <NavLink
           to="/goals"
           className={({ isActive }) =>
-            isActive ? "bg-primary rounded-md px-3 py-1 text-white" : ""
+            isActive
+              ? "bg-primary dark:bg-dark-primary rounded-md px-3 py-1 text-white"
+              : ""
           }
         >
           <span>الأهداف</span>
@@ -94,7 +98,9 @@ export default function Navbar() {
         <NavLink
           to="/content-map"
           className={({ isActive }) =>
-            isActive ? "bg-primary rounded-md px-3 py-1 text-white" : ""
+            isActive
+              ? "bg-primary dark:bg-dark-primary rounded-md px-3 py-1 text-white"
+              : ""
           }
         >
           <span>خريطة المحتوى</span>
@@ -102,7 +108,9 @@ export default function Navbar() {
         <NavLink
           to="/course/1"
           className={({ isActive }) =>
-            isActive ? "bg-primary rounded-md px-3 py-1 text-white" : ""
+            isActive
+              ? "bg-primary dark:bg-dark-primary rounded-md px-3 py-1 text-white"
+              : ""
           }
         >
           <span>الكورس</span>

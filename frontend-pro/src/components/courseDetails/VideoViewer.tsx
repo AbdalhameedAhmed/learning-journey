@@ -141,7 +141,7 @@ export default function VideoViewer({
           className="relative h-2 w-full cursor-pointer rounded-lg bg-gray-500"
         >
           <div
-            className="bg-primary h-full rounded-lg"
+            className="bg-primary dark:bg-dark-primary h-full rounded-lg"
             style={{ width: `${progress}%` }}
           ></div>
           {notes?.map((note) => {

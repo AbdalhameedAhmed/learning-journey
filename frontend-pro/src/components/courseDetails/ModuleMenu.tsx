@@ -75,11 +75,11 @@ export default function ModuleMenu({
             <div key={lesson.id} className="relative">
               <p
                 className={clsx(
-                  "border-primary dark:text-dark-text text-text-tiny text-text flex items-center justify-between rounded-2xl border px-4 py-1",
+                  "border-primary dark:border-dark-primary dark:text-dark-text text-text-tiny text-text dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
                   {
                     "cursor-pointer": !isLessonLocked,
                     "cursor-not-allowed opacity-50": isLessonLocked,
-                    "bg-primary text-white":
+                    "bg-primary dark:bg-dark-primary text-white":
                       activeLesson?.id === lesson.id && !isLessonLocked,
                   },
                 )}
@@ -114,11 +114,11 @@ export default function ModuleMenu({
             <p
               key={quiz.id}
               className={clsx(
-                "border-primary text-text text-text-tiny dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
+                "border-primary dark:border-dark-primary text-textdark:text-dark-text text-text-tiny dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
                 {
                   "cursor-pointer": !isQuizLocked,
                   "cursor-not-allowed opacity-50": isQuizLocked,
-                  "bg-primary text-white":
+                  "bg-primary dark:bg-dark-primary text-white":
                     activeExam?.id === quiz.id && !isQuizLocked,
                 },
               )}

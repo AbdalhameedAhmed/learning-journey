@@ -148,7 +148,7 @@ const ProfilePage = () => {
                         />
                         <label
                           htmlFor="profile_picture"
-                          className="border-primary/30 bg-primary/5 hover:bg-primary/10 focus:ring-primary focus:border-primary text-text flex cursor-pointer items-center justify-between gap-3 rounded-md border px-4 py-3 shadow-sm transition-all duration-200 hover:shadow-md focus:ring-2 focus:outline-none"
+                          className="border-primary/30 dark:border-dark-primary/30 bg-primary/5 dark:bg-dark-primary/5 hover:bg-primary/10 dark:hover:bg-dark-primary/10 focus:ring-primary focus:border-primary text-text flex cursor-pointer items-center justify-between gap-3 rounded-md border px-4 py-3 shadow-sm transition-all duration-200 hover:shadow-md focus:ring-2 focus:outline-none"
                         >
                           <div className="flex items-center gap-2">
                             <svg
@@ -170,7 +170,7 @@ const ProfilePage = () => {
                                 : "لم يتم اختيار صورة"}
                             </span>
                           </div>
-                          <span className="bg-primary hover:bg-dark-primary rounded-md px-4 py-2 font-medium text-white transition-colors duration-200">
+                          <span className="bg-primary dark:bg-dark-primary rounded-md px-4 py-2 font-medium text-white transition-colors duration-200">
                             اختر صورة
                           </span>
                         </label>
@@ -185,7 +185,7 @@ const ProfilePage = () => {
                       {value &&
                         typeof value === "string" &&
                         value.length > 0 && (
-                          <div className="bg-primary/5 border-primary/20 flex flex-col items-center space-y-3 rounded-lg border p-4">
+                          <div className="bg-primary/5 dark:bg-dark-primary/5 border-primary/20 dark:border-dark-primary/20 flex flex-col items-center space-y-3 rounded-lg border p-4">
                             <p className="text-text text-sm font-medium">
                               الصورة الحالية:
                             </p>
@@ -199,7 +199,7 @@ const ProfilePage = () => {
 
                       {/* New Image Preview */}
                       {value instanceof File && (
-                        <div className="bg-primary/10 border-primary/30 flex flex-col items-center space-y-3 rounded-lg border p-4">
+                        <div className="bg-primary/10 dark:bg-dark-primary/10 border-primary/30 dark:border-dark-primary/30 flex flex-col items-center space-y-3 rounded-lg border p-4">
                           <p className="text-text text-sm font-medium">
                             معاينة الصورة المحددة:
                           </p>
@@ -221,7 +221,7 @@ const ProfilePage = () => {
                   type="submit"
                   disabled={isSubmitDisabled}
                   className={clsx(
-                    "bg-primary hover:bg-dark-primary focus:ring-primary text-text-normal flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2 font-medium text-white transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-400",
+                    "bg-primary dark:bg-dark-primary focus:ring-primary text-text-normal flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2 font-medium text-white transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-400",
                     {
                       "cursor-not-allowed opacity-50": isSubmitDisabled,
                     },
@@ -238,7 +238,7 @@ const ProfilePage = () => {
                   type="button"
                   onClick={() => form.reset()}
                   disabled={submitting || pristine}
-                  className="border-primary/30 text-text hover:bg-primary/5 focus:ring-primary text-text-normal rounded-md border px-4 py-2 font-medium transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400"
+                  className="border-primary/30 dark:border-dark-primary/30 text-text hover:bg-primary/5 dark:hover:bg-dark-primary/5 focus:ring-primary dark:focus:ring-dark-primary text-text-normal rounded-md border px-4 py-2 font-medium transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400"
                 >
                   تراجع
                 </button>

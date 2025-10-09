@@ -8,7 +8,7 @@ const SubmissionResultView = ({ result }: { result: ExamSubmissionResult }) => {
   const statusText = result.passed ? "ناجح" : "راسب";
 
   return (
-    <div className="exam-result text-text mx-auto my-12 w-full max-w-xl rounded-xl bg-white p-8 text-center shadow-2xl dark:bg-slate-800 dark:text-white">
+    <div className="exam-result text-text dark:text-dark-text mx-auto my-12 w-full max-w-xl rounded-xl bg-white p-8 text-center shadow-2xl dark:bg-slate-800">
       <h2 className="text-text-normal mb-6 font-extrabold">
         تم تسليم الامتحان
       </h2>

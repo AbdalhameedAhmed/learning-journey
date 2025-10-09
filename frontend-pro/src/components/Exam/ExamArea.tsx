@@ -229,7 +229,7 @@ const ExamArea = ({
                     onClick={() => goToQuestion(index)}
                     className={`relative flex h-10 w-10 items-center justify-center rounded-lg border transition-all ${
                       isCurrent
-                        ? "border-primary bg-primary text-white"
+                        ? "border-primary dark:border-dark-primary bg-primary dark:bg-dark-primary text-white"
                         : status === "answered"
                           ? "border-green-500 bg-green-100"
                           : "border-gray-300 bg-gray-50"
@@ -265,7 +265,7 @@ const ExamArea = ({
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="border-primary bg-primary h-[var(--text-text-tiny)] w-[var(--text-text-tiny)] rounded border"></div>
+                <div className="border-primary bg-primary dark:bg-dark-primary dark:border-dark-primary h-[var(--text-text-tiny)] w-[var(--text-text-tiny)] rounded border"></div>
                 <span className="text-text dark:text-dark-text text-text-tiny">
                   الحالي
                 </span>
@@ -334,7 +334,7 @@ const ExamArea = ({
                     disabled={isPendingSubmittingExam}
                     className={`font-inherit text-text-small w-full rounded-full border-2 p-4 text-right transition-all duration-300 hover:cursor-pointer ${
                       findSelectedOptionId(currentQuestion.id) === option.id
-                        ? "border-primary bg-primary -translate-x-4 transform text-white"
+                        ? "border-primary bg-primary dark:bg-dark-primary dark:border-dark-primary -translate-x-4 transform text-white"
                         : "dark:!text-dark-text border-gray-300 bg-gray-100 text-gray-800 hover:border-gray-400 dark:bg-slate-900"
                     } ${
                       !isPendingSubmittingExam &&
@@ -367,7 +367,7 @@ const ExamArea = ({
                 <button
                   onClick={handleExamSubmit}
                   disabled={!allQuestionsAnswered || isPendingSubmittingExam}
-                  className="font-inherit border-primary bg-primary hover:bg-primary/90 text-text-small cursor-pointer rounded-full border-2 px-6 py-2 text-white transition-all duration-300 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300"
+                  className="font-inherit border-primary dark:border-dark-primary bg-primary dark:bg-dark-primary dark:hover:bg-dark-primary/90 hover:bg-primary/90 text-text-small cursor-pointer rounded-full border-2 px-6 py-2 text-white transition-all duration-300 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300"
                 >
                   {isPendingSubmittingExam
                     ? "جاري التسليم..."
@@ -377,7 +377,7 @@ const ExamArea = ({
                 <button
                   onClick={handleNext}
                   disabled={isPendingSubmittingExam}
-                  className="font-inherit border-primary bg-primary hover:bg-primary/90 text-text-small cursor-pointer rounded-full border-2 px-6 py-2 text-white transition-all duration-300 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300"
+                  className="font-inherit border-primary dark:border-dark-primary bg-primary dark:bg-dark-primary dark:hover:bg-dark-primary/90 hover:bg-primary/90 text-text-small cursor-pointer rounded-full border-2 px-6 py-2 text-white transition-all duration-300 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300"
                 >
                   التالي
                 </button>

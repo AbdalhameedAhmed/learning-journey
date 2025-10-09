@@ -181,7 +181,7 @@ export default function AssetsViewerFooter({
   return (
     <div className="flex w-full max-w-[800px] items-center justify-between">
       <button
-        className="bg-primary text-text-small text-text cursor-pointer rounded-lg px-4 py-1 disabled:cursor-not-allowed disabled:opacity-50"
+        className="bg-primary dark:bg-dark-primary text-text-small text-text dark:text-dark-text cursor-pointer rounded-lg px-4 py-1 disabled:cursor-not-allowed disabled:opacity-50"
         disabled={!getNextModuleChild()}
         onClick={goToNextModuleChild}
       >
@@ -189,7 +189,7 @@ export default function AssetsViewerFooter({
       </button>
       <div className="flex items-center justify-center gap-6">
         <button
-          className="bg-primary text-text-small text-text cursor-pointer rounded-lg px-4 py-1 disabled:cursor-not-allowed disabled:opacity-50"
+          className="bg-primary dark:bg-dark-primary text-text-small text-text dark:text-dark-text cursor-pointer rounded-lg px-4 py-1 disabled:cursor-not-allowed disabled:opacity-50"
           disabled={!getPrevModuleChild()}
           onClick={goToPrevModuleChild}
         >

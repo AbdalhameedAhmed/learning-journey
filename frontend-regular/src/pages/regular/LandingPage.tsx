@@ -155,7 +155,7 @@ const LandingPage = () => {
         ))}
       </div>
 
-      <header className="bg-primary relative z-10 flex max-h-[76px] min-h-[76px] items-center justify-between px-4 py-4 sm:px-6 dark:bg-amber-600">
+      <header className="bg-primary dark:bg-dark-primary relative z-10 flex max-h-[76px] min-h-[76px] items-center justify-between px-4 py-4 sm:px-6 dark:bg-amber-600">
         <div className="flex items-center gap-4">
           {/* Dark Mode Toggle Button */}
           <button
@@ -232,7 +232,7 @@ const LandingPage = () => {
                   </div>
 
                   {/* Join Button */}
-                  <button className="bg-primary relative z-10 transform rounded-xl px-6 py-3 font-semibold text-gray-800 shadow-lg transition-all duration-300 hover:scale-105 sm:px-8 sm:py-4 dark:bg-amber-600 dark:text-gray-900">
+                  <button className="bg-primary dark:bg-dark-primary relative z-10 transform rounded-xl px-6 py-3 font-semibold text-gray-800 shadow-lg transition-all duration-300 hover:scale-105 sm:px-8 sm:py-4 dark:bg-amber-600 dark:text-gray-900">
                     انضم إلينا
                   </button>
                 </div>

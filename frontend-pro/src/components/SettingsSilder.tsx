@@ -117,6 +117,8 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
     if (!isInitialized) return;
 
     const newColor = event.target.value;
+    console.log(theme);
+
     if (theme === "dark") {
       setDarkPrimaryColor(newColor);
       document.documentElement.style.setProperty(

@@ -68,8 +68,8 @@ export default function LoginPage() {
         <form className="space-y-6 sm:space-y-6" onSubmit={handleSubmit}>
           {/* Email input */}
           <div className="relative">
-            <div className="bg-primary dark:bg-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
-              <FaUser className="dark:text-text ml-2 text-black sm:ml-3" />
+            <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
+              <FaUser className="text-text dark:text-dark-text ml-2 sm:ml-3" />
               <input
                 type="email"
                 value={email}
@@ -95,8 +95,8 @@ export default function LoginPage() {
 
           {/* Password input */}
           <div className="relative">
-            <div className="bg-primary dark:bg-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
-              <FaLock className="dark:text-text ml-2 text-black sm:ml-3" />
+            <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
+              <FaLock className="dark:text-dark-text text-text ml-2 sm:ml-3" />
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
