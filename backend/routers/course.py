@@ -1,4 +1,7 @@
-from controllers.course import get_course_details_controller, get_lesson_details_controller
+from controllers.course import (
+    get_course_details_controller,
+    get_lesson_details_controller,
+)
 from db.database import get_supabase_client
 from fastapi import APIRouter, Depends
 from schemas.auth import UserResponse

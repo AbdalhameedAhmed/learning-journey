@@ -134,7 +134,11 @@ async def get_current_user(
 async def validate_student_user(
     token_data=Depends(get_token_data),
 ):
-    if token_data.role != UserRole.regular and token_data.role != UserRole.pro:
+    if (
+        token_data.role != UserRole.regular
+        and token_data.role != UserRole.pro
+        and token_data.role != UserRole.admin
+    ):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have permission to perform this action.",
