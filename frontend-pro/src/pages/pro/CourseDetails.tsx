@@ -9,7 +9,7 @@ import type { ExamHeader, LessonHeader } from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import AssetsViewerFooter from "./AssetsViewerFooter";
+import AssetsViewerFooter from "../../components/courseDetails/AssetsViewerFooter";
 
 export default function CourseDetails() {
   const courseId = useParams().courseId;
@@ -124,7 +124,9 @@ export default function CourseDetails() {
             <ExamArea examId={activeExam?.id} examType={examType} />
           )}
           {!activeLesson && !activeExam && (
-            <p className="text-text dark:text-dark-text">برجاء اختيار الدرس</p>
+            <p className="text-text dark:text-dark-text text-text-normal">
+              برجاء اختيار الدرس
+            </p>
           )}
         </div>
         {activeLesson && (

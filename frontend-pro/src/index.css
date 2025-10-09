@@ -7,7 +7,17 @@
   --color-dark-primary: #ffb732;
   --color-text: #35389b;
   --color-dark-text: #ffffff;
-  --text-text-size: 22px;
+
+  --text-size-small: 22px;
+  --text-size-medium: 26px;
+  --text-size-large: 32px;
+
+  --text-small-ratio: 0.8;
+  --text-tiny-ratio: 0.7;
+
+  --text-text-normal: var(--text-size-medium);
+  --text-text-small: calc(var(--text-text-normal) * var(--text-small-ratio));
+  --text-text-tiny: calc(var(--text-text-normal) * var(--text-tiny-ratio));
 }
 
 ::-webkit-scrollbar {

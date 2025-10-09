@@ -14,10 +14,10 @@ function formatTime(seconds: number) {
 export default function NoteItem({ note, onNoteClick }: NoteItemProps) {
   return (
     <div className="rounded bg-gray-700 p-2">
-      <p className="text-sm">{note.note}</p>
+      <p className="text-text-small">{note.note}</p>
       <button
         onClick={() => onNoteClick(note.time)}
-        className="text-primary text-xs hover:underline"
+        className="text-primary text-text-tiny hover:underline"
       >
         {formatTime(note.time)}
       </button>

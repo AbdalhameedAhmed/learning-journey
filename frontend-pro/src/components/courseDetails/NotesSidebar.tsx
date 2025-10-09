@@ -73,7 +73,7 @@ export default function NotesSidebar({
       <h3 className="mb-4 text-lg font-bold">الملاحظات</h3>
       <div className="mb-4">
         <input
-          className="w-full rounded bg-gray-700 p-2 text-white"
+          className="text-text-tiny w-full rounded bg-gray-700 p-2 text-white"
           value={newNote}
           onChange={(e) => setNewNote(e.target.value)}
           placeholder="اضف ملاحظة جديدة"
@@ -82,13 +82,13 @@ export default function NotesSidebar({
           type="text"
           value={noteTime}
           onChange={(e) => setNoteTime(e.target.value)}
-          className="mt-2 w-full rounded bg-gray-700 p-2 text-white"
+          className="text-text-tiny mt-2 w-full rounded bg-gray-700 p-2 text-white"
           placeholder="Time (mm:ss)"
         />
         {timeError && <p className="mt-1 text-xs text-red-500">{timeError}</p>}
         <button
           onClick={handleAddNote}
-          className="bg-primary mt-2 w-full rounded px-4 py-2 text-white"
+          className="bg-primary text-text-small mt-2 w-full rounded px-4 py-2 text-white"
         >
           اضف ملاحظة
         </button>

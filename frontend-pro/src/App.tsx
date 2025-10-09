@@ -3,17 +3,13 @@ import RoleBasedRoute from "@/components/authorization/RoleBasedRoute";
 import DashboardPage from "@/pages/admin/DashboardPage";
 import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
-import ContentMap from "@/pages/ContentMap";
-import Course from "@/pages/Course";
-import Goals from "@/pages/Goals";
-import Instructions from "@/pages/Instructions";
 import LandingPage from "@/pages/LandingPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import ContentPage from "@/pages/pro/ContentPage";
 import CourseDetails from "@/pages/pro/CourseDetails";
 import GoalsPage from "@/pages/pro/GoalsPage";
 import HomePage from "@/pages/pro/HomePage";
-import InfoPage from "@/pages/pro/InfoPage";
+import InstructionsPage from "@/pages/pro/InstructionsPage";
 import ProfilePage from "@/pages/pro/ProfilePage";
 import UnauthorizedPage from "@/pages/UnauthorizedPage";
 import { UserRole } from "@schemas/User";
@@ -38,6 +34,9 @@ const App = () => {
             <Route path="/home" element={<HomePage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/course/:courseId" element={<CourseDetails />} />
+            <Route path="/instructions" element={<InstructionsPage />} />
+            <Route path="/goals" element={<GoalsPage />} />
+            <Route path="/content-map" element={<ContentPage />} />
           </Route>
         </Route>
 
@@ -51,13 +50,6 @@ const App = () => {
 
         {/* Notfound route */}
         <Route path="*" element={<NotFoundPage />} />
-        <Route path="/instructions" element={<Instructions />} />
-        <Route path="/goals" element={<Goals />} />
-        <Route path="/content-map" element={<ContentMap />} />
-        <Route path="/course" element={<Course />} />
-        <Route path="/info" element={<InfoPage />} />
-        <Route path="/goals" element={<GoalsPage />} />
-        <Route path="/content" element={<ContentPage />} />
       </Routes>
 
       <ToastContainer

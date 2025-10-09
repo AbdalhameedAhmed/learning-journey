@@ -50,8 +50,8 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="border-primary/20 mx-auto mt-8 w-2xl rounded-lg border bg-white p-6 shadow-md">
-      <h1 className="text-text mb-6 text-2xl font-bold">
+    <div className="border-primary/20 mx-auto mt-8 w-2xl rounded-lg border bg-white p-6 shadow-md dark:bg-slate-800">
+      <h1 className="text-text text-text-normal mb-6 text-2xl font-bold">
         الملف الشخصي للمستخدم
       </h1>
 
@@ -74,12 +74,12 @@ const ProfilePage = () => {
             submitting || isUpdatePending || pristine || hasValidationErrors;
 
           return (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="text-text-small space-y-6">
               {/* First Name Field */}
               <div className="space-y-2">
                 <label
                   htmlFor="first_name"
-                  className="text-text block text-sm font-medium"
+                  className="text-text text-text-small block font-medium"
                 >
                   الاسم الاول
                 </label>
@@ -87,7 +87,7 @@ const ProfilePage = () => {
                   name="first_name"
                   component="input"
                   type="text"
-                  className="border-primary/30 focus:ring-primary focus:border-primary text-text w-full rounded-md border px-3 py-2 text-[22px] shadow-sm focus:ring-2 focus:outline-none"
+                  className="border-primary/30 focus:ring-primary focus:border-primary text-text w-full rounded-md border px-3 py-2 shadow-sm focus:ring-2 focus:outline-none"
                 />
                 <Field
                   name="first_name"
@@ -104,7 +104,7 @@ const ProfilePage = () => {
               <div className="space-y-2">
                 <label
                   htmlFor="last_name"
-                  className="text-text block text-sm font-medium"
+                  className="text-text block font-medium"
                 >
                   الاسم الاخير
                 </label>
@@ -129,7 +129,7 @@ const ProfilePage = () => {
               <div className="space-y-2">
                 <label
                   htmlFor="profile_picture"
-                  className="text-text block text-sm font-medium"
+                  className="text-text block font-medium"
                 >
                   الصورة الشخصية
                 </label>
@@ -164,13 +164,13 @@ const ProfilePage = () => {
                                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                               />
                             </svg>
-                            <span className="text-text text-sm font-medium">
+                            <span className="text-text text-base font-medium">
                               {value instanceof File
                                 ? value.name
                                 : "لم يتم اختيار صورة"}
                             </span>
                           </div>
-                          <span className="bg-primary hover:bg-dark-primary rounded-md px-4 py-2 text-sm font-medium text-white transition-colors duration-200">
+                          <span className="bg-primary hover:bg-dark-primary rounded-md px-4 py-2 font-medium text-white transition-colors duration-200">
                             اختر صورة
                           </span>
                         </label>
@@ -221,7 +221,7 @@ const ProfilePage = () => {
                   type="submit"
                   disabled={isSubmitDisabled}
                   className={clsx(
-                    "bg-primary hover:bg-dark-primary focus:ring-primary flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2 text-[22px] font-medium text-white transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-400",
+                    "bg-primary hover:bg-dark-primary focus:ring-primary text-text-normal flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2 font-medium text-white transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-400",
                     {
                       "cursor-not-allowed opacity-50": isSubmitDisabled,
                     },
@@ -238,7 +238,7 @@ const ProfilePage = () => {
                   type="button"
                   onClick={() => form.reset()}
                   disabled={submitting || pristine}
-                  className="border-primary/30 text-text hover:bg-primary/5 focus:ring-primary rounded-md border px-4 py-2 text-[22px] font-medium transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400"
+                  className="border-primary/30 text-text hover:bg-primary/5 focus:ring-primary text-text-normal rounded-md border px-4 py-2 font-medium transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400"
                 >
                   تراجع
                 </button>

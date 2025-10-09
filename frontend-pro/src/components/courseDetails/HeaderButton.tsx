@@ -23,9 +23,9 @@ const HeaderButton = ({
   return (
     <p
       className={clsx(
-        "flex w-full items-center justify-center gap-2 rounded-2xl p-2 text-center font-bold transition-opacity select-none",
+        "text-text-small flex w-full items-center justify-center gap-2 rounded-2xl p-2 text-center font-semibold transition-opacity select-none",
         {
-          "bg-primary cursor-pointer text-white hover:opacity-90": !disabled,
+          "bg-primary text-text cursor-pointer hover:opacity-90": !disabled,
           "cursor-not-allowed bg-gray-400 text-gray-100": disabled,
         },
       )}

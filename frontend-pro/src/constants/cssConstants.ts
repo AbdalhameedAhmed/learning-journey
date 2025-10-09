@@ -1,3 +1,5 @@
+import type { FontSize } from "@schemas/Settings";
+
 export const originalCssValues = {
   primary:
     getComputedStyle(document.documentElement)
@@ -15,9 +17,14 @@ export const originalCssValues = {
     getComputedStyle(document.documentElement)
       .getPropertyValue("--color-dark-text")
       .trim() || "#ffffff",
-  fontSize:
-    getComputedStyle(document.documentElement)
-      .getPropertyValue("--text-text-size")
-      .trim() || "22px",
+  fontSize: (getComputedStyle(document.documentElement)
+    .getPropertyValue("--text-text-normal")
+    .trim() || "medium") as FontSize,
   theme: "light" as "light" | "dark",
+};
+
+export const sizeValues = {
+  small: "22px",
+  medium: "26px",
+  large: "32px",
 };

@@ -7,6 +7,7 @@ import type {
   ExamSubmissionResult,
   ExamType,
 } from "@schemas/Exam";
+import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import Spinner from "../Spinner";
 import SubmissionResultView from "./SubmissionResultView";
@@ -62,13 +63,17 @@ const ExamArea = ({
 
   if (isErrorResponse(exam)) {
     return (
-      <div className="p-8 text-center text-xl text-red-600">{exam.error}</div>
+      <div className="text-text-normal p-8 text-center text-red-600">
+        {exam.error}
+      </div>
     );
   }
 
   if (!isExamResponse(exam)) {
     return (
-      <div className="p-8 text-center text-xl">لم يتم العثور على الامتحان</div>
+      <div className="text-text-normal p-8 text-center">
+        لم يتم العثور على الامتحان
+      </div>
     );
   }
 
@@ -160,12 +165,12 @@ const ExamArea = ({
       <div className="w-full">
         <div className="rounded-lg bg-white p-4 shadow-lg dark:bg-slate-800">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-text dark:text-dark-text text-lg font-semibold">
+            <h3 className="text-text dark:text-dark-text text-text-tiny font-semibold">
               الأسئلة
             </h3>
             <button
               onClick={() => setShowMarkedQuestions(!showMarkedQuestions)}
-              className={`rounded-full px-3 py-1 text-sm ${
+              className={`rounded-full px-3 py-1 ${
                 showMarkedQuestions
                   ? "bg-purple-100 text-purple-800"
                   : "bg-gray-100 text-gray-800"
@@ -193,7 +198,7 @@ const ExamArea = ({
                       <button
                         key={questionId}
                         onClick={() => goToMarkedQuestion(questionId)}
-                        className={`flex items-center gap-2 rounded-lg border p-2 transition-all ${
+                        className={`text-text-tiny flex items-center gap-2 rounded-lg border p-2 transition-all ${
                           currentQuestion.id === questionId
                             ? "border-primary bg-blue-50"
                             : "border-gray-200 hover:border-gray-300"
@@ -231,7 +236,9 @@ const ExamArea = ({
                     } ${isMarked ? "ring-2 ring-violet-400" : ""}`}
                     title={`سؤال ${index + 1}${isMarked ? " (موسوم)" : ""}`}
                   >
-                    <span className="text-sm font-medium">{index + 1}</span>
+                    <span className="text-text-tiny font-medium">
+                      {index + 1}
+                    </span>
                     {isMarked && (
                       <span className="absolute -top-1 -right-1 text-xs text-purple-500">
                         ★
@@ -246,29 +253,38 @@ const ExamArea = ({
           <div className="mt-4 border-t pt-4">
             <div className="flex items-center justify-center gap-6 text-sm">
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded border border-green-500 bg-green-100"></div>
-                <span className="text-text dark:text-dark-text">
+                <div className="h-[var(--text-text-tiny)] w-[var(--text-text-tiny)] rounded border border-green-500 bg-green-100"></div>
+                <span className="text-text dark:text-dark-text text-text-tiny">
                   تم الإجابة
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded border border-gray-300 bg-gray-50"></div>
-                <span className="text-text dark:text-dark-text">لم يتم</span>
+                <div className="h-[var(--text-text-tiny)] w-[var(--text-text-tiny)] rounded border border-gray-300 bg-gray-50"></div>
+                <span className="text-text dark:text-dark-text text-text-tiny">
+                  لم يتم
+                </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="border-primary bg-primary h-3 w-3 rounded border"></div>
-                <span className="text-text dark:text-dark-text">الحالي</span>
+                <div className="border-primary bg-primary h-[var(--text-text-tiny)] w-[var(--text-text-tiny)] rounded border"></div>
+                <span className="text-text dark:text-dark-text text-text-tiny">
+                  الحالي
+                </span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-purple-500">★</span>
-                <span className="text-text dark:text-dark-text">موسوم</span>
+              <div className="flex items-center gap-1">
+                <Star
+                  className="h-[var(--text-text-tiny)] w-[var(--text-text-tiny)] text-purple-500"
+                  fill="currentColor"
+                />
+                <span className="text-text dark:text-dark-text text-text-tiny">
+                  موسوم
+                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Exam Content - Fixed Width */}
+      {/* Exam Content */}
       <div className="w-full">
         <div className="exam-area rounded-lg bg-white p-6 shadow-lg dark:bg-slate-800">
           {/* Progress Bar and Header */}
@@ -288,9 +304,12 @@ const ExamArea = ({
                       : "وسم السؤال"
                   }
                 >
-                  <span className="text-xl">★</span>
+                  <Star
+                    className="h-[var(--text-text-tiny)] w-[var(--text-text-tiny)]"
+                    fill="currentColor"
+                  />
                 </button>
-                <span className="text-sm text-gray-600">
+                <span className="text-text-tiny text-gray-600">
                   السؤال {currentQuestionIndex + 1} من {exam.questions.length}
                 </span>
               </div>
@@ -300,7 +319,7 @@ const ExamArea = ({
           {/* Question */}
           <div className="mb-8">
             <div className="mx-auto w-full max-w-2xl">
-              <h3 className="mb-6 text-center text-xl leading-relaxed font-semibold text-gray-800">
+              <h3 className="text-text-normal mb-6 text-center leading-relaxed font-semibold text-gray-800">
                 {currentQuestion.question_text}
               </h3>
 
@@ -313,7 +332,7 @@ const ExamArea = ({
                       handleAnswerSelect(currentQuestion.id, option.id)
                     }
                     disabled={isPendingSubmittingExam}
-                    className={`font-inherit w-full rounded-full border-2 p-4 text-right text-lg transition-all duration-300 hover:cursor-pointer ${
+                    className={`font-inherit text-text-small w-full rounded-full border-2 p-4 text-right transition-all duration-300 hover:cursor-pointer ${
                       findSelectedOptionId(currentQuestion.id) === option.id
                         ? "border-primary bg-primary -translate-x-4 transform text-white"
                         : "dark:!text-dark-text border-gray-300 bg-gray-100 text-gray-800 hover:border-gray-400 dark:bg-slate-900"
@@ -334,13 +353,13 @@ const ExamArea = ({
             <button
               onClick={handlePrevious}
               disabled={isFirstQuestion || isPendingSubmittingExam}
-              className="font-inherit cursor-pointer rounded-full border-2 border-gray-500 bg-gray-500 px-6 py-2 text-white transition-all duration-300 hover:bg-gray-600 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300"
+              className="font-inherit text-text-small cursor-pointer rounded-full border-2 border-gray-500 bg-gray-500 px-6 py-2 text-white transition-all duration-300 hover:bg-gray-600 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300"
             >
               السابق
             </button>
 
             <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">
+              <span className="text-text-tiny text-gray-600">
                 {selectedAnswers.length} / {exam.questions.length} تم الإجابة
               </span>
 
@@ -348,7 +367,7 @@ const ExamArea = ({
                 <button
                   onClick={handleExamSubmit}
                   disabled={!allQuestionsAnswered || isPendingSubmittingExam}
-                  className="font-inherit border-primary bg-primary hover:bg-primary/90 cursor-pointer rounded-full border-2 px-6 py-2 text-white transition-all duration-300 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300"
+                  className="font-inherit border-primary bg-primary hover:bg-primary/90 text-text-small cursor-pointer rounded-full border-2 px-6 py-2 text-white transition-all duration-300 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300"
                 >
                   {isPendingSubmittingExam
                     ? "جاري التسليم..."
@@ -358,7 +377,7 @@ const ExamArea = ({
                 <button
                   onClick={handleNext}
                   disabled={isPendingSubmittingExam}
-                  className="font-inherit border-primary bg-primary hover:bg-primary/90 cursor-pointer rounded-full border-2 px-6 py-2 text-white transition-all duration-300 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300"
+                  className="font-inherit border-primary bg-primary hover:bg-primary/90 text-text-small cursor-pointer rounded-full border-2 px-6 py-2 text-white transition-all duration-300 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300"
                 >
                   التالي
                 </button>

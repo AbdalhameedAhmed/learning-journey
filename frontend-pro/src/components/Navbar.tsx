@@ -22,7 +22,7 @@ export default function Navbar() {
       <header className="bg-primary relative flex items-center justify-between px-8 py-2 text-white">
         <form
           onSubmit={handleSearch}
-          className="absolute left-1/2 flex -translate-x-1/2 transform items-center overflow-hidden rounded-2xl border-2 border-white bg-white"
+          className="absolute left-1/2 flex -translate-x-1/2 transform items-center overflow-hidden rounded-2xl border-2 border-white bg-white shadow-xl"
         >
           <input
             type="text"
@@ -51,7 +51,7 @@ export default function Navbar() {
               ) : (
                 <CircleUserRound className="h-8 w-8 text-white" />
               )}
-              <p>{me?.first_name}</p>
+              <p className="text-text-small">{me?.first_name}</p>
             </div>
           </Link>
 
@@ -62,58 +62,50 @@ export default function Navbar() {
       </header>
 
       {/* Navigation */}
-      <nav className="text-text dark:text-dark-text mt-8 flex items-center justify-center gap-12 text-sm font-bold">
+      <nav className="text-text dark:text-dark-text text-text-small mt-8 flex items-center justify-center gap-12 text-sm font-bold">
         <NavLink
           to="/home"
           className={({ isActive }) =>
             isActive
-              ? "bg-primary flex items-center gap-1 rounded-md px-3 py-1"
-              : "flex items-center gap-1 px-3 py-1 hover:text-orange-600"
+              ? "bg-primary flex items-center justify-center gap-2 rounded-md px-3 py-1"
+              : "flex items-center gap-1 px-3 py-1"
           }
         >
-          <Home className="text-text dark:text-dark-text h-5 w-5" />
-          الصفحة الرئيسية
+          <Home className="text-text dark:text-dark-text h-[var(--text-text-small)] w-[var(--text-text-small)]" />
+          <span>الصفحة الرئيسية</span>
         </NavLink>
         <NavLink
           to="/instructions"
           className={({ isActive }) =>
-            isActive
-              ? "bg-primary rounded-md px-3 py-1 text-white"
-              : "hover:text-orange-600"
+            isActive ? "bg-primary rounded-md px-3 py-1 text-white" : ""
           }
         >
-          التعليمات
+          <span>التعليمات</span>
         </NavLink>
         <NavLink
           to="/goals"
           className={({ isActive }) =>
-            isActive
-              ? "bg-primary rounded-md px-3 py-1 text-white"
-              : "hover:text-orange-600"
+            isActive ? "bg-primary rounded-md px-3 py-1 text-white" : ""
           }
         >
-          الأهداف
+          <span>الأهداف</span>
         </NavLink>
 
         <NavLink
           to="/content-map"
           className={({ isActive }) =>
-            isActive
-              ? "bg-primary rounded-md px-3 py-1 text-white"
-              : "hover:text-orange-600"
+            isActive ? "bg-primary rounded-md px-3 py-1 text-white" : ""
           }
         >
-          خريطة المحتوى
+          <span>خريطة المحتوى</span>
         </NavLink>
         <NavLink
           to="/course/1"
           className={({ isActive }) =>
-            isActive
-              ? "bg-primary rounded-md px-3 py-1 text-white"
-              : "hover:text-orange-600"
+            isActive ? "bg-primary rounded-md px-3 py-1 text-white" : ""
           }
         >
-          الكورس
+          <span>الكورس</span>
         </NavLink>
       </nav>
     </div>

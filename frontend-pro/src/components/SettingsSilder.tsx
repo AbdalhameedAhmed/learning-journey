@@ -1,9 +1,10 @@
-import { originalCssValues } from "@/constants/cssConstants";
+import { originalCssValues, sizeValues } from "@/constants/cssConstants";
 import {
   deleteSettingsStorage,
   getSettingsStorage,
   setSettingsStorage,
 } from "@/utils/helpers";
+import type { FontSize } from "@schemas/Settings";
 import clsx from "clsx";
 import {
   useEffect,
@@ -28,7 +29,7 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
   const [textColor, setTextColor] = useState("");
   const [darkTextColor, setDarkTextColor] = useState("");
 
-  const [fontSize, setFontSize] = useState("");
+  const [fontSize, setFontSize] = useState<FontSize>("medium");
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useLayoutEffect(() => {
@@ -60,7 +61,7 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
       );
       document.documentElement.style.setProperty(
         "--text-text-size",
-        savedSettings.fontSize,
+        sizeValues[savedSettings.fontSize],
       );
 
       if (savedSettings.theme === "dark") {
@@ -90,6 +91,14 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
         textColor,
         fontSize,
         theme,
+        darkPrimaryColor,
+        darkTextColor,
+      });
+      console.log({
+        theme,
+        primaryColor,
+        textColor,
+        fontSize,
         darkPrimaryColor,
         darkTextColor,
       });
@@ -136,9 +145,15 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
   const handleFontSizeChange = (event: ChangeEvent<HTMLSelectElement>) => {
     if (!isInitialized) return;
 
-    const newSize = event.target.value;
+    const newSize = event.target.value as FontSize;
+
+    // Update the CSS variable - this will automatically update both normal and smaller text
+    document.documentElement.style.setProperty(
+      "--text-text-normal",
+      sizeValues[newSize],
+    );
+
     setFontSize(newSize);
-    document.documentElement.style.setProperty("--text-text-size", newSize);
   };
 
   const handleThemeChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -296,13 +311,13 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
             value={fontSize}
             onChange={handleFontSizeChange}
           >
-            <option value="14px" className="text-black">
+            <option value="small" className="text-black">
               صغير{" "}
             </option>
-            <option value="22px" className="text-black">
+            <option value="medium" className="text-black">
               متوسط
             </option>
-            <option value="30px" className="text-black">
+            <option value="large" className="text-black">
               كبير
             </option>
           </select>

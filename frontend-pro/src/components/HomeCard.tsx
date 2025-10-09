@@ -21,7 +21,7 @@ const HomeCard = ({ image, title, to }: HomeCardProps) => {
           />
         </div>
         <div className="p-4 text-center">
-          <h3 className="text-text dark:text-dark-text text-text-size font-semibold">
+          <h3 className="text-text dark:text-dark-text text-text-normal font-semibold">
             {title}
           </h3>
         </div>
