@@ -14,10 +14,12 @@ import CourseDetails from "@/pages/pro/CourseDetails";
 import GoalsPage from "@/pages/pro/GoalsPage";
 import HomePage from "@/pages/pro/HomePage";
 import InfoPage from "@/pages/pro/InfoPage";
+import ProfilePage from "@/pages/pro/ProfilePage";
 import UnauthorizedPage from "@/pages/UnauthorizedPage";
 import { UserRole } from "@schemas/User";
 import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
+import Layout from "./components/Layout";
 
 const App = () => {
   return (
@@ -32,8 +34,11 @@ const App = () => {
 
         {/* PRO-only routes */}
         <Route element={<RoleBasedRoute allowedRoles={[UserRole.PRO]} />}>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/course/:courseId" element={<CourseDetails />} />
+          <Route element={<Layout />}>
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/course/:courseId" element={<CourseDetails />} />
+          </Route>
         </Route>
 
         {/* ADMIN-only routes */}

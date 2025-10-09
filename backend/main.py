@@ -1,7 +1,9 @@
 import os
 import sys
+from contextlib import asynccontextmanager
 
 from fastapi.middleware.cors import CORSMiddleware
+from utils.cloudinary import init_cloudinary
 
 sys.path.insert(0, os.path.realpath(os.path.dirname(__file__)))
 
@@ -13,7 +15,18 @@ from routers.exam import exam_router
 from routers.favorites import favorites_router
 from routers.notes import notes_router
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_cloudinary()
+    yield
+
+
+app = FastAPI(
+    lifespan=lifespan,
+)
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

@@ -10,7 +10,6 @@ import { ExamType } from "@schemas/Exam";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import AssetsViewerFooter from "./AssetsViewerFooter";
-import Navbar from "@/components/navbar";
 
 export default function CourseDetails() {
   const courseId = useParams().courseId;
@@ -21,7 +20,6 @@ export default function CourseDetails() {
   const [examType, setExamType] = useState<ExamType>();
   const { courseDetails, isPending } = useGetCourseDetails(courseId);
   const { me, isPending: isUserPending } = useGetMe();
-
 
   useEffect(() => {
     if (!courseDetails) return;
@@ -83,69 +81,60 @@ export default function CourseDetails() {
   const courseCompleted = progressData?.course_completed;
 
   return (
-    <div className="flex min-h-screen w-screen flex-col items-center gap-4 dark:bg-slate-900">
-      <Navbar />
-
-      <div className="flex w-full flex-1 items-center justify-center overflow-auto">
-        <div className="flex w-[300px] flex-col items-center gap-2 self-stretch overflow-auto rounded-tl-lg rounded-bl-lg bg-[#E9E9E9] p-4 dark:bg-slate-800">
-          <div className="flex w-full flex-col gap-4 text-center">
-            {/* Pre-exam */}
-            <HeaderButton
-              title="الامتحان القبلي"
-              onClick={() =>
-                setActiveExamHandler(courseDetails!.exams[0], ExamType.PRE_EXAM)
-              }
-            />
-            {courseDetails?.modules?.map((module) => {
-              return (
-                <ModuleMenu
-                  key={module.id}
-                  module={module}
-                  activeLesson={activeLesson}
-                  setActiveLessonHandler={setActiveLessonHandler}
-                  activeExam={activeExam}
-                  setActiveExamHandler={setActiveExamHandler}
-                  openedModule={openedModule}
-                  setOpendModule={setOpendModule}
-                  nextAvailableModuleId={nextAvailableModuleId}
-                  nextAvailableExamId={nextAvailableExamId}
-                />
-              );
-            })}
-            {/* Final-exam */}
-            <HeaderButton
-              title="الامتحان البعدي"
-              disabled={!isFinalExamAvailable && !courseCompleted}
-              onClick={() =>
-                setActiveExamHandler(
-                  courseDetails!.exams[0],
-                  ExamType.FINAL_EXAM,
-                )
-              }
-            />
-          </div>
+    <div className="flex w-full flex-1 items-center justify-center overflow-auto">
+      <div className="flex w-[300px] flex-col items-center gap-2 self-stretch overflow-auto rounded-tl-lg rounded-bl-lg bg-[#E9E9E9] p-4 dark:bg-slate-800">
+        <div className="flex w-full flex-col gap-4 text-center">
+          {/* Pre-exam */}
+          <HeaderButton
+            title="الامتحان القبلي"
+            onClick={() =>
+              setActiveExamHandler(courseDetails!.exams[0], ExamType.PRE_EXAM)
+            }
+          />
+          {courseDetails?.modules?.map((module) => {
+            return (
+              <ModuleMenu
+                key={module.id}
+                module={module}
+                activeLesson={activeLesson}
+                setActiveLessonHandler={setActiveLessonHandler}
+                activeExam={activeExam}
+                setActiveExamHandler={setActiveExamHandler}
+                openedModule={openedModule}
+                setOpendModule={setOpendModule}
+                nextAvailableModuleId={nextAvailableModuleId}
+                nextAvailableExamId={nextAvailableExamId}
+              />
+            );
+          })}
+          {/* Final-exam */}
+          <HeaderButton
+            title="الامتحان البعدي"
+            disabled={!isFinalExamAvailable && !courseCompleted}
+            onClick={() =>
+              setActiveExamHandler(courseDetails!.exams[0], ExamType.FINAL_EXAM)
+            }
+          />
         </div>
-        <div className="flex h-full flex-1 flex-col items-center justify-center gap-12 overflow-auto">
-          <div className="flex w-full max-w-[800px] flex-1 items-center justify-center">
-            {activeLesson && <AssetResource lessonId={activeLesson.id} />}
-            {activeExam && examType && (
-              <ExamArea examId={activeExam?.id} examType={examType} />
-            )}
-            {!activeLesson && !activeExam && (
-              <p className="text-text dark:text-dark-text">
-                برجاء اختيار الدرس
-              </p>
-            )}
-          </div>
-          {activeLesson && (
-            <AssetsViewerFooter
-              lessonId={activeLesson.id}
-              setActiveLessonHandler={setActiveLessonHandler}
-              setActiveExamHandler={setActiveExamHandler}
-              courseDetails={courseDetails}
-            />
+      </div>
+      <div className="flex h-full flex-1 flex-col items-center justify-center gap-12 overflow-auto">
+        <div className="flex w-full max-w-[800px] flex-1 items-center justify-center">
+          {activeLesson && <AssetResource lessonId={activeLesson.id} />}
+          {activeExam && examType && (
+            <ExamArea examId={activeExam?.id} examType={examType} />
+          )}
+          {!activeLesson && !activeExam && (
+            <p className="text-text dark:text-dark-text">برجاء اختيار الدرس</p>
           )}
         </div>
+        {activeLesson && (
+          <AssetsViewerFooter
+            lessonId={activeLesson.id}
+            setActiveLessonHandler={setActiveLessonHandler}
+            setActiveExamHandler={setActiveExamHandler}
+            courseDetails={courseDetails}
+          />
+        )}
       </div>
     </div>
   );
