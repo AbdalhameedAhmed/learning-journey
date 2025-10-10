@@ -44,3 +44,15 @@ async def add_note(
     response = query.execute()
 
     return response.data
+
+
+@notes_router.delete("/{note_id}")
+async def delete_note(
+    note_id: int,
+    supabase: Client = Depends(get_supabase_client),
+    user: UserResponse = Depends(get_current_user),
+):
+    query = supabase.table("notes").delete().eq("id", note_id).eq("user_id", user.id)
+    response = query.execute()
+
+    return response.data

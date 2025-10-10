@@ -115,7 +115,7 @@ export default function VideoViewer({
   return (
     <div
       ref={videoContainerRef}
-      className="group/video relative mx-auto flex w-full max-w-4xl flex-col rounded-lg bg-gray-900 shadow-lg"
+      className="group/video relative mx-auto flex w-full max-w-[1400px] flex-col rounded-lg bg-gray-900 shadow-lg"
     >
       <video
         ref={videoRef}

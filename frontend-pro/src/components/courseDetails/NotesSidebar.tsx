@@ -97,7 +97,12 @@ export default function NotesSidebar({
         {notes
           ?.sort((a, b) => a.time - b.time)
           .map((note) => (
-            <NoteItem key={note.id} note={note} onNoteClick={onNoteClick} />
+            <NoteItem
+              key={note.id}
+              note={note}
+              onNoteClick={onNoteClick}
+              lessonId={lessonId}
+            />
           ))}
       </div>
     </div>

@@ -117,8 +117,8 @@ export default function CourseDetails() {
           />
         </div>
       </div>
-      <div className="flex h-full flex-1 flex-col items-center justify-center gap-12 overflow-auto">
-        <div className="flex w-full max-w-[800px] flex-1 items-center justify-center">
+      <div className="flex h-full flex-1 flex-col items-center justify-center gap-12 overflow-auto p-12">
+        <div className="flex w-full flex-1 items-center justify-center">
           {activeLesson && <AssetResource lessonId={activeLesson.id} />}
           {activeExam && examType && (
             <ExamArea examId={activeExam?.id} examType={examType} />

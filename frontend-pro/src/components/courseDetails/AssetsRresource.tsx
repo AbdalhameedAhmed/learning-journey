@@ -70,13 +70,15 @@ export default function AssetResource({ lessonId }: { lessonId: number }) {
   }
   if (assets[0].type === "pdf") {
     return (
-      <object
-        className="h-full min-h-[600px] w-full"
-        data={assets[0].url + "#toolbar=0"}
-        type="application/pdf"
-        width="100%"
-        height="100%"
-      ></object>
+      <div className="w-full max-w-[800px]">
+        <object
+          className="h-full min-h-[600px] w-full"
+          data={assets[0].url + "#toolbar=0"}
+          type="application/pdf"
+          width="100%"
+          height="100%"
+        ></object>
+      </div>
     );
   }
   return null;
