@@ -87,7 +87,6 @@ async def login_user_controller(
     user_credentials: UserLogin, origin: str | None, supabase: Client
 ):
     role = get_role_via_origin(origin)
-
     user = await authenticate_user(
         user_credentials.email,
         user_credentials.password,
@@ -136,6 +135,8 @@ async def login_user_controller(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to create session: {str(e)}",
         )
+
+    print(user, "🚨")
 
     return LoginResponse(
         user=UserResponse(**user),
@@ -247,7 +248,6 @@ async def update_profile_controller(
     # Handle profile picture upload to Cloudinary
     if profile_picture:
         try:
-
             # Upload new image to Cloudinary
             cloudinary_url = await upload_image(profile_picture)
             update_data["profile_picture"] = cloudinary_url

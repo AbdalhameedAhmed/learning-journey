@@ -16,6 +16,7 @@ import { UserRole } from "@schemas/User";
 import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
 import Layout from "./components/Layout";
+import PreExam from "./pages/pro/PreExam";
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="/goals" element={<GoalsPage />} />
             <Route path="/content-map" element={<ContentPage />} />
           </Route>
+          <Route path="/pre-exam" element={<PreExam />} />
         </Route>
 
         {/* ADMIN-only routes */}

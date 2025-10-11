@@ -1,16 +1,17 @@
 import { useGetExam } from "@/hooks/courseContent/useGetExam";
 import { useSubmitExam } from "@/hooks/courseContent/useSubmitExam";
 import type { ErrorResponse } from "@schemas/course";
-import type {
-  Exam,
-  ExamAnswer,
-  ExamSubmissionResult,
+import {
   ExamType,
+  type Exam,
+  type ExamAnswer,
+  type ExamSubmissionResult,
 } from "@schemas/Exam";
-import { Star } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Star, TimerIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import Spinner from "../Spinner";
 import SubmissionResultView from "./SubmissionResultView";
+import { useNavigate } from "react-router";
 
 const ExamArea = ({
   examId,
@@ -19,6 +20,7 @@ const ExamArea = ({
   examId: number;
   examType: ExamType;
 }) => {
+  const navigate = useNavigate();
   const [submissionResult, setSubmissionResult] = useState<
     ExamSubmissionResult | undefined
   >(undefined);
@@ -33,19 +35,88 @@ const ExamArea = ({
   const { submit, isPending: isPendingSubmittingExam } = useSubmitExam(
     handleSubmissionSuccess,
   );
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<ExamAnswer[]>([]);
   const [markedQuestions, setMarkedQuestions] = useState<Set<number>>(
     new Set(),
   );
   const [showMarkedQuestions, setShowMarkedQuestions] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
   useEffect(() => {
     setSubmissionResult(undefined);
     setCurrentQuestionIndex(0);
     setSelectedAnswers([]);
     setMarkedQuestions(new Set());
+    setTimeLeft(null);
   }, [examId, examType]);
+
+  const submitRef = useRef(submit);
+  submitRef.current = submit;
+
+  useEffect(() => {
+    // Initialize timer when exam data is available
+    if (
+      exam &&
+      isExamResponse(exam) &&
+      exam.time &&
+      timeLeft === null &&
+      !submissionResult
+    ) {
+      setTimeLeft(exam.time);
+    }
+
+    // If timer is not initialized or exam is submitted, do nothing.
+    if (timeLeft === null || submissionResult) {
+      return;
+    }
+    // Countdown interval
+    const timerId = setInterval(
+      () => setTimeLeft((t) => (t && t > 0 ? t - 1 : 0)),
+      1000,
+    );
+    console.log("Timer started!");
+
+    // If time runs out, submit the exam.
+    if (timeLeft <= 0) {
+      clearInterval(timerId);
+      console.log("Time's up!");
+
+      handleExamSubmit();
+      return;
+    }
+
+    return () => clearInterval(timerId);
+  }, [exam, timeLeft, submissionResult]);
+
+  // Submit exam on tab/browser close or navigation
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (
+        exam &&
+        isExamResponse(exam) &&
+        !submissionResult &&
+        timeLeft !== null &&
+        timeLeft > 0
+      ) {
+        submitRef.current({
+          exam_id: examId,
+          exam_type: examType,
+          answers: selectedAnswers,
+        });
+        // Optionally show a confirmation dialog (not always respected by browsers)
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [exam, examId, examType, selectedAnswers, submissionResult, timeLeft]);
 
   const isErrorResponse = (
     data: Exam | ErrorResponse | undefined,
@@ -63,9 +134,19 @@ const ExamArea = ({
 
   if (isErrorResponse(exam)) {
     return (
-      <div className="text-text-normal p-8 text-center text-red-600">
-        {exam.error}
-      </div>
+      <>
+        <div className="text-text-normal p-8 text-center text-red-600">
+          {exam.error}
+        </div>
+        {examType === ExamType.PRE_EXAM && (
+          <button
+            onClick={() => navigate("/course/1")}
+            className="bg-primary dark:bg-dark-primary mx-auto block cursor-pointer rounded-md px-3 py-1"
+          >
+            ابدا مشاهدة الكورس
+          </button>
+        )}
+      </>
     );
   }
 
@@ -143,15 +224,15 @@ const ExamArea = ({
     setShowMarkedQuestions(false);
   };
 
-  const handleExamSubmit = () => {
+  function handleExamSubmit() {
     submit({
       exam_id: examId,
       exam_type: examType,
       answers: selectedAnswers,
     });
-  };
+  }
 
-  const getQuestionStatus = (questionId: number) => {
+  const getQuestionStatus = (questionId: number): "answered" | undefined => {
     if (answeredQuestionIds.has(questionId)) return "answered";
   };
 
@@ -161,6 +242,22 @@ const ExamArea = ({
 
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
+      {/* Timer Display */}
+      {timeLeft !== null && (
+        <div className="flex items-center justify-center gap-2 rounded-lg bg-white p-3 text-lg font-semibold shadow-md dark:bg-slate-800">
+          <TimerIcon className="text-primary dark:text-dark-primary h-6 w-6" />
+          <span className="text-text dark:text-dark-text">الوقت المتبقي:</span>
+          <span
+            className={`tabular-nums ${
+              timeLeft <= 60
+                ? "text-red-500"
+                : "text-gray-700 dark:text-gray-200"
+            }`}
+          >
+            {Math.floor(timeLeft / 60)}:{("0" + (timeLeft % 60)).slice(-2)}
+          </span>
+        </div>
+      )}
       {/* Questions Navigation Panel */}
       <div className="w-full">
         <div className="rounded-lg bg-white p-4 shadow-lg dark:bg-slate-800">

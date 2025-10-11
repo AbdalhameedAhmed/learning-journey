@@ -8,6 +8,7 @@ export interface Exam {
   id: number;
   module_id: number | null;
   course_id: number | null;
+  time: number;
   questions: Question[];
 }
 
