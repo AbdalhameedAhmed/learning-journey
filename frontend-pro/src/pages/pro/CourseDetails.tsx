@@ -81,9 +81,9 @@ export default function CourseDetails() {
   const courseCompleted = progressData?.course_completed;
 
   return (
-    <div className="flex w-full flex-1 items-center justify-center overflow-auto">
+    <div className="flex w-full flex-1 -mt-24 items-center justify-center overflow-auto">
       <div className="flex w-[300px] flex-col items-center gap-2 self-stretch overflow-auto rounded-tl-lg rounded-bl-lg bg-[#E9E9E9] p-4 dark:bg-slate-800">
-        <div className="flex w-full flex-col gap-4 text-center">
+        <div className="flex w-full flex-col gap-4 text-center pt-10">
           {/* Pre-exam */}
           <HeaderButton
             title="الامتحان القبلي"
