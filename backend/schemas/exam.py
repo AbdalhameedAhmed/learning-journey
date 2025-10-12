@@ -69,6 +69,20 @@ class ExamSubmissionRequest(BaseModel):
     answers: List[Dict[str, Any]]  # [{"question_id": 1, "selected_option_id": 3}, ...]
 
 
+class OptionReview(BaseModel):
+    id: int
+    option_text: str
+    is_correct: bool  # Matches the field in your options column
+
+
+class QuestionReview(BaseModel):
+    question_id: int
+    question_text: str
+    options: List[OptionReview]
+    submitted_option_id: Optional[int] = None
+    is_correctly_answered: bool
+
+
 class ExamSubmissionResponse(BaseModel):
     success: bool
     score: int
@@ -80,3 +94,4 @@ class ExamSubmissionResponse(BaseModel):
     next_available_lesson_id: int | None = None
     next_available_module_id: int | None = None
     next_available_exam_id: int | None = None
+    detailed_review: Optional[List[QuestionReview]] = None  # ADD THIS

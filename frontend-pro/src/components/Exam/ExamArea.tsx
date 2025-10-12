@@ -3,15 +3,16 @@ import { useSubmitExam } from "@/hooks/courseContent/useSubmitExam";
 import type { ErrorResponse } from "@schemas/course";
 import {
   ExamType,
+  type AlreadySubmittedResponse,
   type Exam,
   type ExamAnswer,
   type ExamSubmissionResult,
 } from "@schemas/Exam";
 import { Star, TimerIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import Spinner from "../Spinner";
 import SubmissionResultView from "./SubmissionResultView";
-import { useNavigate } from "react-router";
 
 const ExamArea = ({
   examId,
@@ -88,6 +89,7 @@ const ExamArea = ({
     }
 
     return () => clearInterval(timerId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exam, timeLeft, submissionResult]);
 
   // Submit exam on tab/browser close or navigation
@@ -119,18 +121,43 @@ const ExamArea = ({
   }, [exam, examId, examType, selectedAnswers, submissionResult, timeLeft]);
 
   const isErrorResponse = (
-    data: Exam | ErrorResponse | undefined,
+    data: Exam | ErrorResponse | AlreadySubmittedResponse | undefined,
   ): data is ErrorResponse => {
-    return data !== undefined && "error" in data;
+    return (
+      data !== undefined &&
+      "error" in data &&
+      !("status" in data && data.status === "already_submitted")
+    );
+  };
+
+  const isAlreadySubmittedResponse = (
+    data: Exam | ErrorResponse | undefined,
+  ): data is AlreadySubmittedResponse => {
+    return (
+      data !== undefined &&
+      "status" in data &&
+      data.status === "already_submitted"
+    );
   };
 
   const isExamResponse = (
-    data: Exam | ErrorResponse | undefined,
+    data: Exam | ErrorResponse | AlreadySubmittedResponse | undefined,
   ): data is Exam => {
     return data !== undefined && "questions" in data;
   };
 
   if (isPendingGettingExam) return <Spinner />;
+
+  if (isAlreadySubmittedResponse(exam)) {
+    if (submissionResult === undefined) {
+      setSubmissionResult(exam.result);
+      return <Spinner />;
+    }
+  }
+
+  if (submissionResult) {
+    return <SubmissionResultView result={submissionResult} />;
+  }
 
   if (isErrorResponse(exam)) {
     return (

@@ -38,8 +38,8 @@ const App = () => {
             <Route path="/instructions" element={<InstructionsPage />} />
             <Route path="/goals" element={<GoalsPage />} />
             <Route path="/content-map" element={<ContentPage />} />
+            <Route path="/pre-exam" element={<PreExam />} />
           </Route>
-          <Route path="/pre-exam" element={<PreExam />} />
         </Route>
 
         {/* ADMIN-only routes */}

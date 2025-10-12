@@ -70,13 +70,50 @@ async def get_exam_controller(
         )
 
         if submission_response.data:
+            # Exam was submitted previously, return the result
+            submission = submission_response.data[0]
+
+            # 1. Prepare detailed_review conditionally
+            detailed_review = None
+            if exam_type.value != ExamType.PRE_EXAM.value:
+                # Retrieve the saved answers list
+                user_saved_answers = submission.get("answers", [])
+
+                score_recalc_result = await calculate_exam_score(
+                    exam_id=submission["exam_id"],
+                    answers=user_saved_answers,
+                    supabase=supabase,
+                )
+
+                if "error" not in score_recalc_result:
+                    detailed_review = score_recalc_result.get("detailed_review")
+
+            # 2. Format the submission data into the ExamSubmissionResult structure
             return {
                 "status": "already_submitted",
                 "error": "لقد تم تقديم هذا الاختبار بالفعل.",
-                "exam_type": exam_type.value,
+                "exam_type": submission["exam_type"],
+                "result": {  # This object matches the ExamSubmissionResult interface
+                    "success": True,
+                    "score": submission["score"],
+                    "total_questions": submission["total_questions"],
+                    "correct_answers": submission["correct_answers"],
+                    "passed": submission["passed"],
+                    "message": "عرض نتائج الامتحان السابق.",
+                    "next_available_exam_id": progress_data.get(
+                        "next_available_exam_id"
+                    ),
+                    "next_available_lesson_id": progress_data.get(
+                        "next_available_lesson_id"
+                    ),
+                    "next_available_module_id": progress_data.get(
+                        "next_available_module_id"
+                    ),
+                    "progress_updated": True,
+                    "detailed_review": detailed_review,
+                },
             }
 
-    # Validate exam access based on type and progress
     if student_user.role == UserRole.pro:
         return await validate_pro_user_getting_exam(
             exam_data, progress_data, exam_type, supabase
@@ -222,6 +259,11 @@ async def submit_exam_controller(
         # 5. Get updated progress for response
         updated_progress = await get_user_progress(user_id, supabase)
 
+        # 6. Prepare the correct answers preview conditionally
+        detailed_review = None
+        if submission_data.exam_type != "pre_exam":
+            detailed_review = score_result.get("detailed_review")
+
         return ExamSubmissionResponse(
             success=True,
             score=score_result["score"],
@@ -233,6 +275,7 @@ async def submit_exam_controller(
             next_available_lesson_id=updated_progress.get("next_available_lesson_id"),
             next_available_module_id=updated_progress.get("next_available_module_id"),
             next_available_exam_id=updated_progress.get("next_available_exam_id"),
+            detailed_review=detailed_review,
         )
 
     except Exception as e:

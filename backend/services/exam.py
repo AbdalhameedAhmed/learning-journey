@@ -56,10 +56,10 @@ async def calculate_exam_score(
     exam_id: int, answers: List[Dict[str, Any]], supabase: Client
 ) -> Dict[str, Any]:
     try:
-        # Get exam questions with correct answers
+        # Fetch question details: ID, text, and the options array (which contains the correct flag)
         response = (
             supabase.table("questions")
-            .select("id, options")
+            .select("id, question_text, options")
             .eq("exam_id", exam_id)
             .execute()
         )
@@ -67,26 +67,46 @@ async def calculate_exam_score(
         if not response.data:
             return {"error": "Exam questions not found"}
 
-        questions = response.data
-        total_questions = len(questions)
+        questions_data = response.data
+        total_questions = len(questions_data)
         correct_answers_count = 0
 
-        # Calculate score
-        for answer in answers:
-            question_id = answer.get("question_id")
-            selected_option_id = answer.get("selected_option_id")
+        # Dictionary for quick lookup of user's submitted answers
+        user_answers_map = {
+            a["question_id"]: a.get("selected_option_id") for a in answers
+        }
 
-            # Find the question
-            question = next((q for q in questions if q["id"] == question_id), None)
-            if not question:
-                continue
+        # List to store the full detailed review data
+        detailed_review = []
 
-            # Find the correct option
+        # Calculate score and build the detailed review
+        for question in questions_data:
+            question_id = question["id"]
+            question_text = question.get("question_text", "N/A")
+            all_options = question.get("options", [])
+
+            selected_option_id = user_answers_map.get(question_id)
+            is_correctly_answered = False
+
+            # Find the correct option using the 'is_correct' flag in the options array
             correct_option = next(
-                (opt for opt in question["options"] if opt.get("is_correct")), None
+                (opt for opt in all_options if opt.get("is_correct") is True), None
             )
+
+            # Check for correctness
             if correct_option and correct_option["id"] == selected_option_id:
                 correct_answers_count += 1
+                is_correctly_answered = True
+
+
+            review_entry = {
+                "question_id": question_id,
+                "question_text": question_text,
+                "options": all_options,
+                "submitted_option_id": selected_option_id,
+                "is_correctly_answered": is_correctly_answered,
+            }
+            detailed_review.append(review_entry)
 
         # Calculate percentage
         score = (
@@ -102,10 +122,12 @@ async def calculate_exam_score(
             "correct_answers": correct_answers_count,
             "passing_score": passing_score,
             "passed": score >= passing_score,
+            "detailed_review": detailed_review,
         }
 
     except Exception as e:
         return {"error": f"Error calculating score: {str(e)}"}
+
 
 
 async def save_exam_submission(

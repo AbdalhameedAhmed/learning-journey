@@ -46,4 +46,22 @@ export interface ExamSubmissionResult {
   next_available_lesson_id: number | null;
   next_available_module_id: number | null;
   progress_updated: boolean;
+  detailed_review?: QuestionReview[] | null;
+}
+
+export interface OptionReview extends Option {
+  is_correct: boolean;
+}
+
+export interface QuestionReview extends Question {
+  options: OptionReview[]; // Use the new extended OptionReview interface
+  submitted_option_id: number | null;
+  is_correctly_answered: boolean;
+}
+
+export interface AlreadySubmittedResponse {
+  status: "already_submitted";
+  error: string;
+  exam_type: string;
+  result: ExamSubmissionResult; // The actual submission data
 }
