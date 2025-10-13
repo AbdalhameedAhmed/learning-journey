@@ -8,6 +8,7 @@ import {
   type ExamAnswer,
   type ExamSubmissionResult,
 } from "@schemas/Exam";
+import { useQueryClient } from "@tanstack/react-query";
 import { Star, TimerIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
@@ -22,12 +23,14 @@ const ExamArea = ({
   examType: ExamType;
 }) => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [submissionResult, setSubmissionResult] = useState<
     ExamSubmissionResult | undefined
   >(undefined);
 
   const handleSubmissionSuccess = (data: ExamSubmissionResult) => {
     setSubmissionResult(data);
+    queryClient.invalidateQueries({ queryKey: ["exam", examId, examType] });
   };
   const { exam, isPending: isPendingGettingExam } = useGetExam(
     examId,
