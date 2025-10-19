@@ -82,9 +82,9 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
       isInitialized &&
       primaryColor &&
       textColor &&
-      fontSize &&
-      darkPrimaryColor &&
-      darkTextColor
+      fontSize 
+      // && darkPrimaryColor &&
+      // darkTextColor
     ) {
       setSettingsStorage({
         primaryColor,

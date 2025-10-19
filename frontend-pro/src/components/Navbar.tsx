@@ -63,7 +63,7 @@ export default function Navbar() {
               isActive ? "flex items-center text-white" : "flex items-center"
             }
           >
-            <span>خريطة المحتوى</span>
+            <span>المحتوى</span>
           </NavLink>
           <NavLink
             to="/course/1"

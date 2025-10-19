@@ -31,7 +31,7 @@ const homeCardItems = [
   },
   {
     image: contentImage,
-    title: "المحتوى",
+    title: "خريطة المحتوى",
     to: "/content-map",
   },
   {
