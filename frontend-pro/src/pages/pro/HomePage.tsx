@@ -6,7 +6,7 @@ import HomeCard from "@/components/HomeCard";
 
 const HomePage = () => {
   return (
-    <div className="relative mx-25 mt-12 flex h-full items-center justify-center">
+    <div className="mx-25 my-auto flex h-full items-center justify-center">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
         {homeCardItems.map((item, index) => (
           <HomeCard key={index} {...item} />
@@ -22,7 +22,7 @@ const homeCardItems = [
   {
     image: infoImage,
     title: "التعليمات",
-    to: "/info",
+    to: "/instructions",
   },
   {
     image: goalsImage,
@@ -32,7 +32,7 @@ const homeCardItems = [
   {
     image: contentImage,
     title: "المحتوى",
-    to: "/content",
+    to: "/content-map",
   },
   {
     image: examImage,

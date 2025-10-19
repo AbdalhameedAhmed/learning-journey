@@ -12,7 +12,7 @@ const Layout = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen w-screen flex-col items-center gap-4 dark:bg-slate-900">
+    <div className="relative flex min-h-screen w-screen flex-col items-center dark:bg-slate-900">
       <Navbar />
       <Outlet />
 

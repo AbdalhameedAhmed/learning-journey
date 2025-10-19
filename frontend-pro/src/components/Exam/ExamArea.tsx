@@ -80,12 +80,10 @@ const ExamArea = ({
       () => setTimeLeft((t) => (t && t > 0 ? t - 1 : 0)),
       1000,
     );
-    console.log("Timer started!");
 
     // If time runs out, submit the exam.
     if (timeLeft <= 0) {
       clearInterval(timerId);
-      console.log("Time's up!");
 
       handleExamSubmit();
       return;
@@ -223,10 +221,25 @@ const ExamArea = ({
     question_id: number,
     selected_option_id: number,
   ) => {
-    setSelectedAnswers((prev) => [
-      ...prev,
-      { question_id, selected_option_id },
-    ]);
+    setSelectedAnswers((prev) => {
+      // Check if this question already has an answer
+      const existingAnswerIndex = prev.findIndex(
+        (answer) => answer.question_id === question_id,
+      );
+
+      if (existingAnswerIndex !== -1) {
+        // Update existing answer
+        const updatedAnswers = [...prev];
+        updatedAnswers[existingAnswerIndex] = {
+          question_id,
+          selected_option_id,
+        };
+        return updatedAnswers;
+      } else {
+        // Add new answer
+        return [...prev, { question_id, selected_option_id }];
+      }
+    });
   };
 
   const handleNext = () => {
@@ -274,7 +287,7 @@ const ExamArea = ({
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
       {/* Timer Display */}
       {timeLeft !== null && (
-        <div className="flex items-center justify-center gap-2 rounded-lg bg-white p-3 text-lg font-semibold shadow-md dark:bg-slate-800">
+        <div className="flex items-center justify-center gap-2 rounded-lg bg-white p-4 text-lg font-semibold shadow-md dark:bg-slate-800">
           <TimerIcon className="text-primary dark:text-dark-primary h-6 w-6" />
           <span className="text-text dark:text-dark-text">الوقت المتبقي:</span>
           <span

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Image4 from "../../assets/Image4.svg";
 import Vector1 from "../../assets/Vector1.svg";
-import { User, Play, Moon, Sun } from "lucide-react";
+import { User, Moon, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const LandingPage = () => {
@@ -213,29 +213,6 @@ const LandingPage = () => {
                 <h2 className="relative z-10 text-2xl leading-tight font-bold text-gray-800 sm:text-3xl lg:text-5xl dark:text-white">
                   إطمح ، تعلم ، تقدم
                 </h2>
-              </div>
-
-              {/* Call to Action Buttons */}
-              <div className="flex flex-col justify-center gap-4 sm:flex-row lg:justify-start">
-                <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-8 lg:justify-start">
-                  {/* Video Button */}
-                  <div className="flex items-center gap-4 sm:gap-6">
-                    <div className="relative z-10 flex h-10 w-10 transform cursor-pointer items-center justify-center rounded-full bg-orange-200 shadow-lg transition-all duration-300 hover:scale-105 hover:bg-orange-300 sm:h-12 sm:w-12 dark:bg-amber-300 dark:hover:bg-amber-400">
-                      <Play
-                        size={16}
-                        className="ml-1 text-gray-800 sm:size-5 dark:text-gray-900"
-                      />
-                    </div>
-                    <span className="relative z-10 text-lg font-medium text-gray-800 sm:text-xl dark:text-white">
-                      فيديو تعريفي للموقع
-                    </span>
-                  </div>
-
-                  {/* Join Button */}
-                  <button className="bg-primary dark:bg-dark-primary relative z-10 transform rounded-xl px-6 py-3 font-semibold text-gray-800 shadow-lg transition-all duration-300 hover:scale-105 sm:px-8 sm:py-4 dark:bg-amber-600 dark:text-gray-900">
-                    انضم إلينا
-                  </button>
-                </div>
               </div>
             </div>
 

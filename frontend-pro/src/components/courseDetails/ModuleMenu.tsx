@@ -1,135 +1,96 @@
-import type { ExamHeader, LessonHeader, Module } from "@schemas/course";
+import { useGetMe } from "@/hooks/auth/useGetMe";
+import ModuleTab from "./ModuleTab";
+import type { Course, ExamHeader, LessonHeader } from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
-import clsx from "clsx";
-import { Heart, Lock } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
 import HeaderButton from "./HeaderButton";
-import { useGetFavorites } from "@/hooks/courseContent/useGetFavorites";
+import { X } from "lucide-react";
 
-type ModuleMenuProps = {
-  module: Module;
+interface ModuleMenuProps {
+  openedModule: number | undefined;
+  courseDetails: Course | undefined;
   activeLesson: LessonHeader | undefined;
   setActiveLessonHandler: (lesson: LessonHeader) => void;
   activeExam: ExamHeader | undefined;
   setActiveExamHandler: (exam: ExamHeader, examType: ExamType) => void;
-  openedModule: number | undefined;
   setOpendModule: Dispatch<SetStateAction<number | undefined>>;
-  nextAvailableModuleId?: number | null;
-  nextAvailableExamId?: number | null;
-};
+  isOpen?: boolean;
+  onClose?: () => void;
+}
 
-export default function ModuleMenu({
-  module,
+const ModuleMenu = ({
+  openedModule,
+  courseDetails,
   activeLesson,
   setActiveLessonHandler,
   activeExam,
   setActiveExamHandler,
-  openedModule,
   setOpendModule,
-  nextAvailableModuleId,
-}: ModuleMenuProps) {
-  const { favorites } = useGetFavorites();
-  const isModuleLocked =
-    nextAvailableModuleId === null ||
-    (typeof nextAvailableModuleId === "number" &&
-      module.id > nextAvailableModuleId);
-
-  const isLessonFavorited = (lessonId: number) => {
-    return favorites?.some((fav) => fav.lesson_id === lessonId) || false;
-  };
-
-  // Handler for the module title button
-  const handleHeaderClick = () => {
-    if (!isModuleLocked) {
-      setOpendModule(module.id);
-    }
-  };
+  isOpen = true,
+  onClose,
+}: ModuleMenuProps) => {
+  const { me } = useGetMe();
+  const progressData = me?.current_progress_data;
+  const nextAvailableModuleId = progressData?.next_available_module_id;
+  const nextAvailableExamId = progressData?.next_available_exam_id;
+  const isFinalExamAvailable = progressData?.is_final_exam_available;
+  const courseCompleted = progressData?.course_completed;
 
   return (
-    <div>
-      <HeaderButton
-        onClick={handleHeaderClick}
-        title={module.name}
-        disabled={isModuleLocked}
-      ></HeaderButton>
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-gray-700 opacity-50 blur-lg lg:hidden"
+          onClick={onClose}
+        />
+      )}
+
+      {/* Menu Container */}
       <div
-        className={clsx(
-          "flex max-h-[0px] w-full flex-col gap-2 overflow-hidden px-6 transition-all duration-300",
-          {
-            "mt-2 max-h-[1000px]":
-              !isModuleLocked && openedModule === module.id,
-          },
-        )}
+        className={`fixed top-0 right-0 z-50 h-full w-80 transform transition-transform duration-300 ease-in-out lg:static lg:right-auto lg:h-auto lg:w-[300px] ${isOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"} flex flex-col items-center gap-2 self-stretch overflow-auto bg-[#E9E9E9] p-4 shadow-lg lg:shadow-none dark:bg-slate-800`}
       >
-        {module.lessons.map((lesson) => {
-          const isLessonLocked = isModuleLocked;
-          const isFavorited = isLessonFavorited(lesson.id);
+        {/* Mobile Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 rounded-lg bg-gray-200 p-2 hover:bg-gray-300 lg:hidden dark:bg-gray-700 dark:hover:bg-gray-600"
+        >
+          <X size={20} />
+        </button>
 
-          const handleLessonClick = () => {
-            if (!isLessonLocked) {
-              setActiveLessonHandler(lesson);
-            }
-          };
-
-          return (
-            <div key={lesson.id} className="relative">
-              <p
-                className={clsx(
-                  "border-primary dark:border-dark-primary text-text-tiny text-text dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
-                  {
-                    "cursor-pointer": !isLessonLocked,
-                    "cursor-not-allowed opacity-50": isLessonLocked,
-                    "bg-primary dark:bg-dark-primary text-white":
-                      activeLesson?.id === lesson.id && !isLessonLocked,
-                  },
-                )}
-                onClick={handleLessonClick}
-              >
-                <span className="flex-1 text-center">{lesson.name}</span>
-                {isLessonLocked && <Lock size={14} className="text-gray-400" />}
-              </p>
-
-              {isFavorited && (
-                <div className="absolute top-1/2 left-2 -translate-y-1/2">
-                  <Heart
-                    size={14}
-                    className="fill-red-500 text-red-500 drop-shadow-sm"
-                  />
-                </div>
-              )}
-            </div>
-          );
-        })}
-
-        {module.quizzes.map((quiz) => {
-          const isQuizLocked = isModuleLocked;
-
-          const handleQuizClick = () => {
-            if (!isQuizLocked) {
-              setActiveExamHandler(quiz, ExamType.QUIZ);
-            }
-          };
-
-          return (
-            <p
-              key={quiz.id}
-              className={clsx(
-                "border-primary dark:border-dark-primary text-text text-text-tiny dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
-                {
-                  "cursor-pointer": !isQuizLocked,
-                  "cursor-not-allowed opacity-50": isQuizLocked,
-                  "bg-primary dark:bg-dark-primary text-white":
-                    activeExam?.id === quiz.id && !isQuizLocked,
-                },
-              )}
-              onClick={handleQuizClick}
-            >
-              <span className="flex-1 text-center">اختبار</span>
-              {isQuizLocked && <Lock size={14} className="text-gray-400" />}
-            </p>
-          );
-        })}
+        <div className="flex w-full flex-col gap-4 pt-10 text-center lg:pt-10">
+          {courseDetails?.modules?.map((module) => {
+            return (
+              <ModuleTab
+                key={module.id}
+                module={module}
+                activeLesson={activeLesson}
+                setActiveLessonHandler={setActiveLessonHandler}
+                activeExam={activeExam}
+                setActiveExamHandler={setActiveExamHandler}
+                openedModule={openedModule}
+                setOpendModule={setOpendModule}
+                nextAvailableModuleId={nextAvailableModuleId}
+                nextAvailableExamId={nextAvailableExamId}
+              />
+            );
+          })}
+          {/* Final-exam */}
+          <HeaderButton
+            title="الامتحان البعدي"
+            disabled={!isFinalExamAvailable && !courseCompleted}
+            onClick={() => {
+              setActiveExamHandler(
+                courseDetails!.exams[0],
+                ExamType.FINAL_EXAM,
+              );
+              onClose?.();
+            }}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
-}
+};
+
+export default ModuleMenu;

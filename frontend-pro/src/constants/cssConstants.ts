@@ -24,7 +24,7 @@ export const originalCssValues = {
 };
 
 export const sizeValues = {
-  small: "22px",
-  medium: "26px",
+  small: "24px",
+  medium: "28px",
   large: "32px",
 };
