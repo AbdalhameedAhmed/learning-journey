@@ -1,10 +1,11 @@
-import loginImg from "@/assets/Image4.svg";
+import image from '@/assets/image.png';
 import { useLogin } from "@/hooks/auth/useLogin";
 import { UserRole } from "@schemas/User";
-import { useState, useEffect } from "react";
+import { Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash, FaLock, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { Moon, Sun } from "lucide-react";
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -103,7 +104,7 @@ export default function LoginPage() {
         </p>
 
         <div className="mb-4 flex justify-center sm:mb-6">
-          <img src={loginImg} alt="login" className="w-40 sm:w-64" />
+          <img src={image} alt="login" className="w-40 sm:w-64" />
         </div>
 
         {apiError && (
@@ -157,7 +158,7 @@ export default function LoginPage() {
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${
                   password
                     ? "-top-2 text-xs sm:text-sm"
                     : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
@@ -177,7 +178,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="dark:bg-text w-1/2 cursor-pointer rounded-full bg-[#002538] py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50 sm:w-1/3 sm:py-3 sm:text-lg"
+              className="dark:bg-text bg-primary w-1/2 cursor-pointer rounded-full py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50 sm:w-1/3 sm:py-3 sm:text-lg"
             >
               {isPending ? "جاري الدخول..." : "دخول"}
             </button>

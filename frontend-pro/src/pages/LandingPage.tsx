@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Image4 from "../assets/Image4.svg";
+import image from '@/assets/image.png'
 import Vector1 from "../assets/Vector1.svg";
 import { User, Moon, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -219,7 +219,7 @@ const LandingPage = () => {
             {/* Image - Order changes on medium screens */}
             <div className="order-1 mb-8 w-full lg:order-2 lg:mb-0 lg:w-fit">
               <img
-                src={Image4}
+                src={image}
                 alt="Learning illustration"
                 className="relative z-10 mx-auto h-auto w-full max-w-[500px] sm:max-w-[600px] lg:mx-0 lg:w-[600px] lg:pl-10"
               />

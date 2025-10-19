@@ -3,9 +3,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-primary: #ffb732;
-  --color-dark-primary: #ffb732;
-  --color-text: #35389b;
+  --color-primary: #80CBC4;
+  --color-dark-primary: #80CBC4;
+  --color-text: #26667F;
   --color-dark-text: #ffffff;
 
   --text-size-small: 24px;

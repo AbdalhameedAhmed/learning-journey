@@ -19,7 +19,7 @@ export function useLogout() {
     onSuccess: () => {
       queryClient.setQueryData(["me"], null);
       removeTokens();
-      navigate("/login", { replace: true });
+      navigate("/", { replace: true });
     },
     onError: (err) => {
       console.log(err);

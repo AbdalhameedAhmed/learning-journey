@@ -284,7 +284,7 @@ const ExamArea = ({
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
+    <div className="flex w-full flex-col gap-6 px-4 sm:px-6 lg:px-8">
       {/* Timer Display */}
       {timeLeft !== null && (
         <div className="flex items-center justify-center gap-2 rounded-lg bg-white p-4 text-lg font-semibold shadow-md dark:bg-slate-800">

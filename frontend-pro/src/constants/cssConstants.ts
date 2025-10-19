@@ -4,15 +4,15 @@ export const originalCssValues = {
   primary:
     getComputedStyle(document.documentElement)
       .getPropertyValue("--color-primary")
-      .trim() || "#ffb732",
+      .trim() || "#80CBC4",
   darkPrimary:
     getComputedStyle(document.documentElement)
       .getPropertyValue("--color-dark-primary")
-      .trim() || "#ffb732",
+      .trim() || "#80CBC4",
   text:
     getComputedStyle(document.documentElement)
       .getPropertyValue("--color-text")
-      .trim() || "#35389b",
+      .trim() || "#26667F",
   darkText:
     getComputedStyle(document.documentElement)
       .getPropertyValue("--color-dark-text")

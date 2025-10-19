@@ -1,10 +1,10 @@
-import registerImg from "@/assets/Image4.svg";
+import image from "@/assets/image.png";
 import { useRegister } from "@/hooks/auth/useRegister";
 import { UserRole } from "@schemas/User";
-import { useState, useEffect } from "react";
+import { Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
 import { FaEnvelope, FaEye, FaEyeSlash, FaLock, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { Moon, Sun } from "lucide-react";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -138,7 +138,7 @@ export default function RegisterPage() {
         </p>
 
         <div className="mb-4 flex justify-center sm:mb-6">
-          <img src={registerImg} alt="register" className="w-40 sm:w-64" />
+          <img src={image} alt="register" className="w-40 sm:w-64" />
         </div>
 
         {apiError && (
@@ -151,7 +151,7 @@ export default function RegisterPage() {
           {/* Email input */}
           <div className="relative">
             <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
-              <FaEnvelope className="dark:text-dark-text text-text ml-2 sm:ml-3" />
+              <FaEnvelope className="dark:text-dark-text ml-2 text-black sm:ml-3" />
               <input
                 type="email"
                 value={email}
@@ -178,7 +178,7 @@ export default function RegisterPage() {
           {/* First name input */}
           <div className="relative">
             <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
-              <FaUser className="dark:text-dark-text text-text ml-2 sm:ml-3" />
+              <FaUser className="dark:text-dark-text ml-2 text-black sm:ml-3" />
               <input
                 type="text"
                 value={firstName}
@@ -205,7 +205,7 @@ export default function RegisterPage() {
           {/* Last name input */}
           <div className="relative">
             <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
-              <FaUser className="text-text dark:text-dark-text ml-2 sm:ml-3" />
+              <FaUser className="dark:text-dark-text ml-2 text-black sm:ml-3" />
               <input
                 type="text"
                 value={lastName}
@@ -232,7 +232,7 @@ export default function RegisterPage() {
           {/* Password input */}
           <div className="relative">
             <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
-              <FaLock className="text-text dark:text-dark-text ml-2 sm:ml-3" />
+              <FaLock className="dark:text-dark-text ml-2 text-black sm:ml-3" />
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
@@ -267,7 +267,7 @@ export default function RegisterPage() {
           {/* Confirm password input */}
           <div className="relative">
             <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
-              <FaLock className="text-text dark:text-dark-text ml-2 sm:ml-3" />
+              <FaLock className="dark:text-dark-text ml-2 text-black sm:ml-3" />
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
@@ -303,7 +303,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="dark:bg-text w-1/2 cursor-pointer rounded-full bg-[#002538] py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50 sm:w-1/3 sm:py-3 sm:text-lg"
+              className="dark:bg-text bg-primary w-1/2 cursor-pointer rounded-full py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50 sm:w-1/3 sm:py-3 sm:text-lg"
             >
               {isPending ? "جاري التسجيل..." : "تسجيل"}
             </button>
