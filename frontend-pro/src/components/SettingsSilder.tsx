@@ -69,7 +69,9 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
       }
     } else {
       setPrimaryColor(originalCssValues.primary);
+      setDarkPrimaryColor(originalCssValues.darkPrimary);
       setTextColor(originalCssValues.text);
+      setDarkTextColor(originalCssValues.darkText);
       setFontSize(originalCssValues.fontSize);
       setTheme(originalCssValues.theme);
     }
@@ -82,9 +84,9 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
       isInitialized &&
       primaryColor &&
       textColor &&
-      fontSize 
-      // && darkPrimaryColor &&
-      // darkTextColor
+      fontSize &&
+      darkPrimaryColor &&
+      darkTextColor
     ) {
       setSettingsStorage({
         primaryColor,
@@ -94,7 +96,7 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
         darkPrimaryColor,
         darkTextColor,
       });
-      console.log({
+      console.log("Change settings detected the nwe values =>", {
         theme,
         primaryColor,
         textColor,
@@ -117,7 +119,6 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
     if (!isInitialized) return;
 
     const newColor = event.target.value;
-    console.log(theme);
 
     if (theme === "dark") {
       setDarkPrimaryColor(newColor);
@@ -132,13 +133,16 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
   };
 
   const handleTextColorChange = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log("handleTextColorChange function called");
     if (!isInitialized) return;
 
     const newColor = event.target.value;
     if (theme === "dark") {
+      console.log("change dark text color");
       setDarkTextColor(newColor);
       document.documentElement.style.setProperty("--color-dark-text", newColor);
     } else {
+      console.log("change light text color");
       setTextColor(newColor);
       document.documentElement.style.setProperty("--color-text", newColor);
     }
@@ -314,7 +318,7 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
             onChange={handleFontSizeChange}
           >
             <option value="small" className="text-black">
-              صغير{" "}
+              صغير
             </option>
             <option value="medium" className="text-black">
               متوسط

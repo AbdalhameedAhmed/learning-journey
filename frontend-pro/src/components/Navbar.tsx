@@ -23,7 +23,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="bg-primary relative flex w-full items-center justify-between px-8 py-3 text-white">
+      <nav className="bg-primary dark:bg-dark-primary relative flex w-full items-center justify-between px-8 py-3 text-white">
         {/* LOGO */}
         <div className="text-right">
           <h1 className="text-lg font-bold">رحلة تعلّم</h1>
@@ -83,7 +83,7 @@ export default function Navbar() {
             onChange={(e) => setSearch(e.target.value)}
             className="px-3 py-1 text-black outline-none"
           />
-          <button type="submit" className="bg-primary p-2">
+          <button type="submit" className="bg-primary dark:bg-dark-primary p-2">
             <Search className="h-4 w-4 text-white" />
           </button>
         </div>
