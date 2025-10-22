@@ -34,19 +34,12 @@ export default function ModuleTab({
   isFinalExamAvailable,
   courseCompleted,
 }: ModulTabProps) {
-  console.log({ isFinalExamAvailable, courseCompleted });
   // Module is locked if it comes after the next available module
   const isModuleAvailable =
     isFinalExamAvailable ||
     courseCompleted ||
     (typeof nextAvailableModuleId === "number" &&
       module.id <= nextAvailableModuleId);
-
-  console.log({
-    isModuleAvailable,
-    moduleId: module.id,
-    nextAvailableModuleId,
-  });
 
   // Handler for the module title button
   const handleHeaderClick = () => {
@@ -79,8 +72,6 @@ export default function ModuleTab({
             courseCompleted ||
             (typeof nextAvailableLessonId === "number" &&
               lesson.id <= nextAvailableLessonId);
-
-          console.log({ isLessonAvailable: isLessonAvailable });
 
           const handleLessonClick = () => {
             if (isLessonAvailable) {
@@ -116,12 +107,6 @@ export default function ModuleTab({
             (nextAvailableExamId ?? 0) >= quiz.id ||
             isFinalExamAvailable ||
             courseCompleted;
-
-          console.log({
-            quizId: quiz.id,
-            isQuizLocked: isQuizAvailable,
-            nextAvailableExamId,
-          });
 
           const handleQuizClick = () => {
             if (isQuizAvailable) {

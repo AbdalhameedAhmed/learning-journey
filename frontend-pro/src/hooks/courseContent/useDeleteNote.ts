@@ -12,7 +12,6 @@ export function useDeleteNote(lessonId: number) {
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["notes", lessonId] });
       toast("تم حذف الملاحظة بنجاح", { type: "success" });
-      console.log(res);
     },
   });
 

@@ -136,8 +136,6 @@ async def login_user_controller(
             detail=f"Failed to create session: {str(e)}",
         )
 
-    print(user, "🚨")
-
     return LoginResponse(
         user=UserResponse(**user),
         tokens=Token(access_token=access_token, refresh_token=refresh_token),

@@ -96,14 +96,6 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
         darkPrimaryColor,
         darkTextColor,
       });
-      console.log("Change settings detected the nwe values =>", {
-        theme,
-        primaryColor,
-        textColor,
-        fontSize,
-        darkPrimaryColor,
-        darkTextColor,
-      });
     }
   }, [
     primaryColor,
@@ -133,16 +125,13 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
   };
 
   const handleTextColorChange = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log("handleTextColorChange function called");
     if (!isInitialized) return;
 
     const newColor = event.target.value;
     if (theme === "dark") {
-      console.log("change dark text color");
       setDarkTextColor(newColor);
       document.documentElement.style.setProperty("--color-dark-text", newColor);
     } else {
-      console.log("change light text color");
       setTextColor(newColor);
       document.documentElement.style.setProperty("--color-text", newColor);
     }
