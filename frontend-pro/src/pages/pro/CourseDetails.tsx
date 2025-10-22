@@ -76,7 +76,7 @@ export default function CourseDetails() {
   if (isPending) return <Spinner />;
 
   return (
-    <div className="relative flex w-full flex-1 items-center justify-center overflow-auto">
+    <div className="relative flex w-full flex-1 justify-center overflow-auto">
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMenuOpen(true)}
@@ -97,7 +97,7 @@ export default function CourseDetails() {
         onClose={() => setIsMenuOpen(false)}
       />
 
-      <div className="flex h-full flex-1 flex-col items-center justify-center gap-12 overflow-auto p-4 lg:p-12">
+      <div className="flex h-full flex-1 flex-col items-center justify-center gap-12 overflow-auto p-4">
         <div className="mt-16 flex w-full flex-1 items-center justify-center lg:mt-0">
           {activeLesson && <AssetResource lessonId={activeLesson.id} />}
           {activeExam && examType && (

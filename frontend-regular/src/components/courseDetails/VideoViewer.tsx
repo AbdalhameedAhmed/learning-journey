@@ -1,14 +1,12 @@
 import {
   Fullscreen,
   Minimize,
-  NotebookText,
   Pause,
   Play,
   Volume2,
   VolumeX,
 } from "lucide-react";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
-import clsx from "clsx";
 
 export default function VideoViewer({ url }: { url: string }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -19,10 +17,10 @@ export default function VideoViewer({ url }: { url: string }) {
   const [isMuted, setIsMuted] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const videoContainerRef = useRef<HTMLDivElement | null>(null);
-  const [showNotes, setShowNotes] = useState(false);
+  // const [showNotes, setShowNotes] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [playbackRate, setPlaybackRate] = useState(1);
+  // const [playbackRate, setPlaybackRate] = useState(1);
 
   const toggleFullScreen = () => {
     const videoContainer = videoContainerRef.current;
@@ -76,15 +74,15 @@ export default function VideoViewer({ url }: { url: string }) {
     }
   };
 
-  const handlePlaybackRateChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    const newPlaybackRate = parseFloat(e.target.value);
-    if (videoRef.current) {
-      videoRef.current.playbackRate = newPlaybackRate;
-      setPlaybackRate(newPlaybackRate);
-    }
-  };
+  // const handlePlaybackRateChange = (
+  //   e: React.ChangeEvent<HTMLSelectElement>,
+  // ) => {
+  //   const newPlaybackRate = parseFloat(e.target.value);
+  //   if (videoRef.current) {
+  //     videoRef.current.playbackRate = newPlaybackRate;
+  //     setPlaybackRate(newPlaybackRate);
+  //   }
+  // };
 
   const handleTimeUpdate = () => {
     if (!videoRef.current) return;
@@ -196,7 +194,7 @@ export default function VideoViewer({ url }: { url: string }) {
           </div>
 
           <div className="flex items-center gap-4">
-            {/* Playback Speed Control */}
+            {/* Playback Speed Control
             <select
               value={playbackRate}
               onChange={handlePlaybackRateChange}
@@ -210,9 +208,9 @@ export default function VideoViewer({ url }: { url: string }) {
               <option value="1.5">1.5x</option>
               <option value="1.75">1.75x</option>
               <option value="2">2x</option>
-            </select>
+            </select> */}
 
-            {/* Notes Button */}
+            {/* Notes Button
             <button onClick={() => setShowNotes(!showNotes)}>
               <NotebookText
                 className={clsx({
@@ -220,7 +218,7 @@ export default function VideoViewer({ url }: { url: string }) {
                   "text-primary": showNotes,
                 })}
               />
-            </button>
+            </button> */}
 
             {/* Fullscreen Button */}
             <button onClick={toggleFullScreen}>
