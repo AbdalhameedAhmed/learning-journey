@@ -1,15 +1,61 @@
-import React from "react";
+import contentSmall from "@/assets/content/content-small.jpg";
+import contentMedium from "@/assets/content/content-medium.jpg";
+import contentLarge from "@/assets/content/content-large.jpg";
+import { getSettingsStorage } from "@/utils/helpers";
+import { useEffect, useState } from "react";
 
-const ContentPage: React.FC = () => {
+const ContentPage = () => {
+  const [settings, setSettings] = useState(getSettingsStorage());
+
+  // Get the appropriate image based on font size setting, default to medium
+  const getContentImage = () => {
+    const fontSize = settings?.fontSize || "medium";
+
+    switch (fontSize) {
+      case "small":
+        return contentSmall;
+      case "large":
+        return contentLarge;
+      case "medium":
+      default:
+        return contentMedium;
+    }
+  };
+
+  const contentImage = getContentImage();
+
+  // Listen for settings changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setSettings(getSettingsStorage());
+    };
+
+    // Listen for storage events (changes from other tabs/windows)
+    window.addEventListener("storage", handleStorageChange);
+
+    // Poll for changes (in case changes happen in the same tab)
+    const interval = setInterval(() => {
+      const newSettings = getSettingsStorage();
+      if (JSON.stringify(newSettings) !== JSON.stringify(settings)) {
+        setSettings(newSettings);
+      }
+    }, 50);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [settings]);
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen p-6">
-      <h1 className="text-2xl font-bold mb-6">خريطة المحتوى</h1>
-      <div className="border border-gray-400 rounded-lg w-96 h-64 flex items-center justify-center">
-        <p className="text-lg">خريطة توضح عناصر المحتوى</p>
-      </div>
+    <div className="h-[calc(100vh-4rem)] w-screen overflow-hidden bg-white p-2">
+      <img
+        src={contentImage}
+        alt="الاهداف"
+        className="h-full w-full object-contain"
+      />
     </div>
   );
 };
 
 export default ContentPage;
-

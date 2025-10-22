@@ -1,5 +1,13 @@
 import { useGetNotes } from "@/hooks/courseContent/useGetNotes";
-import { Fullscreen, Minimize, NotebookText, Pause, Play } from "lucide-react";
+import {
+  Fullscreen,
+  Minimize,
+  NotebookText,
+  Pause,
+  Play,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import NotesSidebar from "./NotesSidebar";
 import clsx from "clsx";
@@ -17,11 +25,13 @@ export default function VideoViewer({
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const videoContainerRef = useRef<HTMLDivElement | null>(null);
   const [showNotes, setShowNotes] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [playbackRate, setPlaybackRate] = useState(1);
 
   const toggleFullScreen = () => {
     const videoContainer = videoContainerRef.current;
@@ -53,9 +63,35 @@ export default function VideoViewer({
   });
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value);
     if (videoRef.current) {
-      videoRef.current.volume = parseFloat(e.target.value);
-      setVolume(parseFloat(e.target.value));
+      videoRef.current.volume = newVolume;
+      setVolume(newVolume);
+      setIsMuted(newVolume === 0);
+    }
+  };
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      if (isMuted) {
+        videoRef.current.volume = volume > 0 ? volume : 0.5;
+        setVolume(volume > 0 ? volume : 0.5);
+        setIsMuted(false);
+      } else {
+        videoRef.current.volume = 0;
+        setVolume(0);
+        setIsMuted(true);
+      }
+    }
+  };
+
+  const handlePlaybackRateChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const newPlaybackRate = parseFloat(e.target.value);
+    if (videoRef.current) {
+      videoRef.current.playbackRate = newPlaybackRate;
+      setPlaybackRate(newPlaybackRate);
     }
   };
 
@@ -66,6 +102,10 @@ export default function VideoViewer({
     setCurrentTime(videoRef.current.currentTime);
     setDuration(videoRef.current.duration);
     setProgress(newProgress);
+  };
+
+  const handleVideoEnd = () => {
+    setIsPlaying(false);
   };
 
   const handleProgressClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -87,7 +127,7 @@ export default function VideoViewer({
 
   const togglePlayPause = () => {
     if (!videoRef.current) return;
-    if (videoRef.current.paused) {
+    if (videoRef.current.paused || videoRef.current.ended) {
       videoRef.current.play();
       setIsPlaying(true);
     } else {
@@ -99,7 +139,7 @@ export default function VideoViewer({
   const handleNoteClick = (time: number) => {
     if (videoRef.current) {
       videoRef.current.currentTime = time;
-      if (videoRef.current.paused) {
+      if (videoRef.current.paused || videoRef.current.ended) {
         videoRef.current.play();
         setIsPlaying(true);
       }
@@ -121,6 +161,7 @@ export default function VideoViewer({
         ref={videoRef}
         src={url}
         onTimeUpdate={handleTimeUpdate}
+        onEnded={handleVideoEnd}
         className="h-auto w-full flex-1"
         onClick={togglePlayPause}
       />
@@ -163,19 +204,59 @@ export default function VideoViewer({
         </div>
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-4">
+            {/* Play/Pause Button */}
             <button onClick={togglePlayPause}>
-              {isPlaying ? (
+              {isPlaying && !videoRef.current?.ended ? (
                 <Pause color="white" />
               ) : (
                 <Play color="white" className="-scale-x-100" />
               )}
             </button>
+
+            {/* Volume Control */}
+            <div className="flex items-center gap-2">
+              <button onClick={toggleMute} className="text-white">
+                {isMuted || volume === 0 ? (
+                  <VolumeX size={20} className="-scale-x-100" />
+                ) : (
+                  <Volume2 size={20} className="-scale-x-100" />
+                )}
+              </button>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+                value={volume}
+                onChange={handleVolumeChange}
+                className="h-2 w-24 cursor-pointer appearance-none rounded-lg bg-gray-500"
+              />
+            </div>
+
+            {/* Time Display */}
             <span className="text-white">
               {formatTime(currentTime)} / {formatTime(duration)}
             </span>
           </div>
 
           <div className="flex items-center gap-4">
+            {/* Playback Speed Control */}
+            <select
+              value={playbackRate}
+              onChange={handlePlaybackRateChange}
+              className="rounded bg-gray-700 px-2 py-1 text-white"
+            >
+              <option value="0.25">0.25x</option>
+              <option value="0.5">0.5x</option>
+              <option value="0.75">0.75x</option>
+              <option value="1">1x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="1.75">1.75x</option>
+              <option value="2">2x</option>
+            </select>
+
+            {/* Notes Button */}
             <button onClick={() => setShowNotes(!showNotes)}>
               <NotebookText
                 className={clsx({
@@ -184,16 +265,8 @@ export default function VideoViewer({
                 })}
               />
             </button>
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.1"
-              value={volume}
-              onChange={handleVolumeChange}
-              className="h-2 w-24 cursor-pointer appearance-none rounded-lg bg-gray-500"
-            />
 
+            {/* Fullscreen Button */}
             <button onClick={toggleFullScreen}>
               {isFullScreen ? (
                 <Minimize color="white" />

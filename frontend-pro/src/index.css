@@ -3,9 +3,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-primary: #80CBC4;
-  --color-dark-primary: #80CBC4;
-  --color-text: #26667F;
+  --color-primary: #80cbc4;
+  --color-dark-primary: #80cbc4;
+  --color-text: #26667f;
   --color-dark-text: #ffffff;
 
   --text-size-small: 24px;
@@ -50,4 +50,104 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+@keyframes float1 {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+  }
+}
+@keyframes float2 {
+  0%,
+  100% {
+    transform: translateX(0px) scale(1);
+  }
+  50% {
+    transform: translateX(15px) scale(1.1);
+  }
+}
+@keyframes float3 {
+  0%,
+  100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  33% {
+    transform: translate(10px, -15px) rotate(120deg);
+  }
+  66% {
+    transform: translate(-5px, 10px) rotate(240deg);
+  }
+}
+@keyframes float4 {
+  0%,
+  100% {
+    transform: translateY(0px) skew(0deg);
+  }
+  50% {
+    transform: translateY(15px) skew(10deg);
+  }
+}
+@keyframes float5 {
+  0%,
+  100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  25% {
+    transform: translate(5px, -10px) rotate(90deg);
+  }
+  50% {
+    transform: translate(10px, 5px) rotate(180deg);
+  }
+  75% {
+    transform: translate(-5px, 10px) rotate(270deg);
+  }
+}
+@keyframes float6 {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.5) rotate(180deg);
+  }
+}
+.animate-float1 {
+  animation: float1 8s ease-in-out infinite;
+}
+.animate-float2 {
+  animation: float2 6s ease-in-out infinite;
+}
+.animate-float3 {
+  animation: float3 10s ease-in-out infinite;
+}
+.animate-float4 {
+  animation: float4 7s ease-in-out infinite;
+}
+.animate-float5 {
+  animation: float5 9s ease-in-out infinite;
+}
+.animate-float6 {
+  animation: float6 5s ease-in-out infinite;
+}
+.animate-float7 {
+  animation: float1 11s ease-in-out infinite;
+}
+.animate-float8 {
+  animation: float2 8s ease-in-out infinite;
+}
+.animate-float9 {
+  animation: float3 12s ease-in-out infinite;
+}
+.animate-float10 {
+  animation: float4 6s ease-in-out infinite;
+}
+.animate-float11 {
+  animation: float5 10s ease-in-out infinite;
+}
+.animate-float12 {
+  animation: float6 7s ease-in-out infinite;
 }

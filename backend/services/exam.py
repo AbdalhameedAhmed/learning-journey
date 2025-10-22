@@ -276,9 +276,6 @@ async def update_regular_progress_after_module_quiz(
         next_lesson_id = await get_next_lesson_id(current_lesson_id, supabase)
         progress_data["next_available_lesson_id"] = next_lesson_id
 
-        # Set next available exam to None
-        progress_data["next_available_exam_id"] = None
-
         # Check if this was the last lesson
         if not next_lesson_id:
             progress_data["is_final_exam_available"] = True

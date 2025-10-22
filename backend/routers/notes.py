@@ -19,7 +19,6 @@ async def get_lesson_notes(
     """
     Get notes for a specific lesson.
     """
-    print(user.id, "✨✨")
     query = (
         supabase.table("notes")
         .select("*")
@@ -27,7 +26,6 @@ async def get_lesson_notes(
         .eq("user_id", user.id)
     )
     response = query.execute()
-    print(response, "🥳")
 
     return response.data
 

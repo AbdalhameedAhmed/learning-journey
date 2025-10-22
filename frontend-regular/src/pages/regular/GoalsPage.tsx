@@ -1,15 +1,15 @@
-import React from "react";
+import goalsMedium from "@/assets/goals/goals-medium.jpg";
 
-const GoalsPage: React.FC = () => {
+const GoalsPage = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen p-6">
-      <h1 className="text-2xl font-bold mb-6">الأهداف</h1>
-      <div className="border border-gray-400 rounded-lg w-96 h-64 flex items-center justify-center">
-        <p className="text-lg">تعرض الأهداف هنا</p>
-      </div>
+    <div className="h-[calc(100vh-4rem)] w-screen overflow-hidden bg-white p-2">
+      <img
+        src={goalsMedium}
+        alt="الاهداف"
+        className="h-full w-full object-contain"
+      />
     </div>
   );
 };
 
 export default GoalsPage;
-

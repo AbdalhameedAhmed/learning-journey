@@ -9,10 +9,14 @@ import UnauthorizedPage from "@/pages/UnauthorizedPage";
 import { UserRole } from "@schemas/User";
 import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
-import InfoPage from "./pages/regular/InfoPage";
-import GoalsPage from "./pages/regular/GoalsPage";
+import Layout from "./components/Layout";
 import ContentPage from "./pages/regular/ContentPage";
+import CourseDetails from "./pages/regular/CourseDetails";
+import GoalsPage from "./pages/regular/GoalsPage";
+import InstructionsPage from "./pages/regular/InstructionsPage";
 import LandingPage from "./pages/regular/LandingPage";
+import PreExam from "./pages/regular/PreExam";
+import ProfilePage from "./pages/regular/ProfilePage";
 
 const App = () => {
   return (
@@ -27,7 +31,15 @@ const App = () => {
 
         {/* REGULAR-only routes */}
         <Route element={<RoleBasedRoute allowedRoles={[UserRole.REGULAR]} />}>
-          <Route path="/home" element={<HomePage />} />
+          <Route element={<Layout />}>
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/course/:courseId" element={<CourseDetails />} />
+            <Route path="/instructions" element={<InstructionsPage />} />
+            <Route path="/goals" element={<GoalsPage />} />
+            <Route path="/content-map" element={<ContentPage />} />
+            <Route path="/pre-exam" element={<PreExam />} />
+          </Route>{" "}
         </Route>
 
         {/* ADMIN-only routes */}
@@ -40,10 +52,6 @@ const App = () => {
 
         {/* Notfound route */}
         <Route path="*" element={<NotFoundPage />} />
-
-        <Route path="/info" element={<InfoPage />} />
-        <Route path="/goals" element={<GoalsPage />} />
-        <Route path="/content" element={<ContentPage />} />
       </Routes>
 
       <ToastContainer

@@ -39,7 +39,7 @@ async def get_course_details_controller(course_id: int, supabase: Client):
         )
         .eq("id", course_id)
         .order("created_at", desc=True, foreign_table="modules.exams")
-        .order("id", foreign_table="modules.lessons")
+        .order("created_at", foreign_table="modules.lessons")
         .single()
     )
 

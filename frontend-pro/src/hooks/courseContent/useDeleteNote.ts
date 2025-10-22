@@ -9,10 +9,9 @@ export function useDeleteNote(lessonId: number) {
     mutationFn: async (noteId: number) => {
       return await apiReq("DELETE", `/notes/${noteId}`);
     },
-    onSuccess: (res) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes", lessonId] });
       toast("تم حذف الملاحظة بنجاح", { type: "success" });
-      console.log(res);
     },
   });
 

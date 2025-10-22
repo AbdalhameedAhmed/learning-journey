@@ -69,7 +69,9 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
       }
     } else {
       setPrimaryColor(originalCssValues.primary);
+      setDarkPrimaryColor(originalCssValues.darkPrimary);
       setTextColor(originalCssValues.text);
+      setDarkTextColor(originalCssValues.darkText);
       setFontSize(originalCssValues.fontSize);
       setTheme(originalCssValues.theme);
     }
@@ -82,23 +84,15 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
       isInitialized &&
       primaryColor &&
       textColor &&
-      fontSize 
-      // && darkPrimaryColor &&
-      // darkTextColor
+      fontSize &&
+      darkPrimaryColor &&
+      darkTextColor
     ) {
       setSettingsStorage({
         primaryColor,
         textColor,
         fontSize,
         theme,
-        darkPrimaryColor,
-        darkTextColor,
-      });
-      console.log({
-        theme,
-        primaryColor,
-        textColor,
-        fontSize,
         darkPrimaryColor,
         darkTextColor,
       });
@@ -117,7 +111,6 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
     if (!isInitialized) return;
 
     const newColor = event.target.value;
-    console.log(theme);
 
     if (theme === "dark") {
       setDarkPrimaryColor(newColor);
@@ -314,7 +307,7 @@ const SettingsSlider = ({ isOpen, onClose }: SettingsSliderProps) => {
             onChange={handleFontSizeChange}
           >
             <option value="small" className="text-black">
-              صغير{" "}
+              صغير
             </option>
             <option value="medium" className="text-black">
               متوسط

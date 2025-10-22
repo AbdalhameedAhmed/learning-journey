@@ -75,11 +75,12 @@ async def check_pro_user_availability(
     lesson: Dict[str, Any], user_progress: Dict[str, Any]
 ) -> Tuple[bool, str]:
     next_available_module_id = user_progress.get("next_available_module_id")
+    is_course_compleleted = user_progress.get("course_completed")
     completed_modules = user_progress.get("completed_modules", [])
     lesson_module_id = lesson.get("module_id")
 
     # If next_available_module_id is None, pre-exam not submitted
-    if next_available_module_id is None:
+    if next_available_module_id is None and not is_course_compleleted:
         return False, "أكمل الاختبار القبلي للبدء في الكورس"
     # Lesson is available if it belongs to the next available module or completed modules
     if lesson_module_id in completed_modules:
@@ -95,11 +96,12 @@ async def check_regular_user_availability(
     lesson: Dict[str, Any], user_progress: Dict[str, Any]
 ) -> Tuple[bool, str]:
     next_available_lesson_id = user_progress.get("next_available_lesson_id")
+    is_course_compleleted = user_progress.get("course_completed")
     completed_lessons = user_progress.get("completed_lessons", [])
     lesson_id = lesson["id"]
 
     # If next_available_lesson_id is None, pre-exam not submitted
-    if next_available_lesson_id is None:
+    if next_available_lesson_id is None and not is_course_compleleted:
         return False, "أكمل الاختبار القبلي للبدء في الكورس"
 
     # Lesson is available if it's the next available lesson or already completed

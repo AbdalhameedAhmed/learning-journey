@@ -1,41 +1,9 @@
-import { useState, useEffect } from "react";
-import Image4 from "../../assets/Image4.svg";
-import Vector1 from "../../assets/Vector1.svg";
-import { User, Moon, Sun } from "lucide-react";
+import image from "@/assets/image.png";
+import Vector1 from "@/assets/Vector1.svg";
+import { User } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const LandingPage = () => {
-  const [darkMode, setDarkMode] = useState(false);
-
-  // Initialize dark mode based on system preference or localStorage
-  useEffect(() => {
-    const savedMode = localStorage.getItem("darkMode");
-    const systemPrefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-
-    if (savedMode !== null) {
-      setDarkMode(JSON.parse(savedMode));
-    } else {
-      setDarkMode(systemPrefersDark);
-    }
-  }, []);
-
-  // Apply dark mode class to document root and save preference
-  useEffect(() => {
-    const root = document.documentElement;
-    if (darkMode) {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-    localStorage.setItem("darkMode", JSON.stringify(darkMode));
-  }, [darkMode]);
-
-  const toggleDarkMode = () => {
-    setDarkMode((prevMode) => !prevMode);
-  };
-
   // Background shapes data
   const backgroundShapes = [
     // Circles
@@ -155,23 +123,8 @@ const LandingPage = () => {
         ))}
       </div>
 
-      <header className="bg-primary dark:bg-dark-primary relative z-10 flex max-h-[76px] min-h-[76px] items-center justify-between px-4 py-4 sm:px-6 dark:bg-amber-600">
+      <header className="bg-primary dark:bg-dark-primary relative z-10 flex max-h-[76px] min-h-[76px] items-center justify-between px-4 py-4 sm:px-6">
         <div className="flex items-center gap-4">
-          {/* Dark Mode Toggle Button */}
-          <button
-            onClick={toggleDarkMode}
-            className="flex items-center justify-center rounded-full border-2 border-gray-800 bg-white p-2 transition-colors duration-200 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
-            aria-label={
-              darkMode ? "Switch to light mode" : "Switch to dark mode"
-            }
-          >
-            {darkMode ? (
-              <Sun size={20} className="text-yellow-500" />
-            ) : (
-              <Moon size={20} className="text-gray-700" />
-            )}
-          </button>
-
           <div className="text-right">
             <h1 className="text-lg font-bold text-gray-800 sm:text-xl dark:text-gray-900">
               رحلة تعلم
@@ -219,7 +172,7 @@ const LandingPage = () => {
             {/* Image - Order changes on medium screens */}
             <div className="order-1 mb-8 w-full lg:order-2 lg:mb-0 lg:w-fit">
               <img
-                src={Image4}
+                src={image}
                 alt="Learning illustration"
                 className="relative z-10 mx-auto h-auto w-full max-w-[500px] sm:max-w-[600px] lg:mx-0 lg:w-[600px] lg:pl-10"
               />
@@ -227,109 +180,6 @@ const LandingPage = () => {
           </div>
         </div>
       </main>
-
-      {/* Add custom animations to your CSS or Tailwind config */}
-      <style jsx>{`
-        @keyframes float1 {
-          0%,
-          100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-20px) rotate(180deg);
-          }
-        }
-        @keyframes float2 {
-          0%,
-          100% {
-            transform: translateX(0px) scale(1);
-          }
-          50% {
-            transform: translateX(15px) scale(1.1);
-          }
-        }
-        @keyframes float3 {
-          0%,
-          100% {
-            transform: translate(0px, 0px) rotate(0deg);
-          }
-          33% {
-            transform: translate(10px, -15px) rotate(120deg);
-          }
-          66% {
-            transform: translate(-5px, 10px) rotate(240deg);
-          }
-        }
-        @keyframes float4 {
-          0%,
-          100% {
-            transform: translateY(0px) skew(0deg);
-          }
-          50% {
-            transform: translateY(15px) skew(10deg);
-          }
-        }
-        @keyframes float5 {
-          0%,
-          100% {
-            transform: translate(0px, 0px) rotate(0deg);
-          }
-          25% {
-            transform: translate(5px, -10px) rotate(90deg);
-          }
-          50% {
-            transform: translate(10px, 5px) rotate(180deg);
-          }
-          75% {
-            transform: translate(-5px, 10px) rotate(270deg);
-          }
-        }
-        @keyframes float6 {
-          0%,
-          100% {
-            transform: scale(1) rotate(0deg);
-          }
-          50% {
-            transform: scale(1.5) rotate(180deg);
-          }
-        }
-        .animate-float1 {
-          animation: float1 8s ease-in-out infinite;
-        }
-        .animate-float2 {
-          animation: float2 6s ease-in-out infinite;
-        }
-        .animate-float3 {
-          animation: float3 10s ease-in-out infinite;
-        }
-        .animate-float4 {
-          animation: float4 7s ease-in-out infinite;
-        }
-        .animate-float5 {
-          animation: float5 9s ease-in-out infinite;
-        }
-        .animate-float6 {
-          animation: float6 5s ease-in-out infinite;
-        }
-        .animate-float7 {
-          animation: float1 11s ease-in-out infinite;
-        }
-        .animate-float8 {
-          animation: float2 8s ease-in-out infinite;
-        }
-        .animate-float9 {
-          animation: float3 12s ease-in-out infinite;
-        }
-        .animate-float10 {
-          animation: float4 6s ease-in-out infinite;
-        }
-        .animate-float11 {
-          animation: float5 10s ease-in-out infinite;
-        }
-        .animate-float12 {
-          animation: float6 7s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 };

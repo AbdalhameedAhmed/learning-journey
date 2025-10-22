@@ -26,12 +26,10 @@ async def get_users_basic_info_and_exams_controller(
 
         all_submissions_response = (
             supabase.table("submissions")
-            .select("id, user_id, exam_id, exam_type,score")
+            .select("id, user_id, exam_id, exam_type, score")
             .in_("user_id", user_ids)
             .execute()
         )
-
-        print(f"All Submissions: {all_submissions_response.data}")
 
         submissions_by_user = {}
         for submission in all_submissions_response.data:
@@ -86,6 +84,7 @@ async def get_users_basic_info_and_exams_controller(
                 "email": user["email"],
                 "first_name": user.get("first_name", ""),
                 "last_name": user.get("last_name", ""),
+                "profile_picture": user.get("profile_picture", ""),
                 "completed_lessons_ids": completed_lessons_ids,
                 "exam_submissions": exam_submissions,
                 "pre_exam": {
@@ -109,7 +108,9 @@ async def get_users_basic_info_and_exams_controller(
         )
 
 
-async def get_quiz_report_controller(quiz_id: int, supabase: Client, origin: str):
+async def get_quiz_report_controller(
+    quiz_id: int, supabase: Client, origin: str | None
+):
     role = get_role_via_origin(origin)
     pre_question_headers = [
         "الاسم",
@@ -198,7 +199,7 @@ async def get_quiz_report_controller(quiz_id: int, supabase: Client, origin: str
 
 
 async def get_exam_report_controller(
-    exam_id: int, exam_type: ExamType, supabase: Client, origin: str
+    exam_id: int, exam_type: ExamType, supabase: Client, origin: str | None
 ):
     role = get_role_via_origin(origin)
     pre_question_headers = [
