@@ -114,7 +114,7 @@ export default function RegisterPage() {
                 className="flex-1 bg-transparent text-sm text-black outline-none sm:text-lg dark:text-white"
               />
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${email ? "-top-2 text-xs sm:text-sm" : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"}`}
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${email ? "-top-6 text-xs sm:text-lg" : "top-6 -translate-y-3 text-sm sm:text-lg"}`}
               >
                 البريد الالكتروني
               </label>
@@ -137,7 +137,7 @@ export default function RegisterPage() {
                 className="flex-1 bg-transparent text-sm text-black outline-none sm:text-lg dark:text-white"
               />
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${firstName ? "-top-2 text-xs sm:text-sm" : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"}`}
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${firstName ? "-top-6 text-xs sm:text-lg" : "top-6 -translate-y-3 text-sm sm:text-lg"}`}
               >
                 الاسم الأول
               </label>
@@ -160,7 +160,7 @@ export default function RegisterPage() {
                 className="flex-1 bg-transparent text-sm text-black outline-none sm:text-lg dark:text-white"
               />
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${lastName ? "-top-2 text-xs sm:text-sm" : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"}`}
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${lastName ? "-top-6 text-xs sm:text-lg" : "top-6 -translate-y-3 text-sm sm:text-lg"}`}
               >
                 الاسم الأخير
               </label>
@@ -191,7 +191,7 @@ export default function RegisterPage() {
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${password ? "-top-2 text-xs sm:text-sm" : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"}`}
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${password ? "-top-6 text-xs sm:text-lg" : "top-6 -translate-y-3 text-sm sm:text-lg"}`}
               >
                 كلمة المرور
               </label>
@@ -222,7 +222,7 @@ export default function RegisterPage() {
                 {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${confirmPassword ? "-top-2 text-xs sm:text-sm" : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"}`}
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${confirmPassword ? "-top-6 text-xs sm:text-lg" : "top-6 -translate-y-3 text-sm sm:text-lg"}`}
               >
                 تأكيد كلمة المرور
               </label>
