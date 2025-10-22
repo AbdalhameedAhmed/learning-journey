@@ -27,7 +27,7 @@ const apiReq = async (method: string, endpoint: string, body?: unknown) => {
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message);
-        accessToken = data.accessToken;
+        accessToken = data.access_token;
         if (accessToken) {
           setAccessToken(accessToken);
         } else {

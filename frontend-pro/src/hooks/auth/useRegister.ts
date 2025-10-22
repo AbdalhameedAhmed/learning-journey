@@ -25,6 +25,7 @@ export function useRegister() {
       navigate("/login");
     },
     onError: (err) => {
+      toast("حدث خطأ أثناء التسجيل", { type: "error" });
       console.log("error in useRegister", err);
     },
   });

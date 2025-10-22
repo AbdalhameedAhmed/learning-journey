@@ -1,4 +1,4 @@
-import loginImg from "@/assets/Image4.svg";
+import image from "@/assets/image.png";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { UserRole } from "@schemas/User";
 import { useState } from "react";
@@ -38,7 +38,6 @@ export default function LoginPage() {
 
     try {
       setApiError("");
-
       login({ email, password, role: UserRole.REGULAR });
     } catch (err: unknown) {
       const errorMsg =
@@ -58,7 +57,7 @@ export default function LoginPage() {
         </p>
 
         <div className="mb-4 flex justify-center sm:mb-6">
-          <img src={loginImg} alt="login" className="w-40 sm:w-64" />
+          <img src={image} alt="login" className="w-40 sm:w-64" />
         </div>
 
         {apiError && (
@@ -69,7 +68,7 @@ export default function LoginPage() {
           {/* Email input */}
           <div className="relative">
             <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
-              <FaUser className="text-text dark:text-dark-text ml-2 sm:ml-3" />
+              <FaUser className="dark:text-dark-text ml-2 text-black sm:ml-3" />
               <input
                 type="email"
                 value={email}
@@ -77,7 +76,7 @@ export default function LoginPage() {
                 className="flex-1 bg-transparent text-sm text-black outline-none sm:text-lg dark:text-white"
               />
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${
+                className={`absolute ${labelRight} dark:text-dark-text pointer-events-none text-black transition-all duration-300 ${
                   email
                     ? "-top-2 text-xs sm:text-sm"
                     : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
@@ -96,7 +95,7 @@ export default function LoginPage() {
           {/* Password input */}
           <div className="relative">
             <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
-              <FaLock className="dark:text-dark-text text-text ml-2 sm:ml-3" />
+              <FaLock className="dark:text-dark-text ml-2 text-black sm:ml-3" />
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
@@ -106,7 +105,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 tabIndex={-1}
-                className="ml-2 text-black dark:text-white"
+                className="ml-2 text-black dark:text-black"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
@@ -132,7 +131,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="dark:bg-text w-1/2 cursor-pointer rounded-full bg-[#002538] py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50 sm:w-1/3 sm:py-3 sm:text-lg"
+              className="dark:bg-text bg-primary w-1/2 cursor-pointer rounded-full py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50 sm:w-1/3 sm:py-3 sm:text-lg"
             >
               {isPending ? "جاري الدخول..." : "دخول"}
             </button>

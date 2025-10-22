@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import image from '@/assets/image.png'
-import Vector1 from "../assets/Vector1.svg";
+import Vector1 from "@/assets/Vector1.svg";
 import { User, Moon, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
 

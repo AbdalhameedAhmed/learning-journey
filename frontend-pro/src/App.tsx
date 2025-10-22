@@ -3,7 +3,7 @@ import RoleBasedRoute from "@/components/authorization/RoleBasedRoute";
 import DashboardPage from "@/pages/admin/DashboardPage";
 import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
-import LandingPage from "@/pages/LandingPage";
+import LandingPage from "@/pages/pro/LandingPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import ContentPage from "@/pages/pro/ContentPage";
 import CourseDetails from "@/pages/pro/CourseDetails";

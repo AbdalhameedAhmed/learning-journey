@@ -1,12 +1,12 @@
+import { useGetFavorites } from "@/hooks/courseContent/useGetFavorites";
 import type { ExamHeader, LessonHeader, Module } from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
 import clsx from "clsx";
 import { Heart, Lock } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
 import HeaderButton from "./HeaderButton";
-import { useGetFavorites } from "@/hooks/courseContent/useGetFavorites";
 
-type ModuleMenuProps = {
+type ModuleTabProps = {
   module: Module;
   activeLesson: LessonHeader | undefined;
   setActiveLessonHandler: (lesson: LessonHeader) => void;
@@ -27,7 +27,7 @@ export default function ModuleTab({
   openedModule,
   setOpendModule,
   nextAvailableModuleId,
-}: ModuleMenuProps) {
+}: ModuleTabProps) {
   const { favorites } = useGetFavorites();
   const isModuleLocked =
     nextAvailableModuleId === null ||

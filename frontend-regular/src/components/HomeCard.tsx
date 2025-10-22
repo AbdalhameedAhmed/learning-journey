@@ -12,7 +12,7 @@ const HomeCard = ({ image, title, to }: HomeCardProps) => {
       to={to}
       className="text-current transition-transform duration-200 hover:scale-105"
     >
-      <div className="flex h-full flex-col overflow-hidden rounded-lg border border-gray-300 bg-white shadow-md">
+      <div className="flex h-full flex-col overflow-hidden rounded-lg border border-gray-300 bg-white shadow-md dark:bg-slate-800">
         <div className="relative aspect-square w-full p-2">
           <img
             src={image}
@@ -21,7 +21,7 @@ const HomeCard = ({ image, title, to }: HomeCardProps) => {
           />
         </div>
         <div className="p-4 text-center">
-          <h3 className="text-text dark:text-dark-text dark:text-dark-text text-text-size font-semibold">
+          <h3 className="text-text dark:text-dark-text text-text-normal font-semibold">
             {title}
           </h3>
         </div>

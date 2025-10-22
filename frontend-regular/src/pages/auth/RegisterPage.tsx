@@ -1,4 +1,4 @@
-import registerImg from "@/assets/Image4.svg";
+import image from "@/assets/image.png";
 import { useRegister } from "@/hooks/auth/useRegister";
 import { UserRole } from "@schemas/User";
 import { useState } from "react";
@@ -87,13 +87,12 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4 dark:bg-[#002538]">
       <div className="w-full max-w-md rounded-2xl bg-white p-6 text-right shadow-2xl sm:p-10 md:max-w-3xl dark:bg-[#0c1e2b]">
-        <p className="dark:text-primary mb-4 text-center text-2xl leading-relaxed font-semibold text-[#febc34] sm:mb-6">
-          مرحباً بكم في منصة رحلة تعلم
-          <br /> الآن يمكنكم التسجيل إلى المنصة
+        <p className="text-primary mb-4 text-center text-2xl leading-relaxed font-semibold sm:mb-6">
+          مرحباً بكم في منصة رحلة تعلم الآن يمكنكم التسجيل إلى المنصة
         </p>
 
         <div className="mb-4 flex justify-center sm:mb-6">
-          <img src={registerImg} alt="register" className="w-40 sm:w-64" />
+          <img src={image} alt="register" className="w-40 sm:w-64" />
         </div>
 
         {apiError && (
@@ -105,8 +104,8 @@ export default function RegisterPage() {
         <form className="space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
           {/* Email input */}
           <div className="relative">
-            <div className="dark:bg-text flex items-center rounded-full bg-[#febc34] px-3 py-2 sm:px-4 sm:py-3">
-              <FaEnvelope className="ml-2 text-black sm:ml-3 dark:text-white" />
+            <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
+              <FaEnvelope className="dark:text-dark-text ml-2 text-black sm:ml-3" />
               <input
                 type="email"
                 value={email}
@@ -114,7 +113,11 @@ export default function RegisterPage() {
                 className="flex-1 bg-transparent text-sm text-black outline-none sm:text-lg dark:text-white"
               />
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${email ? "-top-2 text-xs sm:text-sm" : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"}`}
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
+                  email
+                    ? "-top-2 text-xs sm:text-sm"
+                    : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
+                }`}
               >
                 البريد الالكتروني
               </label>
@@ -128,8 +131,8 @@ export default function RegisterPage() {
 
           {/* First name input */}
           <div className="relative">
-            <div className="dark:bg-text flex items-center rounded-full bg-[#febc34] px-3 py-2 sm:px-4 sm:py-3">
-              <FaUser className="ml-2 text-black sm:ml-3 dark:text-white" />
+            <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
+              <FaUser className="dark:text-dark-text ml-2 text-black sm:ml-3" />
               <input
                 type="text"
                 value={firstName}
@@ -137,7 +140,11 @@ export default function RegisterPage() {
                 className="flex-1 bg-transparent text-sm text-black outline-none sm:text-lg dark:text-white"
               />
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${firstName ? "-top-2 text-xs sm:text-sm" : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"}`}
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
+                  firstName
+                    ? "-top-2 text-xs sm:text-sm"
+                    : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
+                }`}
               >
                 الاسم الأول
               </label>
@@ -151,8 +158,8 @@ export default function RegisterPage() {
 
           {/* Last name input */}
           <div className="relative">
-            <div className="dark:bg-text flex items-center rounded-full bg-[#febc34] px-3 py-2 sm:px-4 sm:py-3">
-              <FaUser className="ml-2 text-black sm:ml-3 dark:text-white" />
+            <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
+              <FaUser className="dark:text-dark-text ml-2 text-black sm:ml-3" />
               <input
                 type="text"
                 value={lastName}
@@ -160,7 +167,11 @@ export default function RegisterPage() {
                 className="flex-1 bg-transparent text-sm text-black outline-none sm:text-lg dark:text-white"
               />
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${lastName ? "-top-2 text-xs sm:text-sm" : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"}`}
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
+                  lastName
+                    ? "-top-2 text-xs sm:text-sm"
+                    : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
+                }`}
               >
                 الاسم الأخير
               </label>
@@ -174,8 +185,8 @@ export default function RegisterPage() {
 
           {/* Password input */}
           <div className="relative">
-            <div className="dark:bg-text flex items-center rounded-full bg-[#febc34] px-3 py-2 sm:px-4 sm:py-3">
-              <FaLock className="ml-2 text-black sm:ml-3 dark:text-white" />
+            <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
+              <FaLock className="dark:text-dark-text ml-2 text-black sm:ml-3" />
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
@@ -185,13 +196,17 @@ export default function RegisterPage() {
               <button
                 type="button"
                 tabIndex={-1}
-                className="ml-2 text-black dark:text-white"
+                className="ml-2 text-black dark:text-black"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${password ? "-top-2 text-xs sm:text-sm" : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"}`}
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
+                  password
+                    ? "-top-2 text-xs sm:text-sm"
+                    : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
+                }`}
               >
                 كلمة المرور
               </label>
@@ -205,8 +220,8 @@ export default function RegisterPage() {
 
           {/* Confirm password input */}
           <div className="relative">
-            <div className="dark:bg-text flex items-center rounded-full bg-[#febc34] px-3 py-2 sm:px-4 sm:py-3">
-              <FaLock className="ml-2 text-black sm:ml-3 dark:text-white" />
+            <div className="bg-primary dark:bg-dark-primary flex items-center rounded-full px-3 py-2 sm:px-4 sm:py-3">
+              <FaLock className="dark:text-dark-text ml-2 text-black sm:ml-3" />
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
@@ -216,13 +231,17 @@ export default function RegisterPage() {
               <button
                 type="button"
                 tabIndex={-1}
-                className="ml-2 text-black dark:text-white"
+                className="ml-2 text-black dark:text-black"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
               <label
-                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-white ${confirmPassword ? "-top-2 text-xs sm:text-sm" : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"}`}
+                className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
+                  confirmPassword
+                    ? "-top-2 text-xs sm:text-sm"
+                    : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
+                }`}
               >
                 تأكيد كلمة المرور
               </label>
@@ -238,7 +257,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="w-1/2 cursor-pointer rounded-full bg-[#002538] py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50 sm:w-1/3 sm:py-3 sm:text-lg dark:bg-[#0c1e2b]"
+              className="dark:bg-text bg-primary w-1/2 cursor-pointer rounded-full py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50 sm:w-1/3 sm:py-3 sm:text-lg"
             >
               {isPending ? "جاري التسجيل..." : "تسجيل"}
             </button>
