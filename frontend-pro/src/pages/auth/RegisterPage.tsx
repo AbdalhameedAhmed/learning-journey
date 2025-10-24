@@ -161,8 +161,8 @@ export default function RegisterPage() {
               <label
                 className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
                   email
-                    ? "-top-2 text-xs sm:text-sm"
-                    : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
+                    ? "-top-6 text-xs sm:text-lg"
+                    : "top-6 -translate-y-3 text-sm sm:text-lg"
                 }`}
               >
                 البريد الالكتروني
@@ -188,8 +188,8 @@ export default function RegisterPage() {
               <label
                 className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
                   firstName
-                    ? "-top-2 text-xs sm:text-sm"
-                    : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
+                    ? "-top-6 text-xs sm:text-lg"
+                    : "top-6 -translate-y-3 text-sm sm:text-lg"
                 }`}
               >
                 الاسم الأول
@@ -215,8 +215,8 @@ export default function RegisterPage() {
               <label
                 className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
                   lastName
-                    ? "-top-2 text-xs sm:text-sm"
-                    : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
+                    ? "-top-6 text-xs sm:text-lg"
+                    : "top-6 -translate-y-3 text-sm sm:text-lg"
                 }`}
               >
                 الاسم الأخير
@@ -250,8 +250,8 @@ export default function RegisterPage() {
               <label
                 className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
                   password
-                    ? "-top-2 text-xs sm:text-sm"
-                    : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
+                    ? "-top-6 text-xs sm:text-lg"
+                    : "top-6 -translate-y-3 text-sm sm:text-lg"
                 }`}
               >
                 كلمة المرور
@@ -285,8 +285,8 @@ export default function RegisterPage() {
               <label
                 className={`absolute ${labelRight} pointer-events-none text-black transition-all duration-300 dark:text-black ${
                   confirmPassword
-                    ? "-top-2 text-xs sm:text-sm"
-                    : "top-1/2 -translate-y-1/2 text-sm sm:text-lg"
+                    ? "-top-6 text-xs sm:text-lg"
+                    : "top-6 -translate-y-3 text-sm sm:text-lg"
                 }`}
               >
                 تأكيد كلمة المرور
@@ -310,12 +310,12 @@ export default function RegisterPage() {
 
             <div className="mt-3 text-center text-sm sm:mt-4 sm:text-base">
               <p className="mt-1 text-black sm:mt-2 dark:text-white">
-                لديك حساب بالفعل؟{" "}
+                 لديك حساب بالفعل؟{" "}
                 <Link
                   to="/login"
                   className="dark:text-primary mt-5 font-semibold text-[#002538]"
                 >
-                  الدخول الآن
+                  الدخول الآن  
                 </Link>
               </p>
             </div>
