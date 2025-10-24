@@ -211,17 +211,18 @@ async def submit_exam_controller(
         if existing_submission:
             return {"error": "تم تقديم الامتحان بالفعل. لا يمكنك تقديمه مرة أخرى."}
 
-        # 2. Check if exam is allowed based on progress data
-        is_exam_allowed = await is_exam_allowed_by_progress(
-            exam_id=submission_data.exam_id,
-            exam_type=submission_data.exam_type,
-            user_progress=user_progress,
-        )
+        if submission_data.exam_type != ExamType.ACTIVITY:
+            # 2. Check if exam is allowed based on progress data
+            is_exam_allowed = await is_exam_allowed_by_progress(
+                exam_id=submission_data.exam_id,
+                exam_type=submission_data.exam_type,
+                user_progress=user_progress,
+            )
 
-        if not is_exam_allowed:
-            return {
-                "error": "للوصول إلى هذا الامتحان، يرجى استكمال الدروس والوحدات السابقة أولاً."
-            }
+            if not is_exam_allowed:
+                return {
+                    "error": "للوصول إلى هذا الامتحان، يرجى استكمال الدروس والوحدات السابقة أولاً."
+                }
 
         # 2. Calculate score with detailed results
         score_result = await calculate_exam_score(
@@ -248,6 +249,7 @@ async def submit_exam_controller(
 
         # 4. Update user progress
         progress_update_result = await update_progress_after_exam(
+            exam_id=submission_data.exam_id,
             user_id=user_id,
             user_role=user_role,
             exam_type=submission_data.exam_type,

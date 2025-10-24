@@ -27,7 +27,8 @@ async def get_course_details_controller(course_id: int, supabase: Client):
                 name,
                 lessons (
                     id,
-                    name
+                    name,
+                    activity_id
                 ),
                 quizzes: exams (
                     id,
@@ -62,18 +63,22 @@ async def get_lesson_details_controller(
             supabase=supabase,
         )
 
+        activity_id = result["lesson"]["activity_id"]
+
         # If there's an error, return it immediately
         if "error" in result:
             return result
 
         # If lesson is successfully accessed, update user progress
         # Only update if this is a new lesson (not already completed)
+
         should_update_progress = await should_update_lesson_progress(
             lesson_id, student_user, supabase
         )
 
         if should_update_progress:
             update_result = await update_progress_after_lesson_completion(
+                activity_id=activity_id,
                 user_id=student_user.id,
                 user_role=student_user.role,
                 completed_lesson_id=lesson_id,
@@ -95,7 +100,9 @@ async def get_lesson_details_controller(
 
 
 async def should_update_lesson_progress(
-    lesson_id: int, student_user: UserResponse, supabase: Client
+    lesson_id: int,
+    student_user: UserResponse,
+    supabase: Client,
 ) -> bool:
     user_progress = student_user.current_progress_data
     completed_lessons = user_progress.get("completed_lessons", [])

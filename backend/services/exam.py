@@ -6,8 +6,10 @@ from schemas.exam import ExamType
 from supabase import Client
 
 from services.course import (
+    get_exam_by_previous_lesson,
     get_first_exam_for_module,
     get_next_lesson_id,
+    is_last_activity_in_current_module,
     is_last_module,
 )
 
@@ -98,7 +100,6 @@ async def calculate_exam_score(
                 correct_answers_count += 1
                 is_correctly_answered = True
 
-
             review_entry = {
                 "question_id": question_id,
                 "question_text": question_text,
@@ -127,7 +128,6 @@ async def calculate_exam_score(
 
     except Exception as e:
         return {"error": f"Error calculating score: {str(e)}"}
-
 
 
 async def save_exam_submission(
@@ -163,6 +163,7 @@ async def save_exam_submission(
 
 
 async def update_progress_after_exam(
+    exam_id: int,
     user_id: int,
     user_role: UserRole,
     exam_type: str,
@@ -193,6 +194,23 @@ async def update_progress_after_exam(
                 user_id, progress_data, supabase
             )
 
+        elif exam_type == "activity":
+            lesson_obj = await is_last_activity_in_current_module(exam_id, supabase)
+
+            if lesson_obj.get("is_last"):
+                progress_data[
+                    "next_available_exam_id"
+                ] = await get_exam_by_previous_lesson(
+                    lesson_obj.get("lesson_id"), supabase
+                )
+            else:
+                next_lesson_id = await get_next_lesson_id(
+                    lesson_obj.get("lesson_id"), supabase
+                )
+                progress_data["next_available_lesson_id"] = next_lesson_id
+
+            return {"success": True}
+
         else:
             return {"error": "Unknown exam type"}
 
@@ -219,7 +237,7 @@ async def update_progress_after_pre_exam(
     else:
         progress_data.update(
             {
-                "next_available_lesson_id": 1,
+                "next_available_lesson_id": 0,
                 "next_available_exam_id": None,
             }
         )

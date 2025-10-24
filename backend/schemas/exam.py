@@ -8,6 +8,7 @@ class ExamType(str, Enum):
     PRE_EXAM = "pre_exam"
     QUIZ = "quiz"
     FINAL_EXAM = "final_exam"
+    ACTIVITY = "activity"
 
 
 # without is_correct

@@ -18,7 +18,7 @@ courses_router = APIRouter(
 async def get_course_details(
     course_id: int,
     supabase: Client = Depends(get_supabase_client),
-    _: dict = Depends(validate_student_user),
+    # _: dict = Depends(validate_student_user),
 ):
     return await get_course_details_controller(course_id, supabase)
 

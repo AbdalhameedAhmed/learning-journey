@@ -8,7 +8,7 @@ from services.auth import get_user_progress
 
 
 async def get_lesson_by_id(
-    lesson_id: int, supabase: Client
+    lesson_id: int | None, supabase: Client
 ) -> Optional[Dict[str, Any]]:
     try:
         response = (
@@ -50,7 +50,7 @@ async def get_first_lesson_of_module(
 
 
 async def get_next_lesson(
-    current_lesson_id: int, supabase: Client
+    current_lesson_id: int | None, supabase: Client
 ) -> Optional[Dict[str, Any]]:
     try:
         current_lesson = await get_lesson_by_id(current_lesson_id, supabase)
@@ -125,16 +125,34 @@ async def is_lesson_available(
         return await check_regular_user_availability(lesson, user_progress)
 
 
-async def is_last_lesson_in_current_module(lesson_id: int, supabase: Client) -> bool:
+async def get_lesson_by_activity_id(activity_id: int, supabase: Client):
     try:
+        response = (
+            supabase.table("lessons")
+            .select("id")
+            .eq("activity_id", activity_id)
+            .execute()
+        )
+        return response.data[0]["id"] if response.data else None
+    except Exception:
+        return None
+
+
+async def is_last_activity_in_current_module(activity_id: int, supabase: Client):
+    try:
+        lesson_id = await get_lesson_by_activity_id(activity_id, supabase)
+
+        if lesson_id is None:
+            return {"lesson_id": lesson_id, "is_last": False}
+
         # Get the current lesson to find its module
         current_lesson = await get_lesson_by_id(lesson_id, supabase)
         if not current_lesson:
-            return False
+            return {"lesson_id": lesson_id, "is_last": False}
 
         module_id = current_lesson.get("module_id")
         if not module_id:
-            return False
+            return {"lesson_id": lesson_id, "is_last": False}
 
         # Get all lessons in this module ordered by creation
         response = (
@@ -146,19 +164,22 @@ async def is_last_lesson_in_current_module(lesson_id: int, supabase: Client) -> 
         )
 
         if not response.data:
-            return False
+            return {"lesson_id": lesson_id, "is_last": False}
 
         lesson_ids = [lesson["id"] for lesson in response.data]
 
         # Check if this is the last lesson in the module
-        return lesson_id == lesson_ids[-1] if lesson_ids else False
+        if lesson_id == lesson_ids[-1]:
+            return {"lesson_id": lesson_id, "is_last": True}
+        else:
+            return {"lesson_id": lesson_id, "is_last": False}
 
     except Exception:
-        return False
+        return {"lesson_id": None, "is_last": False}
 
 
 async def get_exam_by_previous_lesson(
-    lesson_id: int, supabase: Client
+    lesson_id: int | None, supabase: Client
 ) -> Optional[int]:
     try:
         response = (
@@ -174,7 +195,11 @@ async def get_exam_by_previous_lesson(
 
 
 async def update_progress_after_lesson_completion(
-    user_id: int, user_role: UserRole, completed_lesson_id: int, supabase: Client
+    activity_id: int | None,
+    user_id: int,
+    user_role: UserRole,
+    completed_lesson_id: int,
+    supabase: Client,
 ) -> Dict[str, Any]:
     progress_data = await get_user_progress(user_id, supabase)
     completed_lessons = progress_data.get("completed_lessons", [])
@@ -192,17 +217,21 @@ async def update_progress_after_lesson_completion(
             completed_lessons.append(completed_lesson_id)
             progress_data["completed_lessons"] = completed_lessons
 
-        # Check if this is the last lesson in the current module
-        is_last_lesson_in_module = await is_last_lesson_in_current_module(
-            completed_lesson_id, supabase
-        )
+        # # Check if this is the last lesson in the current module
+        # is_last_lesson_in_module = await is_last_lesson_in_current_module(
+        #     completed_lesson_id, supabase
+        # )
 
-        if is_last_lesson_in_module:
-            # Don't update next_available_lesson_id
-            # Set next_available_exam_id
-            progress_data["next_available_exam_id"] = await get_exam_by_previous_lesson(
-                completed_lesson_id, supabase
-            )
+        # if is_last_lesson_in_module:
+        #     # Don't update next_available_lesson_id
+        #     # Set next_available_exam_id
+        #     progress_data["next_available_exam_id"] = await get_exam_by_previous_lesson(
+        #         completed_lesson_id, supabase
+        #     )
+        # TODO: Abdalhameed: (check the submission of activity)
+        if activity_id:
+            # in case the lesson has an activity
+            progress_data["next_available_activity_id"] = activity_id
         else:
             # Normal progression - set next available lesson
             next_lesson_id = await get_next_lesson_id(completed_lesson_id, supabase)
@@ -252,6 +281,7 @@ async def get_lesson_with_validation(
             module_id=lesson_dict["module_id"],
             assets=assets,
             created_at=lesson_dict["created_at"],
+            activity_id=lesson_dict["activity_id"],
         )
 
         # Return lesson data
@@ -280,7 +310,9 @@ async def is_module_completed(
         return False
 
 
-async def get_next_lesson_id(current_lesson_id: int, supabase: Client) -> Optional[int]:
+async def get_next_lesson_id(
+    current_lesson_id: int | None, supabase: Client
+) -> Optional[int]:
     try:
         next_lesson = await get_next_lesson(current_lesson_id, supabase)
         return next_lesson["id"] if next_lesson else None

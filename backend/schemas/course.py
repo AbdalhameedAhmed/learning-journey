@@ -15,3 +15,4 @@ class LessonResponse(BaseModel):
     module_id: int
     assets: List[AssetResponse]
     created_at: datetime
+    activity_id: int | None = None

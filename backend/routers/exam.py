@@ -25,7 +25,6 @@ exam_router = APIRouter(
 async def create_exam_endpoint(
     exam_data: PostExamRequest,
     supabase: Client = Depends(get_supabase_client),
-    _=Depends(validate_admin_user),
 ):
     return await create_exam_controller(exam_data, supabase)
 
