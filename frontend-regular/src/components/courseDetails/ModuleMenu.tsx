@@ -38,7 +38,7 @@ const ModuleMenu = ({
 
   // Calculate next available module ID based on next available lesson
   const getNextAvailableModuleId = () => {
-    if (!courseDetails || !nextAvailableLessonId) return null;
+    if (!courseDetails || typeof nextAvailableLessonId != "number") return null;
 
     for (const module of courseDetails.modules) {
       // Check if this module contains the next available lesson

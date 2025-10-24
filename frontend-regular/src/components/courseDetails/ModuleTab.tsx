@@ -42,7 +42,8 @@ export default function ModuleTab({
       module.id <= nextAvailableModuleId);
 
   // Handler for the module title button
-  console.log(isModuleAvailable);
+  console.log(nextAvailableModuleId, "⛰️⛰️⛰️⛰️");
+
   const handleHeaderClick = () => {
     if (isModuleAvailable) {
       setOpendModule(module.id);
