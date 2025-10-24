@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { Lock } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
 import HeaderButton from "./HeaderButton";
+import { useGetMe } from "@/hooks/auth/useGetMe";
 
 type ModulTabProps = {
   module: Module;
@@ -43,6 +44,7 @@ export default function ModuleTab({
 
   // Handler for the module title button
   console.log(nextAvailableModuleId, "⛰️⛰️⛰️⛰️");
+  const { me } = useGetMe();
 
   const handleHeaderClick = () => {
     if (isModuleAvailable) {
@@ -81,26 +83,67 @@ export default function ModuleTab({
             }
           };
 
+          const isActivityAvailable =
+            me?.current_progress_data?.next_available_activity_id &&
+            lesson.activity_id &&
+            me?.current_progress_data?.next_available_activity_id <=
+              lesson.activity_id;
+
+          const handleQuizClick = () => {
+            if (isActivityAvailable && lesson.activity_id) {
+              setActiveExamHandler(
+                {
+                  id: lesson.activity_id,
+                  created_at: new Date(),
+                },
+                ExamType.ACTIVITY,
+              );
+            }
+          };
+
           return (
-            <div key={lesson.id} className="relative">
-              <p
-                className={clsx(
-                  "border-primary dark:border-dark-primary text-text-tiny text-text dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
-                  {
-                    "cursor-pointer": isLessonAvailable,
-                    "cursor-not-allowed opacity-50": !isLessonAvailable,
-                    "bg-primary dark:bg-dark-primary text-white":
-                      activeLesson?.id === lesson.id && isLessonAvailable,
-                  },
-                )}
-                onClick={handleLessonClick}
-              >
-                <span className="flex-1 text-center">{lesson.name}</span>
-                {!isLessonAvailable && (
-                  <Lock size={14} className="text-gray-400" />
-                )}
-              </p>
-            </div>
+            <>
+              <div key={lesson.id} className="relative">
+                <p
+                  className={clsx(
+                    "border-primary dark:border-dark-primary text-text-tiny text-text dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
+                    {
+                      "cursor-pointer": isLessonAvailable,
+                      "cursor-not-allowed opacity-50": !isLessonAvailable,
+                      "bg-primary dark:bg-dark-primary text-white":
+                        activeLesson?.id === lesson.id && isLessonAvailable,
+                    },
+                  )}
+                  onClick={handleLessonClick}
+                >
+                  <span className="flex-1 text-center">{lesson.name}</span>
+                  {!isLessonAvailable && (
+                    <Lock size={14} className="text-gray-400" />
+                  )}
+                </p>
+              </div>
+              {lesson.activity_id && (
+                <p
+                  key={lesson.activity_id}
+                  className={clsx(
+                    "border-primary dark:border-dark-primary text-text text-text-tiny dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
+                    {
+                      "cursor-pointer": isActivityAvailable,
+                      "cursor-not-allowed opacity-50": !isActivityAvailable,
+                      "bg-primary dark:bg-dark-primary text-white":
+                        activeExam?.id === lesson.activity_id &&
+                        isActivityAvailable,
+                    },
+                  )}
+                  onClick={handleQuizClick}
+                >
+                  <span className="flex-1 text-center">نشاط</span>
+                  {!isActivityAvailable && (
+                    <Lock size={14} className="text-gray-400" />
+                  )}
+                </p>
+              )}
+            </>
           );
         })}
 

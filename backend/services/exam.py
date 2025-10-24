@@ -207,8 +207,12 @@ async def update_progress_after_exam(
                 next_lesson_id = await get_next_lesson_id(
                     lesson_obj.get("lesson_id"), supabase
                 )
+
                 progress_data["next_available_lesson_id"] = next_lesson_id
 
+            supabase.table("users").update({"current_progress_data": progress_data}).eq(
+                "id", user_id
+            ).execute()
             return {"success": True}
 
         else:

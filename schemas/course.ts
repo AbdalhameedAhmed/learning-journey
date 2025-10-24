@@ -15,6 +15,7 @@ export interface Module {
 export interface LessonHeader {
   id: number;
   name: string;
+  activity_id: number | null;
 }
 
 export interface Lesson extends LessonHeader {

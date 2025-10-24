@@ -21,6 +21,7 @@ export interface IProgress {
   next_available_module_id: number | null;
   next_available_lesson_id: number | null;
   next_available_exam_id: number | null;
+  next_available_activity_id: number | null;
   course_completed?: boolean;
   completed_at?: Date;
 }

@@ -133,6 +133,7 @@ async def validate_pro_user_getting_exam(
     next_available_module_id = progress_data.get("next_available_module_id")
     next_available_exam_id = progress_data.get("next_available_exam_id")
     is_final_exam_available = progress_data.get("is_final_exam_available", False)
+    next_available_activity_id = progress_data.get("next_available_activity_id")
 
     if exam_type == ExamType.PRE_EXAM:
         # Pre-exam: must be course-level exam and no progress yet
@@ -155,7 +156,13 @@ async def validate_pro_user_getting_exam(
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {"error": "الامتحان النهائي غير متاح بعد. أكمل جميع الوحدات أولاً."}
-
+    elif exam_type == ExamType.ACTIVITY:
+        if exam_data["id"] == next_available_activity_id:
+            return await get_exam_and_questions_by_id(exam_data["id"], supabase)
+        else:
+            return {
+                "error": "للوصول إلى هذا الامتحان، يرجى استكمال الدروس والوحدات السابقة أولاً."
+            }
     return {"error": "نوع الامتحان غير صالح"}
 
 
@@ -166,6 +173,7 @@ async def validate_regular_user_getting_exam(
     next_available_lesson_id = progress_data.get("next_available_lesson_id")
     next_available_exam_id = progress_data.get("next_available_exam_id")
     is_final_exam_available = progress_data.get("is_final_exam_available", False)
+    next_available_activity_id = progress_data.get("next_available_activity_id")
 
     if exam_type == ExamType.PRE_EXAM:
         # Pre-exam: must be course-level exam and no progress yet
@@ -188,6 +196,13 @@ async def validate_regular_user_getting_exam(
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {"error": "الامتحان النهائي غير متاح بعد. أكمل جميع الوحدات أولاً."}
+    elif exam_type == ExamType.ACTIVITY:
+        if exam_data["id"] == next_available_activity_id:
+            return await get_exam_and_questions_by_id(exam_data["id"], supabase)
+        else:
+            return {
+                "error": "للوصول إلى هذا الامتحان، يرجى استكمال الدروس والوحدات السابقة أولاً."
+            }
 
     return {"error": "نوع الامتحان غير صالح"}
 
