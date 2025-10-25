@@ -2,7 +2,8 @@ import logo from "@/assets/logo.svg";
 import { useGetMe } from "@/hooks/auth/useGetMe";
 import { useLogout } from "@/hooks/auth/useLogout";
 import { useGetCourseDetails } from "@/hooks/courseContent/useGetCourseDetails";
-import { CircleUserRound, LogOut, Menu, Search, X } from "lucide-react";
+import clsx from "clsx";
+import { CircleUserRound, Lock, LogOut, Menu, Search, X } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
@@ -13,6 +14,7 @@ interface SearchResult {
   name: string;
   moduleName: string;
   courseId: number;
+  isAvailable: boolean;
 }
 
 export default function Navbar() {
@@ -26,6 +28,38 @@ export default function Navbar() {
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const [showResults, setShowResults] = useState(false);
 
+  const progressData = me?.current_progress_data;
+  const nextAvailableLessonId = progressData?.next_available_lesson_id;
+  const isFinalExamAvailable = progressData?.is_final_exam_available;
+  const courseCompleted = progressData?.course_completed;
+
+  const getNextAvailableModuleId = () => {
+    if (!courseDetails || typeof nextAvailableLessonId != "number") return null;
+
+    for (const module of courseDetails.modules) {
+      // Check if this module contains the next available lesson
+      const hasNextLesson = module.lessons.some(
+        (lesson) => lesson.id === nextAvailableLessonId,
+      );
+      if (hasNextLesson) {
+        return module.id;
+      }
+
+      // Check if this module has any lessons that come after the next available lesson
+      // This handles the case where we need to find which module should be unlocked next
+      const hasFutureLessons = module.lessons.some(
+        (lesson) => lesson.id >= nextAvailableLessonId,
+      );
+      if (hasFutureLessons) {
+        return module.id;
+      }
+    }
+
+    return null;
+  };
+
+  const nextAvailableModuleId = getNextAvailableModuleId();
+
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
@@ -37,7 +71,24 @@ export default function Navbar() {
     const searchTerm = search.toLowerCase();
 
     courseDetails.modules.forEach((module) => {
+      const isModuleAvailable =
+        isFinalExamAvailable ||
+        courseCompleted ||
+        (typeof nextAvailableModuleId === "number" &&
+          module.id <= nextAvailableModuleId);
+
       module.lessons.forEach((lesson) => {
+        const isLessonAvailable =
+          (isModuleAvailable && isFinalExamAvailable) ||
+          courseCompleted ||
+          (typeof nextAvailableLessonId === "number" &&
+            lesson.id <= nextAvailableLessonId);
+
+        const isActivityAvailable =
+          me?.current_progress_data?.next_available_activity_id &&
+          lesson.activity_id &&
+          me?.current_progress_data?.next_available_activity_id <=
+            lesson.activity_id;
         if (lesson.name.toLowerCase().includes(searchTerm)) {
           results.push({
             type: "lesson",
@@ -45,6 +96,7 @@ export default function Navbar() {
             name: lesson.name,
             moduleName: module.name,
             courseId: courseDetails.id,
+            isAvailable: isLessonAvailable,
           });
         }
         if (lesson.activity?.name.toLowerCase().includes(searchTerm)) {
@@ -54,6 +106,7 @@ export default function Navbar() {
             name: lesson.activity.name,
             moduleName: module.name,
             courseId: courseDetails.id,
+            isAvailable: !!isActivityAvailable,
           });
         }
       });
@@ -143,37 +196,46 @@ export default function Navbar() {
             </div>
           </div>
 
+          {/* search results */}
           {showResults && search.trim() && (
             <div className="search-results absolute top-full mt-2 max-h-80 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-slate-800">
               {searchResults.length > 0 ? (
                 <ul>
-                  {searchResults.map((result) => (
-                    <li
-                      key={`${result.type}-${result.id}`}
-                      className="text-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-slate-700"
-                    >
-                      <button
-                        className="w-full px-4 py-2 text-right"
-                        onClick={() => {
-                          const params =
-                            result.type === "lesson"
-                              ? { lessonId: String(result.id) }
-                              : { examId: String(result.id) };
-                          navigate(`/course/${result.courseId}`, {
-                            state: params,
-                          });
-                          setSearch("");
-                          setShowResults(false);
-                        }}
+                  {searchResults.map((result) => {
+                    return (
+                      <li
+                        key={`${result.type}-${result.id}`}
+                        className={clsx("text-text dark:text-dark-text", {
+                          "hover:bg-gray-100 dark:hover:bg-slate-700":
+                            result.isAvailable,
+                        })}
                       >
-                        <p className="font-semibold">{result.name}</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {result.type === "lesson" ? "درس" : "نشاط"} في{" "}
-                          {result.moduleName}
-                        </p>
-                      </button>
-                    </li>
-                  ))}
+                        <button
+                          className="flex w-full items-center justify-between gap-2 px-4 py-2 text-right"
+                          onClick={() => {
+                            if (result.isAvailable) {
+                              navigate(
+                                `/course/${result.courseId}?lessonId=${String(result.id)}`,
+                              );
+                              setSearch("");
+                              setShowResults(false);
+                            }
+                          }}
+                        >
+                          <div>
+                            <p className="font-semibold">{result.name}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              {result.type === "lesson" ? "درس" : "نشاط"} في{" "}
+                              {result.moduleName}
+                            </p>
+                          </div>
+                          {!result.isAvailable && (
+                            <Lock size={16} className="text-primary" />
+                          )}
+                        </button>
+                      </li>
+                    );
+                  })}
                 </ul>
               ) : (
                 <p className="p-4 text-center text-gray-500 dark:text-gray-400">
