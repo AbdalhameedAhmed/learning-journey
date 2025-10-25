@@ -32,6 +32,8 @@ export default function VideoViewer({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
+  const [isSpeedMenuOpen, setIsSpeedMenuOpen] = useState(false);
+  const speedMenuContainerRef = useRef<HTMLDivElement | null>(null);
 
   const toggleFullScreen = () => {
     const videoContainer = videoContainerRef.current;
@@ -62,6 +64,22 @@ export default function VideoViewer({
     };
   });
 
+  useEffect(() => {
+    const handleOutsideClick = (event: globalThis.MouseEvent) => {
+      if (
+        speedMenuContainerRef.current &&
+        !speedMenuContainerRef.current.contains(event.target as Node)
+      ) {
+        setIsSpeedMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(e.target.value);
     if (videoRef.current) {
@@ -85,13 +103,11 @@ export default function VideoViewer({
     }
   };
 
-  const handlePlaybackRateChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    const newPlaybackRate = parseFloat(e.target.value);
+  const handleSpeedChange = (speed: number) => {
     if (videoRef.current) {
-      videoRef.current.playbackRate = newPlaybackRate;
-      setPlaybackRate(newPlaybackRate);
+      videoRef.current.playbackRate = speed;
+      setPlaybackRate(speed);
+      setIsSpeedMenuOpen(false);
     }
   };
 
@@ -152,6 +168,8 @@ export default function VideoViewer({
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   };
 
+  const playbackRates = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+
   return (
     <div
       ref={videoContainerRef}
@@ -202,10 +220,10 @@ export default function VideoViewer({
             );
           })}
         </div>
-        <div className="flex w-full items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="flex w-full items-center justify-between gap-2">
+          <div className="flex w-full items-center justify-start gap-2">
             {/* Play/Pause Button */}
-            <button onClick={togglePlayPause}>
+            <button onClick={togglePlayPause} className="p-1">
               {isPlaying && !videoRef.current?.ended ? (
                 <Pause color="white" />
               ) : (
@@ -229,7 +247,7 @@ export default function VideoViewer({
                 step="0.1"
                 value={volume}
                 onChange={handleVolumeChange}
-                className="h-2 w-24 cursor-pointer appearance-none rounded-lg bg-gray-500"
+                className="hidden h-2 w-24 cursor-pointer appearance-none rounded-lg bg-gray-500 md:block"
               />
             </div>
 
@@ -239,25 +257,42 @@ export default function VideoViewer({
             </span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex w-fit items-center justify-end gap-2">
             {/* Playback Speed Control */}
-            <select
-              value={playbackRate}
-              onChange={handlePlaybackRateChange}
-              className="rounded bg-gray-700 px-2 py-1 text-white"
-            >
-              <option value="0.25">0.25x</option>
-              <option value="0.5">0.5x</option>
-              <option value="0.75">0.75x</option>
-              <option value="1">1x</option>
-              <option value="1.25">1.25x</option>
-              <option value="1.5">1.5x</option>
-              <option value="1.75">1.75x</option>
-              <option value="2">2x</option>
-            </select>
+            <div ref={speedMenuContainerRef} className="relative">
+              <button
+                onClick={() => setIsSpeedMenuOpen((prev) => !prev)}
+                className="rounded bg-gray-700 px-2 py-1 text-sm text-white"
+              >
+                {playbackRate}x
+              </button>
+              {isSpeedMenuOpen && (
+                <div className="ring-opacity-5 absolute right-0 bottom-full mb-2 w-20 rounded-md bg-gray-800 shadow-lg ring-1 ring-black">
+                  <div
+                    className="flex flex-col-reverse"
+                    role="menu"
+                    aria-orientation="vertical"
+                  >
+                    {playbackRates.map((rate) => (
+                      <button
+                        key={rate}
+                        onClick={() => handleSpeedChange(rate)}
+                        className={clsx(
+                          "block w-full px-2 py-1 text-sm text-white hover:bg-gray-700",
+                          { "bg-primary/50": playbackRate === rate },
+                        )}
+                        role="menuitem"
+                      >
+                        {rate}x
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Notes Button */}
-            <button onClick={() => setShowNotes(!showNotes)}>
+            <button onClick={() => setShowNotes(!showNotes)} className="p-1">
               <NotebookText
                 className={clsx({
                   "text-white": !showNotes,
@@ -267,7 +302,7 @@ export default function VideoViewer({
             </button>
 
             {/* Fullscreen Button */}
-            <button onClick={toggleFullScreen}>
+            <button onClick={toggleFullScreen} className="p-1">
               {isFullScreen ? (
                 <Minimize color="white" />
               ) : (

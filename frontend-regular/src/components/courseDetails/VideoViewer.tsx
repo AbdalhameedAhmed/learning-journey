@@ -156,10 +156,10 @@ export default function VideoViewer({ url }: { url: string }) {
             style={{ width: `${progress}%` }}
           ></div>
         </div>
-        <div className="flex w-full items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="flex w-full flex-col items-center justify-between gap-2 sm:flex-row">
+          <div className="flex w-full items-center justify-center gap-2 sm:w-auto sm:justify-start sm:gap-4">
             {/* Play/Pause Button */}
-            <button onClick={togglePlayPause}>
+            <button onClick={togglePlayPause} className="p-1">
               {isPlaying && !videoRef.current?.ended ? (
                 <Pause color="white" />
               ) : (
@@ -168,7 +168,7 @@ export default function VideoViewer({ url }: { url: string }) {
             </button>
 
             {/* Volume Control */}
-            <div className="flex items-center gap-2">
+            <div className="hidden items-center gap-2 md:flex">
               <button onClick={toggleMute} className="text-white">
                 {isMuted || volume === 0 ? (
                   <VolumeX size={20} className="-scale-x-100" />
@@ -193,7 +193,7 @@ export default function VideoViewer({ url }: { url: string }) {
             </span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex w-full items-center justify-center gap-2 sm:w-auto sm:justify-end sm:gap-4">
             {/* Playback Speed Control
             <select
               value={playbackRate}
@@ -221,7 +221,7 @@ export default function VideoViewer({ url }: { url: string }) {
             </button> */}
 
             {/* Fullscreen Button */}
-            <button onClick={toggleFullScreen}>
+            <button onClick={toggleFullScreen} className="p-1">
               {isFullScreen ? (
                 <Minimize color="white" />
               ) : (

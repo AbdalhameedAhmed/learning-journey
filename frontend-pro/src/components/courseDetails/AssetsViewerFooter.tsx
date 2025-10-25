@@ -67,6 +67,57 @@ export default function AssetsViewerFooter({
     return null;
   }
 
+  function getExamObject(examId: number): {
+    type: ExamType;
+    child: ExamHeader | undefined;
+  } | null {
+    if (!courseDetails) return null;
+    // activity case
+    for (const module of courseDetails.modules) {
+      for (const lesson of module.lessons) {
+        if (lesson.activity && lesson.activity.id === examId) {
+          return {
+            type: ExamType.ACTIVITY,
+            child: lesson.activity,
+          };
+        }
+      }
+    }
+
+    // exam case
+    for (const exam of courseDetails.exams) {
+      if (exam.id === examId) {
+        return {
+          type: ExamType.FINAL_EXAM,
+          child: exam,
+        };
+      }
+    }
+    return null;
+  }
+
+  function getLessonDataByActivityId(activityId: number): {
+    lessonIndex: number;
+    lessonId: number;
+    moduleIndex: number;
+    moduleId: number;
+  } | null {
+    if (!courseDetails) return null;
+    courseDetails.modules.map((module, moduleIndex) => {
+      module.lessons.map((lesson, lessonIndex) => {
+        if (lesson.activity && lesson.activity.id === activityId) {
+          return {
+            lessonIndex,
+            lessonId: lesson.id,
+            moduleIndex,
+            moduleId: module.id,
+          };
+        }
+      });
+    });
+    return null;
+  }
+
   function getLessonIndexAndModuleIndex(lessonId: number) {
     let lessonIndex = null;
     let moduleIndex = null;
@@ -89,25 +140,60 @@ export default function AssetsViewerFooter({
         parseInt(lessonId),
       );
       if (lessonIndex === null || moduleIndex === null) return null;
-      if (
-        lessonIndex <
-        courseDetails!.modules[moduleIndex].lessons.length - 1
-      ) {
+      const module = courseDetails!.modules[moduleIndex];
+      const lesson = courseDetails!.modules[moduleIndex].lessons[lessonIndex];
+
+      //in normal lesson case
+      if (lesson && lesson.activity_id) {
+        return {
+          type: ExamType.ACTIVITY,
+          child: {
+            id: lesson.activity?.id,
+            course_id: 1,
+            module_id: module.id,
+            created_at: new Date(),
+          },
+        };
+      } else {
+        //in goals lessons case
         const nextChild =
           courseDetails!.modules[moduleIndex].lessons[lessonIndex + 1];
         return { type: "lesson", child: nextChild };
       }
-      if (
-        lessonIndex ===
-        courseDetails!.modules[moduleIndex].lessons.length - 1
-      ) {
-        const nextChild = courseDetails!.modules[moduleIndex].quizzes[0];
-        return { type: ExamType.QUIZ, child: nextChild };
-      }
     }
 
     if (examId) {
+      const exam = getExamObject(parseInt(examId));
+      if (!exam) return null;
+
+      if (exam.type === ExamType.ACTIVITY) {
+        const lessonData = getLessonDataByActivityId(parseInt(examId));
+
+        if (
+          lessonData &&
+          lessonData.lessonId <
+            courseDetails!.modules[lessonData.moduleIndex].lessons.length - 1
+        ) {
+          const nextChild =
+            courseDetails!.modules[lessonData.moduleIndex].lessons[
+              lessonData.lessonIndex + 1
+            ];
+          return { type: "lesson", child: nextChild };
+        }
+        if (
+          lessonData &&
+          lessonData.lessonIndex ===
+            courseDetails!.modules[lessonData.moduleIndex].lessons.length - 1
+        ) {
+          const nextChild =
+            courseDetails!.modules[lessonData.moduleIndex].quizzes[0];
+          return { type: ExamType.QUIZ, child: nextChild };
+        }
+        return { type: ExamType.ACTIVITY, child: exam.child };
+      }
+
       const moduleIndex = getModuleIndexByExamId(parseInt(examId));
+
       if (moduleIndex === null) return null;
       if (moduleIndex < courseDetails!.modules.length - 1) {
         const nextChild = courseDetails!.modules[moduleIndex + 1].lessons[0];
@@ -135,6 +221,11 @@ export default function AssetsViewerFooter({
       if (lessonIndex > 0) {
         const prevChild =
           courseDetails!.modules[moduleIndex].lessons[lessonIndex - 1];
+        if (prevChild.activity_id) {
+          const exam = getExamObject(prevChild.activity_id);
+          if (exam?.child)
+            return { type: ExamType.ACTIVITY, child: exam?.child };
+        }
         return { type: "lesson", child: prevChild };
       } else {
         const prevModule = courseDetails!.modules[moduleIndex - 1];
@@ -143,6 +234,20 @@ export default function AssetsViewerFooter({
       }
     }
     if (examId) {
+      const exam = getExamObject(parseInt(examId));
+      if (!exam) return null;
+
+      if (exam.type === ExamType.ACTIVITY) {
+        const lessonData = getLessonDataByActivityId(parseInt(examId));
+        if (lessonData) {
+          const prevChild =
+            courseDetails!.modules[lessonData.moduleIndex].lessons[
+              lessonData.lessonIndex
+            ];
+          return { type: "lesson", child: prevChild };
+        }
+      }
+
       const moduleId = getModuleIndexByExamId(parseInt(examId));
       if (moduleId === null) return null;
       const module = courseDetails!.modules[moduleId];
