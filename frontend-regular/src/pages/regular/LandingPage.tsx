@@ -2,6 +2,7 @@ import image from "@/assets/image.png";
 import Vector1 from "@/assets/Vector1.svg";
 import { User } from "lucide-react";
 import { Link } from "react-router-dom";
+import logo from "@/assets/logo.svg";
 
 const LandingPage = () => {
   // Background shapes data
@@ -124,15 +125,10 @@ const LandingPage = () => {
       </div>
 
       <header className="bg-primary dark:bg-dark-primary relative z-10 flex max-h-[76px] min-h-[76px] items-center justify-between px-4 py-4 sm:px-6">
-        <div className="flex items-center gap-4">
-          <div className="text-right">
-            <h1 className="text-lg font-bold text-gray-800 sm:text-xl dark:text-gray-900">
-              رحلة تعلم
-            </h1>
-            <p className="text-xs text-gray-700 sm:text-sm dark:text-gray-800">
-              Learn Journey
-            </p>
-          </div>
+        <div className="w-34">
+          <Link to="/">
+            <img src={logo} alt="logo" />
+          </Link>
         </div>
 
         <Link

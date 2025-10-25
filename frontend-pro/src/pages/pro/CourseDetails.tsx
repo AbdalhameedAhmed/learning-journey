@@ -128,7 +128,12 @@ export default function CourseDetails() {
         <div className="mt-16 flex w-full flex-1 items-center justify-center lg:mt-0">
           {activeLesson && <AssetResource lessonId={activeLesson.id} />}
           {activeExam && examType && (
-            <ExamArea examId={activeExam?.id} examType={examType} />
+            <ExamArea
+              examId={activeExam?.id}
+              examType={examType}
+              setActiveLessonHandler={setActiveLessonHandler}
+              setActiveExamHandler={setActiveExamHandler}
+            />
           )}
           {!activeLesson && !activeExam && (
             <p className="text-text dark:text-dark-text text-text-normal">

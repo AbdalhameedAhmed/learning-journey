@@ -3,6 +3,7 @@ import image from "@/assets/image.png";
 import Vector1 from "@/assets/Vector1.svg";
 import { User, Moon, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
+import logo from "@/assets/logo.svg";
 
 const LandingPage = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -172,13 +173,10 @@ const LandingPage = () => {
             )}
           </button>
 
-          <div className="text-right">
-            <h1 className="text-lg font-bold text-gray-800 sm:text-xl dark:text-gray-900">
-              رحلة تعلم
-            </h1>
-            <p className="text-xs text-gray-700 sm:text-sm dark:text-gray-800">
-              Learn Journey
-            </p>
+          <div className="w-34">
+            <Link to="/">
+              <img src={logo} alt="logo" />
+            </Link>
           </div>
         </div>
 
