@@ -2,8 +2,17 @@ import logo from "@/assets/logo.svg";
 import { useGetMe } from "@/hooks/auth/useGetMe";
 import { useLogout } from "@/hooks/auth/useLogout";
 import { useGetCourseDetails } from "@/hooks/courseContent/useGetCourseDetails";
+import type { IProgress } from "@schemas/User";
 import clsx from "clsx";
-import { Check, CircleUserRound, Filter, Lock, LogOut, Menu, X } from "lucide-react";
+import {
+  Check,
+  CircleUserRound,
+  Filter,
+  Lock,
+  LogOut,
+  Menu,
+  X,
+} from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
@@ -30,9 +39,16 @@ export default function Navbar() {
   const navigate = useNavigate();
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const filterContainerRef = useRef<HTMLDivElement>(null);
+  const progressDataRef = useRef<IProgress | undefined>(undefined);
+  const nextAvailableModuleIdRef = useRef<number | undefined>(null);
 
-  const progressData = me?.current_progress_data;
-  const nextAvailableModuleId = progressData?.next_available_module_id;
+  useEffect(() => {
+    console.log("me chagedd");
+    console.log(me);
+    progressDataRef.current = me?.current_progress_data;
+    nextAvailableModuleIdRef.current =
+      progressDataRef.current?.next_available_module_id;
+  }, [me]);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -53,9 +69,9 @@ export default function Navbar() {
 
     modulesToSearch.forEach((module) => {
       const isModuleLocked =
-        nextAvailableModuleId === null ||
-        (typeof nextAvailableModuleId === "number" &&
-          module.id > nextAvailableModuleId);
+        nextAvailableModuleIdRef.current === null ||
+        (typeof nextAvailableModuleIdRef.current === "number" &&
+          module.id > nextAvailableModuleIdRef.current);
 
       module.lessons.forEach((lesson) => {
         if (lesson.name.toLowerCase().includes(searchTerm)) {
@@ -252,9 +268,15 @@ export default function Navbar() {
                           className="flex w-full items-center justify-between gap-2 px-4 py-2 text-right"
                           onClick={() => {
                             if (result.isAvailable) {
-                              navigate(
-                                `/course/${result.courseId}?lessonId=${String(result.id)}`,
-                              );
+                              if (result.type === "lesson") {
+                                navigate(
+                                  `/course/${result.courseId}?lessonId=${String(result.id)}`,
+                                );
+                              } else if (result.type === "activity") {
+                                navigate(
+                                  `/course/${result.courseId}?examId=${String(result.id)}`,
+                                );
+                              }
                               setSearch("");
                               setShowResults(false);
                             }
