@@ -1,10 +1,19 @@
 import { useGetMe } from "@/hooks/auth/useGetMe";
 import { useLogout } from "@/hooks/auth/useLogout";
-import { Check, CircleUserRound, Filter, LogOut, Menu, X } from "lucide-react";
+import {
+  Check,
+  CircleUserRound,
+  Filter,
+  Lock,
+  LogOut,
+  Menu,
+  X,
+} from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
 import { useGetCourseDetails } from "@/hooks/courseContent/useGetCourseDetails";
+import clsx from "clsx";
 
 interface SearchResult {
   type: "lesson" | "activity";
@@ -12,6 +21,7 @@ interface SearchResult {
   name: string;
   moduleName: string;
   courseId: number;
+  isAvailable: boolean;
 }
 
 export default function Navbar() {
@@ -27,6 +37,9 @@ export default function Navbar() {
   const navigate = useNavigate();
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const filterContainerRef = useRef<HTMLDivElement>(null);
+
+  const progressData = me?.current_progress_data;
+  const nextAvailableModuleId = progressData?.next_available_module_id;
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -46,6 +59,11 @@ export default function Navbar() {
           );
 
     modulesToSearch.forEach((module) => {
+      const isModuleLocked =
+        nextAvailableModuleId === null ||
+        (typeof nextAvailableModuleId === "number" &&
+          module.id > nextAvailableModuleId);
+
       module.lessons.forEach((lesson) => {
         if (lesson.name.toLowerCase().includes(searchTerm)) {
           results.push({
@@ -54,6 +72,7 @@ export default function Navbar() {
             name: lesson.name,
             moduleName: module.name,
             courseId: courseDetails.id,
+            isAvailable: !isModuleLocked,
           });
         }
         if (lesson.activity?.name.toLowerCase().includes(searchTerm)) {
@@ -63,6 +82,7 @@ export default function Navbar() {
             name: lesson.activity.name,
             moduleName: module.name,
             courseId: courseDetails.id,
+            isAvailable: !isModuleLocked,
           });
         }
       });
@@ -229,27 +249,33 @@ export default function Navbar() {
                     {searchResults.map((result) => (
                       <li
                         key={`${result.type}-${result.id}`}
-                        className="text-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-slate-700"
+                        className={clsx("text-text dark:text-dark-text", {
+                          "hover:bg-gray-100 dark:hover:bg-slate-700":
+                            result.isAvailable,
+                        })}
                       >
                         <button
-                          className="w-full px-4 py-2 text-right"
+                          className="flex w-full items-center justify-between gap-2 px-4 py-2 text-right"
                           onClick={() => {
-                            const params =
-                              result.type === "lesson"
-                                ? { lessonId: String(result.id) }
-                                : { examId: String(result.id) };
-                            navigate(`/course/${result.courseId}`, {
-                              state: params,
-                            });
-                            setSearch("");
-                            setShowResults(false);
+                            if (result.isAvailable) {
+                              navigate(
+                                `/course/${result.courseId}?lessonId=${String(result.id)}`,
+                              );
+                              setSearch("");
+                              setShowResults(false);
+                            }
                           }}
                         >
-                          <p className="font-semibold">{result.name}</p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {result.type === "lesson" ? "درس" : "نشاط"} في{" "}
-                            {result.moduleName}
-                          </p>
+                          <div>
+                            <p className="font-semibold">{result.name}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              {result.type === "lesson" ? "درس" : "نشاط"} في{" "}
+                              {result.moduleName}
+                            </p>
+                          </div>
+                          {!result.isAvailable && (
+                            <Lock size={16} className="text-primary" />
+                          )}
                         </button>
                       </li>
                     ))}
