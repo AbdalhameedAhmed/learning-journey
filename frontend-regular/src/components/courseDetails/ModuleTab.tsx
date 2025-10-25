@@ -1,10 +1,10 @@
+import { useGetMe } from "@/hooks/auth/useGetMe";
 import type { ExamHeader, LessonHeader, Module } from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
 import clsx from "clsx";
 import { Lock } from "lucide-react";
-import type { Dispatch, SetStateAction } from "react";
+import { Fragment, type Dispatch, type SetStateAction } from "react";
 import HeaderButton from "./HeaderButton";
-import { useGetMe } from "@/hooks/auth/useGetMe";
 
 type ModulTabProps = {
   module: Module;
@@ -36,6 +36,8 @@ export default function ModuleTab({
   courseCompleted,
 }: ModulTabProps) {
   // Module is locked if it comes after the next available module
+  const { me } = useGetMe();
+
   const isModuleAvailable =
     isFinalExamAvailable ||
     courseCompleted ||
@@ -43,9 +45,6 @@ export default function ModuleTab({
       module.id <= nextAvailableModuleId);
 
   // Handler for the module title button
-  console.log(nextAvailableModuleId, "⛰️⛰️⛰️⛰️");
-  const { me } = useGetMe();
-
   const handleHeaderClick = () => {
     if (isModuleAvailable) {
       setOpendModule(module.id);
@@ -86,7 +85,7 @@ export default function ModuleTab({
           const isActivityAvailable =
             me?.current_progress_data?.next_available_activity_id &&
             lesson.activity_id &&
-            me?.current_progress_data?.next_available_activity_id <=
+            me?.current_progress_data?.next_available_activity_id >=
               lesson.activity_id;
 
           const handleQuizClick = () => {
@@ -102,8 +101,8 @@ export default function ModuleTab({
           };
 
           return (
-            <>
-              <div key={lesson.id} className="relative">
+            <Fragment key={lesson.id}>
+              <div className="relative">
                 <p
                   className={clsx(
                     "border-primary dark:border-dark-primary text-text-tiny text-text dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
@@ -145,7 +144,7 @@ export default function ModuleTab({
                   )}
                 </p>
               )}
-            </>
+            </Fragment>
           );
         })}
 

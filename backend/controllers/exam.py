@@ -157,12 +157,8 @@ async def validate_pro_user_getting_exam(
         else:
             return {"error": "الامتحان النهائي غير متاح بعد. أكمل جميع الوحدات أولاً."}
     elif exam_type == ExamType.ACTIVITY:
-        if exam_data["id"] == next_available_activity_id:
-            return await get_exam_and_questions_by_id(exam_data["id"], supabase)
-        else:
-            return {
-                "error": "للوصول إلى هذا الامتحان، يرجى استكمال الدروس والوحدات السابقة أولاً."
-            }
+        return await get_exam_and_questions_by_id(exam_data["id"], supabase)
+
     return {"error": "نوع الامتحان غير صالح"}
 
 

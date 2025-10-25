@@ -115,7 +115,7 @@ async def calculate_exam_score(
             if total_questions > 0
             else 0
         )
-        passing_score = 60
+        passing_score = 50
 
         return {
             "score": round(score, 2),

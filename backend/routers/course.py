@@ -5,7 +5,7 @@ from controllers.course import (
 from db.database import get_supabase_client
 from fastapi import APIRouter, Depends
 from schemas.auth import UserResponse
-from services.auth import get_student_user
+from services.auth import get_student_user, validate_student_user
 from supabase import Client
 
 courses_router = APIRouter(
@@ -18,7 +18,7 @@ courses_router = APIRouter(
 async def get_course_details(
     course_id: int,
     supabase: Client = Depends(get_supabase_client),
-    # _: dict = Depends(validate_student_user),
+    _: dict = Depends(validate_student_user),
 ):
     return await get_course_details_controller(course_id, supabase)
 
