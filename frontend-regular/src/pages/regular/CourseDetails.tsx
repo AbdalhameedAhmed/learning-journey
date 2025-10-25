@@ -38,9 +38,12 @@ export default function CourseDetails() {
       }
     } else if (examId) {
       const examIdNum = parseInt(examId);
+
+      /* Handling final-exam */
       const exam = courseDetails.exams.find((exam) => exam.id === examIdNum);
       if (exam) {
         setActiveExam(exam);
+        setExamType(ExamType.FINAL_EXAM);
         setActiveLesson(undefined);
 
         if (exam.module_id) {
@@ -50,11 +53,24 @@ export default function CourseDetails() {
         }
       }
 
+      /* Handling Quizzes */
+      for (const module of courseDetails.modules) {
+        const quiz = module.quizzes.find((q) => q.id === examIdNum);
+        if (quiz) {
+          setActiveExam(quiz);
+          setExamType(ExamType.QUIZ);
+          setActiveLesson(undefined);
+          setOpendModule(module.id);
+          break;
+        }
+      }
+
       /* Handling Activity */
       for (const module of courseDetails.modules) {
         const lesson = module.lessons.find((l) => l.activity_id === examIdNum);
         if (lesson?.activity) {
           setActiveExam(lesson.activity);
+          setExamType(ExamType.ACTIVITY);
           setActiveLesson(undefined);
           setOpendModule(module.id);
           break;

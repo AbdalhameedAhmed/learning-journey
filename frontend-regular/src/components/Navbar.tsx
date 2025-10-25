@@ -87,8 +87,9 @@ export default function Navbar() {
         const isActivityAvailable =
           me?.current_progress_data?.next_available_activity_id &&
           lesson.activity_id &&
-          me?.current_progress_data?.next_available_activity_id <=
+          me?.current_progress_data?.next_available_activity_id >=
             lesson.activity_id;
+
         if (lesson.name.toLowerCase().includes(searchTerm)) {
           results.push({
             type: "lesson",
@@ -111,7 +112,6 @@ export default function Navbar() {
         }
       });
     });
-    console.log(results, "search start");
     return results;
   }, [search, courseDetails]);
 
@@ -214,9 +214,15 @@ export default function Navbar() {
                           className="flex w-full items-center justify-between gap-2 px-4 py-2 text-right"
                           onClick={() => {
                             if (result.isAvailable) {
-                              navigate(
-                                `/course/${result.courseId}?lessonId=${String(result.id)}`,
-                              );
+                              if (result.type === "lesson") {
+                                navigate(
+                                  `/course/${result.courseId}?lessonId=${String(result.id)}`,
+                                );
+                              } else if (result.type === "activity") {
+                                navigate(
+                                  `/course/${result.courseId}?examId=${String(result.id)}`,
+                                );
+                              }
                               setSearch("");
                               setShowResults(false);
                             }
