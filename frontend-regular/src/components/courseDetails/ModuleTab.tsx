@@ -122,9 +122,9 @@ export default function ModuleTab({
                   )}
                 </p>
               </div>
-              {lesson.activity_id && (
+              {lesson.activity_id && lesson.activity && (
                 <p
-                  key={lesson.activity_id}
+                  key={lesson.activity.id}
                   className={clsx(
                     "border-primary dark:border-dark-primary text-text text-text-tiny dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
                     {
@@ -137,7 +137,9 @@ export default function ModuleTab({
                   )}
                   onClick={handleQuizClick}
                 >
-                  <span className="flex-1 text-center">نشاط</span>
+                  <span className="flex-1 text-center">
+                    {lesson.activity.name}
+                  </span>
                   {!isActivityAvailable && (
                     <Lock size={14} className="text-gray-400" />
                   )}

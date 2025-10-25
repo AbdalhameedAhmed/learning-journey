@@ -16,6 +16,13 @@ export interface LessonHeader {
   id: number;
   name: string;
   activity_id: number | null;
+  activity: Activity | null;
+}
+
+export interface Activity {
+  id: number;
+  name: string;
+  time: number;
 }
 
 export interface Lesson extends LessonHeader {

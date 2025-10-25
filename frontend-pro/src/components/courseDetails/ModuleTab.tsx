@@ -71,33 +71,72 @@ export default function ModuleTab({
             }
           };
 
-          return (
-            <div key={lesson.id} className="relative">
-              <p
-                className={clsx(
-                  "border-primary dark:border-dark-primary text-text-tiny text-text dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
-                  {
-                    "cursor-pointer": !isLessonLocked,
-                    "cursor-not-allowed opacity-50": isLessonLocked,
-                    "bg-primary dark:bg-dark-primary text-white":
-                      activeLesson?.id === lesson.id && !isLessonLocked,
-                  },
-                )}
-                onClick={handleLessonClick}
-              >
-                <span className="flex-1 text-center">{lesson.name}</span>
-                {isLessonLocked && <Lock size={14} className="text-gray-400" />}
-              </p>
+          const handleQuizClick = () => {
+            if (!isModuleLocked && lesson.activity_id) {
+              setActiveExamHandler(
+                {
+                  id: lesson.activity_id,
+                  created_at: new Date(),
+                },
+                ExamType.ACTIVITY,
+              );
+            }
+          };
 
-              {isFavorited && (
-                <div className="absolute top-1/2 left-2 -translate-y-1/2">
-                  <Heart
-                    size={14}
-                    className="fill-red-500 text-red-500 drop-shadow-sm"
-                  />
-                </div>
+          return (
+            <>
+              <div key={lesson.id} className="relative">
+                <p
+                  className={clsx(
+                    "border-primary dark:border-dark-primary text-text-tiny text-text dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
+                    {
+                      "cursor-pointer": !isLessonLocked,
+                      "cursor-not-allowed opacity-50": isLessonLocked,
+                      "bg-primary dark:bg-dark-primary text-white":
+                        activeLesson?.id === lesson.id && !isLessonLocked,
+                    },
+                  )}
+                  onClick={handleLessonClick}
+                >
+                  <span className="flex-1 text-center">{lesson.name}</span>
+                  {isLessonLocked && (
+                    <Lock size={14} className="text-gray-400" />
+                  )}
+                </p>
+
+                {isFavorited && (
+                  <div className="absolute top-1/2 left-2 -translate-y-1/2">
+                    <Heart
+                      size={14}
+                      className="fill-red-500 text-red-500 drop-shadow-sm"
+                    />
+                  </div>
+                )}
+              </div>
+              {lesson.activity_id && lesson.activity && (
+                <p
+                  key={lesson.activity.id}
+                  className={clsx(
+                    "border-primary dark:border-dark-primary text-text text-text-tiny dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
+                    {
+                      "cursor-pointer": !isModuleLocked,
+                      "cursor-not-allowed opacity-50": isModuleLocked,
+                      "bg-primary dark:bg-dark-primary text-white":
+                        activeExam?.id === lesson.activity_id &&
+                        !isModuleLocked,
+                    },
+                  )}
+                  onClick={handleQuizClick}
+                >
+                  <span className="flex-1 text-center">
+                    {lesson.activity.name}
+                  </span>
+                  {isModuleLocked && (
+                    <Lock size={14} className="text-gray-400" />
+                  )}
+                </p>
               )}
-            </div>
+            </>
           );
         })}
 

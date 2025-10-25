@@ -1,19 +1,65 @@
 import { useGetMe } from "@/hooks/auth/useGetMe";
 import { useLogout } from "@/hooks/auth/useLogout";
-import { CircleUserRound, LogOut, Search, Menu, X } from "lucide-react";
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { CircleUserRound, LogOut, Menu, Search, X } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
+import { useGetCourseDetails } from "@/hooks/courseContent/useGetCourseDetails";
+
+interface SearchResult {
+  type: "lesson" | "activity";
+  id: number;
+  name: string;
+  moduleName: string;
+  courseId: number;
+}
 
 export default function Navbar() {
   const [search, setSearch] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { courseDetails, isPending: isCourseDetailsPending } =
+    useGetCourseDetails("1");
   const { me, isPending } = useGetMe();
   const { logout } = useLogout();
+  const navigate = useNavigate();
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+  const [showResults, setShowResults] = useState(false);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
+
+  const searchResults = useMemo((): SearchResult[] => {
+    if (!search.trim() || !courseDetails) return [];
+
+    const results: SearchResult[] = [];
+    const searchTerm = search.toLowerCase();
+
+    courseDetails.modules.forEach((module) => {
+      module.lessons.forEach((lesson) => {
+        if (lesson.name.toLowerCase().includes(searchTerm)) {
+          results.push({
+            type: "lesson",
+            id: lesson.id,
+            name: lesson.name,
+            moduleName: module.name,
+            courseId: courseDetails.id,
+          });
+        }
+        if (lesson.activity?.name.toLowerCase().includes(searchTerm)) {
+          results.push({
+            type: "activity",
+            id: lesson.activity_id!,
+            name: lesson.activity.name,
+            moduleName: module.name,
+            courseId: courseDetails.id,
+          });
+        }
+      });
+    });
+    console.log(results, "search start");
+    return results;
+  }, [search, courseDetails]);
 
   const closeDrawer = () => {
     setIsDrawerOpen(false);
@@ -75,17 +121,65 @@ export default function Navbar() {
           </NavLink>
         </div>
 
-        <div className="flex transform items-center overflow-hidden rounded-2xl border-2 border-white bg-white shadow-xl">
-          <input
-            type="text"
-            placeholder="بحث"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="px-3 py-1 text-black outline-none"
-          />
-          <button type="submit" className="bg-primary dark:bg-dark-primary p-2">
-            <Search className="h-4 w-4 text-white" />
-          </button>
+        <div ref={searchContainerRef} className="relative z-20">
+          <div className="flex transform items-center overflow-hidden rounded-2xl border-2 border-white bg-white shadow-xl">
+            <input
+              type="text"
+              placeholder="بحث"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onFocus={() => setShowResults(true)}
+              onBlur={() => setTimeout(() => setShowResults(false), 150)}
+              className="px-3 py-1 text-black outline-none"
+            />
+            <div className="bg-primary dark:bg-dark-primary p-2">
+              {isCourseDetailsPending ? (
+                <Spinner size="small" />
+              ) : (
+                <Search className="h-4 w-4 text-white" />
+              )}
+            </div>
+          </div>
+
+          {showResults && search.trim() && (
+            <div className="search-results absolute top-full mt-2 max-h-80 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-slate-800">
+              {searchResults.length > 0 ? (
+                <ul>
+                  {searchResults.map((result) => (
+                    <li
+                      key={`${result.type}-${result.id}`}
+                      className="text-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-slate-700"
+                    >
+                      <button
+                        className="w-full px-4 py-2 text-right"
+                        onClick={() => {
+                          const params =
+                            result.type === "lesson"
+                              ? { lessonId: String(result.id) }
+                              : { examId: String(result.id) };
+                          navigate(`/course/${result.courseId}`, {
+                            state: params,
+                          });
+                          setSearch("");
+                          setShowResults(false);
+                        }}
+                      >
+                        <p className="font-semibold">{result.name}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          {result.type === "lesson" ? "درس" : "نشاط"} في{" "}
+                          {result.moduleName}
+                        </p>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="p-4 text-center text-gray-500 dark:text-gray-400">
+                  لا توجد نتائج
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         {/* USER */}

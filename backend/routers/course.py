@@ -5,7 +5,7 @@ from controllers.course import (
 from db.database import get_supabase_client
 from fastapi import APIRouter, Depends
 from schemas.auth import UserResponse
-from services.auth import get_student_user, validate_student_user
+from services.auth import get_student_user
 from supabase import Client
 
 courses_router = APIRouter(

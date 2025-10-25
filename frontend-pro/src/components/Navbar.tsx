@@ -1,23 +1,92 @@
 import { useGetMe } from "@/hooks/auth/useGetMe";
 import { useLogout } from "@/hooks/auth/useLogout";
-import { CircleUserRound, LogOut, Search, Menu, X } from "lucide-react";
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Check, CircleUserRound, Filter, LogOut, Menu, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
+import { useGetCourseDetails } from "@/hooks/courseContent/useGetCourseDetails";
+
+interface SearchResult {
+  type: "lesson" | "activity";
+  id: number;
+  name: string;
+  moduleName: string;
+  courseId: number;
+}
 
 export default function Navbar() {
+  const { courseDetails, isPending: isCourseDetailsPending } =
+    useGetCourseDetails("1");
   const [search, setSearch] = useState("");
+  const [selectedModuleId, setSelectedModuleId] = useState("all");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+  const [showResults, setShowResults] = useState(false);
   const { me, isPending } = useGetMe();
   const { logout } = useLogout();
+  const navigate = useNavigate();
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+  const filterContainerRef = useRef<HTMLDivElement>(null);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
+  const searchResults = useMemo((): SearchResult[] => {
+    if (!search.trim() || !courseDetails) return [];
+
+    const results: SearchResult[] = [];
+    const searchTerm = search.toLowerCase();
+
+    const modulesToSearch =
+      selectedModuleId === "all"
+        ? courseDetails.modules
+        : courseDetails.modules.filter(
+            (module) => String(module.id) === selectedModuleId,
+          );
+
+    modulesToSearch.forEach((module) => {
+      module.lessons.forEach((lesson) => {
+        if (lesson.name.toLowerCase().includes(searchTerm)) {
+          results.push({
+            type: "lesson",
+            id: lesson.id,
+            name: lesson.name,
+            moduleName: module.name,
+            courseId: courseDetails.id,
+          });
+        }
+        if (lesson.activity?.name.toLowerCase().includes(searchTerm)) {
+          results.push({
+            type: "activity",
+            id: lesson.activity_id!,
+            name: lesson.activity.name,
+            moduleName: module.name,
+            courseId: courseDetails.id,
+          });
+        }
+      });
+    });
+    return results;
+  }, [search, courseDetails, selectedModuleId]);
+
   const closeDrawer = () => {
     setIsDrawerOpen(false);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        filterContainerRef.current &&
+        !filterContainerRef.current.contains(event.target as Node)
+      ) {
+        setIsFilterMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   if (isPending) return <Spinner />;
 
@@ -75,17 +144,124 @@ export default function Navbar() {
           </NavLink>
         </div>
 
-        <div className="flex transform items-center overflow-hidden rounded-2xl border-2 border-white bg-white shadow-xl">
-          <input
-            type="text"
-            placeholder="بحث"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="px-3 py-1 text-black outline-none"
-          />
-          <button type="submit" className="bg-primary dark:bg-dark-primary p-2">
-            <Search className="h-4 w-4 text-white" />
-          </button>
+        <div
+          ref={searchContainerRef}
+          className="relative z-20 flex items-center"
+        >
+          <div className="relative flex transform items-center rounded-2xl border-2 border-white bg-white shadow-xl">
+            <div className="flex transform items-center rounded-2xl border-2 border-white bg-white shadow-xl">
+              <input
+                type="text"
+                placeholder="بحث"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onFocus={() => setShowResults(true)}
+                onBlur={() => setTimeout(() => setShowResults(false), 200)}
+                className="w-40 px-3 py-1 text-black outline-none"
+              />
+              <div ref={filterContainerRef} className="relative">
+                <button
+                  onClick={() => setIsFilterMenuOpen((prev) => !prev)}
+                  className="bg-primary dark:bg-dark-primary rounded-tl-xl rounded-bl-xl p-2 outline-none"
+                  disabled={isCourseDetailsPending}
+                >
+                  {isCourseDetailsPending ? (
+                    <Spinner size="small" />
+                  ) : (
+                    <Filter className="h-4 w-4 text-white" />
+                  )}
+                </button>
+                {isFilterMenuOpen && (
+                  <div className="ring-opacity-5 absolute top-full left-0 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black dark:bg-slate-800">
+                    <div
+                      className="py-1"
+                      role="menu"
+                      aria-orientation="vertical"
+                    >
+                      <button
+                        onClick={() => {
+                          setSelectedModuleId("all");
+                          setIsFilterMenuOpen(false);
+                        }}
+                        className="flex w-full items-center justify-between px-4 py-2 text-right text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-slate-700"
+                        role="menuitem"
+                      >
+                        <span className="text-text dark:text-dark-text">
+                          كل الوحدات
+                        </span>
+                        {selectedModuleId === "all" ? (
+                          <Check className="color-primary" size={16} />
+                        ) : null}
+                      </button>
+
+                      {/* filter menu */}
+                      {courseDetails?.modules.map((module) => (
+                        <button
+                          key={module.id}
+                          onClick={() => {
+                            console.log("clicked");
+
+                            setSelectedModuleId(String(module.id));
+                            setIsFilterMenuOpen(false);
+                          }}
+                          className="flex w-full items-center justify-between px-4 py-2 text-right text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-slate-700"
+                          role="menuitem"
+                        >
+                          <span className="text-text dark:text-dark-text">
+                            {module.name}
+                          </span>
+                          {selectedModuleId === String(module.id) ? (
+                            <Check className="color-primary" size={16} />
+                          ) : null}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* search results menu */}
+            {showResults && search.trim() && (
+              <div className="search-results absolute top-full mt-2 max-h-80 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-slate-800">
+                {searchResults.length > 0 ? (
+                  <ul>
+                    {searchResults.map((result) => (
+                      <li
+                        key={`${result.type}-${result.id}`}
+                        className="text-text dark:text-dark-text hover:bg-gray-100 dark:hover:bg-slate-700"
+                      >
+                        <button
+                          className="w-full px-4 py-2 text-right"
+                          onClick={() => {
+                            const params =
+                              result.type === "lesson"
+                                ? { lessonId: String(result.id) }
+                                : { examId: String(result.id) };
+                            navigate(`/course/${result.courseId}`, {
+                              state: params,
+                            });
+                            setSearch("");
+                            setShowResults(false);
+                          }}
+                        >
+                          <p className="font-semibold">{result.name}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            {result.type === "lesson" ? "درس" : "نشاط"} في{" "}
+                            {result.moduleName}
+                          </p>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="p-4 text-center text-gray-500 dark:text-gray-400">
+                    لا توجد نتائج
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* USER */}
@@ -107,7 +283,10 @@ export default function Navbar() {
 
           <button
             className="hidden cursor-pointer lg:flex"
-            onClick={() => logout()}
+            onClick={() => {
+              logout();
+              console.log("clicked");
+            }}
           >
             <LogOut className="h-6 w-6 text-white" />
           </button>
