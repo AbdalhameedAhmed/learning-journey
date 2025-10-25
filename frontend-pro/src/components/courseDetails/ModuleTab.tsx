@@ -3,7 +3,7 @@ import type { ExamHeader, LessonHeader, Module } from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
 import clsx from "clsx";
 import { Heart, Lock } from "lucide-react";
-import type { Dispatch, SetStateAction } from "react";
+import { Fragment, type Dispatch, type SetStateAction } from "react";
 import HeaderButton from "./HeaderButton";
 
 type ModuleTabProps = {
@@ -29,6 +29,7 @@ export default function ModuleTab({
   nextAvailableModuleId,
 }: ModuleTabProps) {
   const { favorites } = useGetFavorites();
+
   const isModuleLocked =
     nextAvailableModuleId === null ||
     (typeof nextAvailableModuleId === "number" &&
@@ -84,8 +85,8 @@ export default function ModuleTab({
           };
 
           return (
-            <>
-              <div key={lesson.id} className="relative">
+            <Fragment key={lesson.id}>
+              <div className="relative">
                 <p
                   className={clsx(
                     "border-primary dark:border-dark-primary text-text-tiny text-text dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
@@ -136,7 +137,7 @@ export default function ModuleTab({
                   )}
                 </p>
               )}
-            </>
+            </Fragment>
           );
         })}
 

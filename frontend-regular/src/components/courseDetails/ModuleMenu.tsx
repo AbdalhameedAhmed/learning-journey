@@ -76,12 +76,12 @@ const ModuleMenu = ({
 
       {/* Menu Container */}
       <div
-        className={`fixed top-0 right-0 z-50 h-full w-80 transform transition-transform duration-300 ease-in-out lg:static lg:right-auto lg:h-auto lg:w-[300px] ${isOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"} flex flex-col items-center gap-2 self-stretch overflow-auto bg-[#E9E9E9] p-4 shadow-lg lg:shadow-none dark:bg-slate-800`}
+        className={`fixed top-0 right-0 z-50 h-full w-80 transform cursor-pointer transition-transform duration-300 ease-in-out lg:static lg:right-auto lg:h-auto lg:w-[300px] ${isOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"} flex flex-col items-center gap-2 self-stretch overflow-auto bg-[#E9E9E9] p-4 shadow-lg lg:shadow-none dark:bg-slate-800`}
       >
         {/* Mobile Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 rounded-lg bg-gray-200 p-2 hover:bg-gray-300 lg:hidden dark:bg-gray-700 dark:hover:bg-gray-600"
+          className="absolute top-4 right-4 cursor-pointer rounded-lg bg-gray-200 p-2 hover:bg-gray-300 lg:hidden dark:bg-gray-700 dark:hover:bg-gray-600"
         >
           <X size={20} />
         </button>

@@ -1,10 +1,11 @@
+import logo from "@/assets/logo.svg";
 import { useGetMe } from "@/hooks/auth/useGetMe";
 import { useLogout } from "@/hooks/auth/useLogout";
+import { useGetCourseDetails } from "@/hooks/courseContent/useGetCourseDetails";
 import { Check, CircleUserRound, Filter, LogOut, Menu, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
-import { useGetCourseDetails } from "@/hooks/courseContent/useGetCourseDetails";
 
 interface SearchResult {
   type: "lesson" | "activity";
@@ -94,17 +95,18 @@ export default function Navbar() {
     <>
       <nav className="bg-primary dark:bg-dark-primary relative flex w-full items-center justify-between px-8 py-3 text-white">
         {/* LOGO */}
-        <div className="text-right">
-          <h1 className="text-lg font-bold">رحلة تعلّم</h1>
-          <p className="text-xs">Learn Journey</p>
+        <div className="w-34">
+          <Link to="/">
+            <img src={logo} alt="logo" />
+          </Link>
         </div>
 
         {/* NAVIGATIONS */}
-        <div className="text-text dark:text-dark-text text-text-small hidden items-center justify-center gap-6 font-bold lg:flex">
+        <div className="dark:text-dark-text text-text-small hidden items-center justify-center gap-6 font-bold text-white lg:flex">
           <NavLink
             to="/home"
             className={({ isActive }) =>
-              isActive ? "flex items-center text-white" : "flex items-center"
+              isActive ? "text-text flex items-center" : "flex items-center"
             }
           >
             <span>الرئيسية</span>
@@ -112,7 +114,7 @@ export default function Navbar() {
           <NavLink
             to="/instructions"
             className={({ isActive }) =>
-              isActive ? "flex items-center text-white" : "flex items-center"
+              isActive ? "text-text flex items-center" : "flex items-center"
             }
           >
             <span>التعليمات</span>
@@ -120,7 +122,7 @@ export default function Navbar() {
           <NavLink
             to="/goals"
             className={({ isActive }) =>
-              isActive ? "flex items-center text-white" : "flex items-center"
+              isActive ? "text-text flex items-center" : "flex items-center"
             }
           >
             <span>الأهداف</span>
@@ -129,7 +131,7 @@ export default function Navbar() {
           <NavLink
             to="/content-map"
             className={({ isActive }) =>
-              isActive ? "flex items-center text-white" : "flex items-center"
+              isActive ? "text-text flex items-center" : "flex items-center"
             }
           >
             <span>المحتوى</span>
@@ -137,7 +139,7 @@ export default function Navbar() {
           <NavLink
             to="/course/1"
             className={({ isActive }) =>
-              isActive ? "flex items-center text-white" : "flex items-center"
+              isActive ? "text-text flex items-center" : "flex items-center"
             }
           >
             <span>الكورس</span>
@@ -293,7 +295,7 @@ export default function Navbar() {
         </div>
 
         {/* Hamburger Button - Hidden on md screens and up */}
-        <button className="p-2 lg:hidden" onClick={toggleDrawer}>
+        <button className="cursor-pointer p-2 lg:hidden" onClick={toggleDrawer}>
           {isDrawerOpen ? (
             <X className="h-6 w-6 text-white" />
           ) : (
@@ -304,12 +306,12 @@ export default function Navbar() {
 
       {/* Top Drawer for mobile screens */}
       <div
-        className={`bg-primary fixed top-0 right-0 left-0 z-50 transform shadow-lg transition-transform duration-300 ease-in-out ${isDrawerOpen ? "translate-y-0" : "-translate-y-full"} lg:hidden`}
+        className={`bg-primary/90 fixed top-0 right-0 left-0 z-50 transform shadow-lg transition-transform duration-300 ease-in-out ${isDrawerOpen ? "translate-y-0" : "-translate-y-full"} lg:hidden`}
       >
         <div className="px-6 pt-16 pb-6">
           {/* Close Button */}
           <button
-            className="absolute top-4 left-4 p-2 text-white"
+            className="absolute top-4 left-4 cursor-pointer p-2 text-white"
             onClick={closeDrawer}
           >
             <X className="h-6 w-6" />
@@ -322,7 +324,7 @@ export default function Navbar() {
               onClick={closeDrawer}
               className={({ isActive }) =>
                 isActive
-                  ? "text-primary flex items-center justify-center gap-2 rounded-md bg-white px-3 py-3 font-bold"
+                  ? "text-primary rounded-md bg-white px-3 py-3 font-bold"
                   : "hover:text-primary flex items-center gap-1 rounded-md px-3 py-3 font-bold text-white transition-colors hover:bg-white"
               }
             >

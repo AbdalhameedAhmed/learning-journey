@@ -23,6 +23,9 @@ export interface Activity {
   id: number;
   name: string;
   time: number;
+  course_id: number;
+  module_id: number;
+  created_at: Date;
 }
 
 export interface Lesson extends LessonHeader {

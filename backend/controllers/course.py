@@ -32,7 +32,10 @@ async def get_course_details_controller(course_id: int, supabase: Client):
                     activity:exams!lessons_activity_id_fkey(
                     id,
                     time,
-                    name
+                    name,
+                    course_id,
+                    module_id,
+                    created_at
                     )
                 ),
                 quizzes: exams (

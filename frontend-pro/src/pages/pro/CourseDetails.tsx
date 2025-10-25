@@ -49,6 +49,17 @@ export default function CourseDetails() {
           setOpendModule(undefined);
         }
       }
+
+      /* Handling Activity */
+      for (const module of courseDetails.modules) {
+        const lesson = module.lessons.find((l) => l.activity_id === examIdNum);
+        if (lesson?.activity) {
+          setActiveExam(lesson.activity);
+          setActiveLesson(undefined);
+          setOpendModule(module.id);
+          break;
+        }
+      }
     }
   }, [courseDetails, searchParams]);
 
@@ -80,7 +91,7 @@ export default function CourseDetails() {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMenuOpen(true)}
-        className="fixed top-20 right-4 z-30 rounded-lg bg-[#E9E9E9] p-2 shadow-lg lg:hidden dark:bg-slate-800"
+        className="fixed top-20 right-4 z-30 cursor-pointer rounded-lg bg-[#E9E9E9] p-2 shadow-lg lg:hidden dark:bg-slate-800"
       >
         <Menu size={20} />
       </button>

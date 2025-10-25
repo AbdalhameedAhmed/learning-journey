@@ -16,11 +16,22 @@ const SubmissionSummary = ({
 
   const statusText = result.passed ? "ناجح" : "راسب";
 
+  const customQuote = result.passed
+    ? "أحسنت، إجابتك صحيحة! استمر على نفس المستوى المتميز❤️✅"
+    : "إجابتك خاطئة! لكن محاولتك تستحق التقدير، ركز في المرة القادمة😊";
+
   return (
     <div className="exam-result text-text dark:text-dark-text mx-auto my-12 w-full max-w-xl rounded-xl bg-white p-8 text-center shadow-2xl dark:bg-slate-800">
       <h2 className="text-text-normal mb-6 font-extrabold">
         تم تسليم الامتحان
       </h2>
+
+      {/* Quote Section */}
+      <p
+        className={`mb-6 text-lg font-medium ${result.passed ? "text-green-700 dark:text-green-400" : "text-red-700 dark:text-red-400"}`}
+      >
+        {customQuote}
+      </p>
 
       {/* Status Section */}
       <div
