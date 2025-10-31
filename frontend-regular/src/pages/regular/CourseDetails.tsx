@@ -2,12 +2,13 @@ import AssetResource from "@/components/courseDetails/AssetsRresource";
 import ModuleMenu from "@/components/courseDetails/ModuleMenu";
 import ExamArea from "@/components/Exam/ExamArea";
 import Spinner from "@/components/Spinner";
+import { useGetMe } from "@/hooks/auth/useGetMe";
 import { useGetCourseDetails } from "@/hooks/courseContent/useGetCourseDetails";
 import type { ExamHeader, LessonHeader } from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
 import { Menu } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import AssetsViewerFooter from "../../components/courseDetails/AssetsViewerFooter";
 
 export default function CourseDetails() {
@@ -19,6 +20,14 @@ export default function CourseDetails() {
   const [examType, setExamType] = useState<ExamType>();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { courseDetails, isPending } = useGetCourseDetails(courseId);
+  const { me } = useGetMe();
+
+  const didNotSubmitPreExam =
+    me?.current_progress_data.completed_modules &&
+    me.current_progress_data.completed_modules.length === 0 &&
+    !me?.current_progress_data.is_final_exam_available &&
+    me.current_progress_data.next_available_module_id === null &&
+    me.current_progress_data.next_available_exam_id === null;
 
   useEffect(() => {
     if (!courseDetails) return;
@@ -135,10 +144,27 @@ export default function CourseDetails() {
               setActiveExamHandler={setActiveExamHandler}
             />
           )}
-          {!activeLesson && !activeExam && (
-            <p className="text-text dark:text-dark-text text-text-normal">
-              برجاء اختيار الدرس
-            </p>
+          {didNotSubmitPreExam ? (
+            <div className="flex h-screen flex-col items-center justify-center gap-6">
+              <p className="text-text dark:text-dark-text text-text-large font-semibold">
+                يرجى إكمال الإمتحان القبلي قبل البدء في المقرر
+              </p>
+              <Link
+                to="/pre-exam?courseId=1"
+                className="font-inherit border-primary dark:border-dark-primary bg-primary dark:bg-dark-primary dark:hover:bg-dark-primary/90 hover:bg-primary/90 text-text-small cursor-pointer rounded-full border-2 px-6 py-2 text-white transition-all duration-300 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300"
+              >
+                الذهاب للإمتحان القبلي
+              </Link>
+            </div>
+          ) : (
+            !activeLesson &&
+            !activeExam && (
+              <div className="flex h-screen items-center justify-center">
+                <p className="text-text dark:text-dark-text text-text-large font-semibold">
+                  برجاء اختيار الدرس
+                </p>
+              </div>
+            )
           )}
         </div>
         {activeLesson && (

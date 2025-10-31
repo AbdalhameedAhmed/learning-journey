@@ -1,42 +1,10 @@
-import { useState, useEffect } from "react";
 import image from "@/assets/image.png";
 import Vector1 from "@/assets/Vector1.svg";
-import { User, Moon, Sun } from "lucide-react";
+import { User } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.svg";
 
 const LandingPage = () => {
-  const [darkMode, setDarkMode] = useState(false);
-
-  // Initialize dark mode based on system preference or localStorage
-  useEffect(() => {
-    const savedMode = localStorage.getItem("darkMode");
-    const systemPrefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-
-    if (savedMode !== null) {
-      setDarkMode(JSON.parse(savedMode));
-    } else {
-      setDarkMode(systemPrefersDark);
-    }
-  }, []);
-
-  // Apply dark mode class to document root and save preference
-  useEffect(() => {
-    const root = document.documentElement;
-    if (darkMode) {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-    localStorage.setItem("darkMode", JSON.stringify(darkMode));
-  }, [darkMode]);
-
-  const toggleDarkMode = () => {
-    setDarkMode((prevMode) => !prevMode);
-  };
-
   // Background shapes data
   const backgroundShapes = [
     // Circles
@@ -157,27 +125,10 @@ const LandingPage = () => {
       </div>
 
       <header className="bg-primary dark:bg-dark-primary relative z-10 flex max-h-[76px] min-h-[76px] items-center justify-between px-4 py-4 sm:px-6">
-        <div className="flex items-center gap-4">
-          {/* Dark Mode Toggle Button */}
-          <button
-            onClick={toggleDarkMode}
-            className="flex items-center justify-center rounded-full border-2 border-gray-800 bg-white p-2 transition-colors duration-200 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
-            aria-label={
-              darkMode ? "Switch to light mode" : "Switch to dark mode"
-            }
-          >
-            {darkMode ? (
-              <Sun size={20} className="text-yellow-500" />
-            ) : (
-              <Moon size={20} className="text-gray-700" />
-            )}
-          </button>
-
-          <div className="w-34">
-            <Link to="/">
-              <img src={logo} alt="logo" />
-            </Link>
-          </div>
+        <div className="w-34">
+          <Link to="/">
+            <img src={logo} alt="logo" />
+          </Link>
         </div>
 
         <Link
@@ -206,7 +157,7 @@ const LandingPage = () => {
               {/* Main Text */}
               <div className="space-y-6 lg:space-y-10">
                 <p className="relative z-10 pb-2 text-xl text-gray-700 sm:text-2xl lg:text-3xl dark:text-gray-300">
-                  ابدأ اليوم رحلة تعملك فكل إنجاز صغير يقودك لنجاح أكبر ....
+                  ابدأ اليوم رحلة تعلمك فكل إنجاز صغير يقودك لنجاح أكبر ....
                 </p>
                 <h2 className="relative z-10 text-2xl leading-tight font-bold text-gray-800 sm:text-3xl lg:text-5xl dark:text-white">
                   إطمح ، تعلم ، تقدم

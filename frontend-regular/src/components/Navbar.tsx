@@ -20,8 +20,7 @@ interface SearchResult {
 export default function Navbar() {
   const [search, setSearch] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const { courseDetails, isPending: isCourseDetailsPending } =
-    useGetCourseDetails("1");
+  const { courseDetails } = useGetCourseDetails("1");
   const { me, isPending } = useGetMe();
   const { logout } = useLogout();
   const navigate = useNavigate();
@@ -123,7 +122,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="bg-primary dark:bg-dark-primary relative flex w-full items-center justify-between px-8 py-3 text-white">
+      <nav className="bg-primary dark:bg-dark-primary relative flex w-full items-center justify-between px-6 py-3 text-white">
         {/* LOGO */}
         <div className="w-34">
           <Link to="/">
@@ -132,14 +131,14 @@ export default function Navbar() {
         </div>
 
         {/* NAVIGATIONS */}
-        <div className="dark:text-dark-text text-text-small hidden items-center justify-center gap-6 font-bold text-white lg:flex">
+        <div className="dark:text-dark-text text-text-tiny hidden items-center justify-center gap-6 font-bold whitespace-nowrap text-white lg:flex">
           <NavLink
             to="/home"
             className={({ isActive }) =>
               isActive ? "text-text flex items-center" : "flex items-center"
             }
           >
-            <span>الرئيسية</span>
+            <span>الصفحة الرئيسية</span>
           </NavLink>
           <NavLink
             to="/instructions"
@@ -147,7 +146,7 @@ export default function Navbar() {
               isActive ? "text-text flex items-center" : "flex items-center"
             }
           >
-            <span>التعليمات</span>
+            <span>الإرشادات</span>
           </NavLink>
           <NavLink
             to="/goals"
@@ -164,7 +163,7 @@ export default function Navbar() {
               isActive ? "text-text flex items-center" : "flex items-center"
             }
           >
-            <span>المحتوى</span>
+            <span>الخريطة الدراسية</span>
           </NavLink>
           <NavLink
             to="/course/1"
@@ -172,7 +171,7 @@ export default function Navbar() {
               isActive ? "text-text flex items-center" : "flex items-center"
             }
           >
-            <span>الكورس</span>
+            <span>المقرر</span>
           </NavLink>
         </div>
 
@@ -188,11 +187,7 @@ export default function Navbar() {
               className="px-3 py-1 text-black outline-none"
             />
             <div className="bg-primary dark:bg-dark-primary p-2">
-              {isCourseDetailsPending ? (
-                <Spinner size="small" />
-              ) : (
-                <Search className="h-4 w-4 text-white" />
-              )}
+              <Search className="h-4 w-4 text-white" />
             </div>
           </div>
 
@@ -265,7 +260,7 @@ export default function Navbar() {
               ) : (
                 <CircleUserRound className="h-8 w-8 text-white" />
               )}
-              <p className="text-text-small">{me?.first_name}</p>
+              <p className="text-text-tiny">{me?.first_name}</p>
             </div>
           </Link>
 
@@ -277,7 +272,7 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Hamburger Button - Hidden on md screens and up */}
+        {/* Hamburger Button */}
         <button className="cursor-pointer p-2 lg:hidden" onClick={toggleDrawer}>
           {isDrawerOpen ? (
             <X className="h-6 w-6 text-white" />
@@ -311,7 +306,7 @@ export default function Navbar() {
                   : "hover:text-primary flex items-center gap-1 rounded-md px-3 py-3 font-bold text-white transition-colors hover:bg-white"
               }
             >
-              <span>الرئيسية</span>
+              <span>الصفحة الرئيسية</span>
             </NavLink>
             <NavLink
               to="/instructions"
@@ -322,7 +317,7 @@ export default function Navbar() {
                   : "hover:text-primary rounded-md px-3 py-3 font-bold text-white transition-colors hover:bg-white"
               }
             >
-              <span>التعليمات</span>
+              <span>الإرشادات</span>
             </NavLink>
             <NavLink
               to="/goals"
@@ -344,7 +339,7 @@ export default function Navbar() {
                   : "hover:text-primary rounded-md px-3 py-3 font-bold text-white transition-colors hover:bg-white"
               }
             >
-              <span>خريطة المحتوى</span>
+              <span>الخريطة الدراسية</span>
             </NavLink>
             <NavLink
               to="/course/1"
@@ -355,7 +350,7 @@ export default function Navbar() {
                   : "hover:text-primary rounded-md px-3 py-3 font-bold text-white transition-colors hover:bg-white"
               }
             >
-              <span>الكورس</span>
+              <span>المقرر</span>
             </NavLink>
           </div>
 

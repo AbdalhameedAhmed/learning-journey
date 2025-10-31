@@ -157,7 +157,7 @@ const LandingPage = () => {
               {/* Main Text */}
               <div className="space-y-6 lg:space-y-10">
                 <p className="relative z-10 pb-2 text-xl text-gray-700 sm:text-2xl lg:text-3xl dark:text-gray-300">
-                  ابدأ اليوم رحلة تعملك فكل إنجاز صغير يقودك لنجاح أكبر ....
+                  ابدأ اليوم رحلة تعلمك فكل إنجاز صغير يقودك لنجاح أكبر ....
                 </p>
                 <h2 className="relative z-10 text-2xl leading-tight font-bold text-gray-800 sm:text-3xl lg:text-5xl dark:text-white">
                   إطمح ، تعلم ، تقدم

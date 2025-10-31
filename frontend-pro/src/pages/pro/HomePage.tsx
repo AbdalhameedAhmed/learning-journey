@@ -21,7 +21,7 @@ export default HomePage;
 const homeCardItems = [
   {
     image: infoImage,
-    title: "التعليمات",
+    title: "الإرشادات",
     to: "/instructions",
   },
   {
@@ -31,7 +31,7 @@ const homeCardItems = [
   },
   {
     image: contentImage,
-    title: "خريطة المحتوى",
+    title: "الخريطة الدراسية",
     to: "/content-map",
   },
   {

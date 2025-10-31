@@ -12,10 +12,12 @@
   --text-size-medium: 28px;
   --text-size-large: 32px;
 
+  --text-large-ratio: 1.3;
   --text-small-ratio: 0.8;
   --text-tiny-ratio: 0.7;
 
   --text-text-normal: var(--text-size-medium);
+  --text-text-large: calc(var(--text-text-normal) * var(--text-large-ratio));
   --text-text-small: calc(var(--text-text-normal) * var(--text-small-ratio));
   --text-text-tiny: calc(var(--text-text-normal) * var(--text-tiny-ratio));
 }
