@@ -5,10 +5,14 @@ const SubmissionSummary = ({
   result,
   shouldShowReviewData,
   handleToggleDetails,
+  goToNextModuleChild,
+  getNextModuleChild,
 }: {
   result: ExamSubmissionResult;
   shouldShowReviewData: boolean | null | undefined;
   handleToggleDetails: () => void;
+  goToNextModuleChild: () => void;
+  getNextModuleChild: () => Record<string, unknown> | null | undefined;
 }) => {
   const statusClasses = result.passed
     ? "bg-green-100 border-green-500 text-green-800"
@@ -67,13 +71,21 @@ const SubmissionSummary = ({
       </div>
 
       {shouldShowReviewData && (
-        <div className="mx-auto w-full max-w-xl px-4">
+        <div className="mx-auto flex w-full max-w-xl flex-col px-4">
           <button
             onClick={handleToggleDetails}
             className="bg-primary dark:bg-dark-primary mt-8 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg px-6 py-3 font-bold text-white shadow-md transition-all duration-200 hover:opacity-90"
           >
             <BookOpen size={20} />
             مراجعة الإجابات الصحيحة
+          </button>
+
+          <button
+            disabled={!getNextModuleChild()}
+            onClick={goToNextModuleChild}
+            className="bg-primary dark:bg-dark-primary mt-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg px-6 py-3 font-bold text-white shadow-md transition-all duration-200 hover:opacity-90 disabled:opacity-60"
+          >
+            التالى
           </button>
         </div>
       )}

@@ -43,8 +43,6 @@ export default function Navbar() {
   const nextAvailableModuleIdRef = useRef<number | undefined>(null);
 
   useEffect(() => {
-    console.log("me chagedd");
-    console.log(me);
     progressDataRef.current = me?.current_progress_data;
     nextAvailableModuleIdRef.current =
       progressDataRef.current?.next_available_module_id;

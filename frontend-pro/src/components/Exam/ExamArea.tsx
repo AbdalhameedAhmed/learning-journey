@@ -1,6 +1,6 @@
 import { useGetExam } from "@/hooks/courseContent/useGetExam";
 import { useSubmitExam } from "@/hooks/courseContent/useSubmitExam";
-import type { ErrorResponse } from "@schemas/course";
+import type { ErrorResponse, ExamHeader, LessonHeader } from "@schemas/course";
 import {
   ExamType,
   type AlreadySubmittedResponse,
@@ -18,9 +18,13 @@ import SubmissionResultView from "./SubmissionResultView";
 const ExamArea = ({
   examId,
   examType,
+  setActiveLessonHandler = () => {},
+  setActiveExamHandler = () => {},
 }: {
   examId: number;
   examType: ExamType;
+  setActiveLessonHandler?: (lesson: LessonHeader) => void;
+  setActiveExamHandler?: (exam: ExamHeader, examType: ExamType) => void;
 }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -157,7 +161,13 @@ const ExamArea = ({
   }
 
   if (submissionResult) {
-    return <SubmissionResultView result={submissionResult} />;
+    return (
+      <SubmissionResultView
+        result={submissionResult}
+        setActiveLessonHandler={setActiveLessonHandler}
+        setActiveExamHandler={setActiveExamHandler}
+      />
+    );
   }
 
   if (isErrorResponse(exam)) {
@@ -280,7 +290,13 @@ const ExamArea = ({
   };
 
   if (submissionResult) {
-    return <SubmissionResultView result={submissionResult} />;
+    return (
+      <SubmissionResultView
+        result={submissionResult}
+        setActiveLessonHandler={setActiveLessonHandler}
+        setActiveExamHandler={setActiveExamHandler}
+      />
+    );
   }
 
   return (
@@ -459,7 +475,7 @@ const ExamArea = ({
           {/* Question */}
           <div className="mb-8">
             <div className="mx-auto w-full max-w-2xl">
-              <h3 className="text-text-normal mb-6 text-center leading-relaxed font-semibold text-gray-800">
+              <h3 className="text-text-normal text-text dark:text-dark-text mb-6 text-center leading-relaxed font-semibold">
                 {currentQuestion.question_text}
               </h3>
 

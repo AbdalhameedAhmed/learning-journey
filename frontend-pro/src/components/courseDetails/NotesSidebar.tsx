@@ -2,6 +2,7 @@ import { useAddNote } from "@/hooks/courseContent/useAddNote";
 import type { Note } from "@schemas/course";
 import { useEffect, useState } from "react";
 import NoteItem from "./NoteItem";
+import Spinner from "../Spinner";
 
 type NotesSidebarProps = {
   notes: Note[] | undefined;
@@ -18,7 +19,7 @@ export default function NotesSidebar({
   videoDuration,
   lessonId,
 }: NotesSidebarProps) {
-  const { addNote } = useAddNote(lessonId);
+  const { addNote, isPending } = useAddNote(lessonId);
   const [newNote, setNewNote] = useState("");
   const [noteTime, setNoteTime] = useState("00:00");
   const [timeError, setTimeError] = useState<string | null>(null);
@@ -90,7 +91,7 @@ export default function NotesSidebar({
           onClick={handleAddNote}
           className="bg-primary dark:bg-dark-primary text-text-small mt-2 w-full rounded px-4 py-2 text-white"
         >
-          اضف ملاحظة
+          {isPending ? <Spinner size="small" /> : "اضف ملاحظة"}
         </button>
       </div>
       <div className="flex max-h-full flex-col gap-2 overflow-y-auto">
