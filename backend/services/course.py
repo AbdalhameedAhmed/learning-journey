@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from schemas.auth import UserRole
 from schemas.course import AssetResponse, LessonResponse
 from supabase import Client
+from utils.course_content import get_lesson_index, get_next_lesson_index
 
 from services.auth import get_user_progress
 
@@ -114,15 +115,39 @@ async def check_regular_user_availability(
     return False, "أكمل الدرس الحالي أولاً"
 
 
+# async def is_lesson_available(
+#     lesson: Dict[str, Any],
+#     user_role: UserRole,
+#     user_progress: Dict[str, Any],
+# ) -> Tuple[bool, str]:
+#     if user_role == UserRole.pro:
+#         return await check_pro_user_availability(lesson, user_progress)
+#     else:
+#         return await check_regular_user_availability(lesson, user_progress)
+
+
 async def is_lesson_available(
     lesson: Dict[str, Any],
-    user_role: UserRole,
     user_progress: Dict[str, Any],
 ) -> Tuple[bool, str]:
-    if user_role == UserRole.pro:
-        return await check_pro_user_availability(lesson, user_progress)
+    current_progress = user_progress.get("current_progress")
+    lesson_index = get_lesson_index(lesson["id"], "lesson")
+
+    if lesson_index is None:
+        return False, "الدرس غير موجود"
+
+    if current_progress is None:
+        return False, "أكمل الاختبار القبلي للبدء في الكورس"
+
+    if lesson_index <= current_progress:
+        return True, "الدرس متاح"
     else:
-        return await check_regular_user_availability(lesson, user_progress)
+        return False, "الدرس غير متاح. أكمل الدروس السابقة أولاً."
+
+    # if user_role == UserRole.pro:
+    #     return await check_pro_user_availability(lesson, user_progress)
+    # else:
+    #     return await check_regular_user_availability(lesson, user_progress)
 
 
 async def get_lesson_by_activity_id(activity_id: int, supabase: Client):
@@ -200,42 +225,52 @@ async def update_progress_after_lesson_completion(
     user_role: UserRole,
     completed_lesson_id: int,
     supabase: Client,
+    lesson_id: int,
 ) -> Dict[str, Any]:
     progress_data = await get_user_progress(user_id, supabase)
-    completed_lessons = progress_data.get("completed_lessons", [])
+    # completed_lessons = progress_data.get("completed_lessons", [])
 
-    if user_role == UserRole.pro:
-        # For PRO users, lessons within a module are freely accessible
-        # Progress is mainly module-based
-        if completed_lesson_id not in completed_lessons:
-            completed_lessons.append(completed_lesson_id)
-            progress_data["completed_lessons"] = completed_lessons
+    # if user_role == UserRole.pro:
+    #     # For PRO users, lessons within a module are freely accessible
+    #     # Progress is mainly module-based
+    #     if completed_lesson_id not in completed_lessons:
+    #         completed_lessons.append(completed_lesson_id)
+    #         progress_data["completed_lessons"] = completed_lessons
 
-    else:
-        # For REGULAR users, linear progression
-        if completed_lesson_id not in completed_lessons:
-            completed_lessons.append(completed_lesson_id)
-            progress_data["completed_lessons"] = completed_lessons
+    # else:
+    #     # For REGULAR users, linear progression
+    #     if completed_lesson_id not in completed_lessons:
+    #         completed_lessons.append(completed_lesson_id)
+    #         progress_data["completed_lessons"] = completed_lessons
 
-        # # Check if this is the last lesson in the current module
-        # is_last_lesson_in_module = await is_last_lesson_in_current_module(
-        #     completed_lesson_id, supabase
-        # )
+    #     # # Check if this is the last lesson in the current module
+    #     # is_last_lesson_in_module = await is_last_lesson_in_current_module(
+    #     #     completed_lesson_id, supabase
+    #     # )
 
-        # if is_last_lesson_in_module:
-        #     # Don't update next_available_lesson_id
-        #     # Set next_available_exam_id
-        #     progress_data["next_available_exam_id"] = await get_exam_by_previous_lesson(
-        #         completed_lesson_id, supabase
-        #     )
-        # TODO: Abdalhameed: (check the submission of activity)
-        if activity_id:
-            # in case the lesson has an activity
-            progress_data["next_available_activity_id"] = activity_id
-        else:
-            # Normal progression - set next available lesson
-            next_lesson_id = await get_next_lesson_id(completed_lesson_id, supabase)
-            progress_data["next_available_lesson_id"] = next_lesson_id
+    #     # if is_last_lesson_in_module:
+    #     #     # Don't update next_available_lesson_id
+    #     #     # Set next_available_exam_id
+    #     #     progress_data["next_available_exam_id"] = await get_exam_by_previous_lesson(
+    #     #         completed_lesson_id, supabase
+    #     #     )
+    #     # TODO: Abdalhameed: (check the submission of activity)
+    #     if activity_id:
+    #         # in case the lesson has an activity
+    #         progress_data["next_available_activity_id"] = activity_id
+    #     else:
+    #         # Normal progression - set next available lesson
+    #         next_lesson_id = await get_next_lesson_id(completed_lesson_id, supabase)
+    #         progress_data["next_available_lesson_id"] = next_lesson_id
+
+    # update current_progress if this is a new lesson
+
+    lesson_index = get_lesson_index(lesson_id, "lesson")
+    next_lesson_index = get_next_lesson_index(lesson_id, "lesson")
+    current_progress = progress_data.get("current_progress")
+
+    if next_lesson_index is not None and lesson_index == current_progress:
+        progress_data["current_progress"] = next_lesson_index
 
     # Save progress
     supabase.table("users").update({"current_progress_data": progress_data}).eq(
@@ -258,9 +293,7 @@ async def get_lesson_with_validation(
             return {"error": "الدرس غير موجود"}
 
         # Check if lesson is available
-        is_available, message = await is_lesson_available(
-            lesson_dict, user_role, user_progress
-        )
+        is_available, message = await is_lesson_available(lesson_dict, user_progress)
 
         if not is_available:
             return {"error": message}

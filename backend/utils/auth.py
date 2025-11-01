@@ -93,6 +93,7 @@ def create_user_progress(user_role: UserRole) -> dict:
         "is_final_exam_available": False,
         "completed_modules": [],
         "completed_lessons": [],
+        "current_progress": None,
     }
 
     if user_role == UserRole.pro:

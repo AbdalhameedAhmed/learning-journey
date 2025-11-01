@@ -4,7 +4,7 @@ from typing import Any, Dict, List
 from schemas.auth import UserRole
 from schemas.exam import ExamType
 from supabase import Client
-
+from utils.course_content import get_lesson_index, get_next_lesson_index, get_exam_by_id
 from services.course import (
     get_exam_by_previous_lesson,
     get_first_exam_for_module,
@@ -173,50 +173,65 @@ async def update_progress_after_exam(
     try:
         progress_data = current_progress.copy()
 
-        if exam_type == "pre_exam":
-            # Pre-exam passed - start the course
-            return await update_progress_after_pre_exam(user_id, user_role, supabase)
+        # if exam_type == "pre_exam":
+        #     # Pre-exam passed - start the course
+        #     return await update_progress_after_pre_exam(user_id, user_role, supabase)
 
-        elif exam_type == "quiz":
-            # Module quiz passed - progress to next module/lesson
-            if user_role == UserRole.pro:
-                return await update_pro_progress_after_module_quiz(
-                    user_id, progress_data, supabase
-                )
-            else:
-                return await update_regular_progress_after_module_quiz(
-                    user_id, progress_data, supabase
-                )
+        # elif exam_type == "quiz":
+        #     # Module quiz passed - progress to next module/lesson
+        #     if user_role == UserRole.pro:
+        #         return await update_pro_progress_after_module_quiz(
+        #             user_id, progress_data, supabase
+        #         )
+        #     else:
+        #         return await update_regular_progress_after_module_quiz(
+        #             user_id, progress_data, supabase
+        #         )
 
-        elif exam_type == "final_exam":
-            # Final exam passed - course completed
-            return await update_progress_after_final_exam(
-                user_id, progress_data, supabase
-            )
+        # elif exam_type == "final_exam":
+        #     # Final exam passed - course completed
+        #     return await update_progress_after_final_exam(
+        #         user_id, progress_data, supabase
+        #     )
 
-        elif exam_type == "activity":
-            lesson_obj = await is_last_activity_in_current_module(exam_id, supabase)
+        # elif exam_type == "activity":
+        #     lesson_obj = await is_last_activity_in_current_module(exam_id, supabase)
 
-            if lesson_obj.get("is_last"):
-                progress_data[
-                    "next_available_exam_id"
-                ] = await get_exam_by_previous_lesson(
-                    lesson_obj.get("lesson_id"), supabase
-                )
-            else:
-                next_lesson_id = await get_next_lesson_id(
-                    lesson_obj.get("lesson_id"), supabase
-                )
+        #     if lesson_obj.get("is_last"):
+        #         progress_data[
+        #             "next_available_exam_id"
+        #         ] = await get_exam_by_previous_lesson(
+        #             lesson_obj.get("lesson_id"), supabase
+        #         )
+        #     else:
+        #         next_lesson_id = await get_next_lesson_id(
+        #             lesson_obj.get("lesson_id"), supabase
+        #         )
 
-                progress_data["next_available_lesson_id"] = next_lesson_id
+        #         progress_data["next_available_lesson_id"] = next_lesson_id
 
-            supabase.table("users").update({"current_progress_data": progress_data}).eq(
-                "id", user_id
-            ).execute()
-            return {"success": True}
+        #     supabase.table("users").update({"current_progress_data": progress_data}).eq(
+        #         "id", user_id
+        #     ).execute()
+        #     return {"success": True}
 
+        # else:
+        #     return {"error": "Unknown exam type"}
+
+        next_lesson_index = get_next_lesson_index(exam_id, "exam")
+        if not next_lesson_index:
+            progress_data["is_final_exam_available"] = True
         else:
-            return {"error": "Unknown exam type"}
+            if user_role == UserRole.regular:
+                progress_data["current_progress"] = next_lesson_index
+            else:
+                exam = get_exam_by_id(exam_id)
+                if exam and "next_exam_index" in exam:
+                    progress_data["current_progress"] = exam["next_exam_index"]
+                else:
+                    progress_data["current_progress"] = next_lesson_index
+
+        return {"success": True}
 
     except Exception as e:
         return {"error": f"Error updating progress: {str(e)}"}
@@ -236,6 +251,7 @@ async def update_progress_after_pre_exam(
             {
                 "next_available_module_id": 1,
                 "next_available_exam_id": await get_first_exam_for_module(1, supabase),
+                "current_progress": 6,
             }
         )
     else:
@@ -243,6 +259,7 @@ async def update_progress_after_pre_exam(
             {
                 "next_available_lesson_id": 0,
                 "next_available_exam_id": None,
+                "current_progress": 0,
             }
         )
 
@@ -348,17 +365,24 @@ async def is_exam_previously_submitted(
 async def is_exam_allowed_by_progress(
     exam_id: int, exam_type: ExamType, user_progress: Dict[str, Any]
 ):
-    if exam_type == ExamType.FINAL_EXAM:
-        return user_progress.get("is_final_exam_available", False)
-    elif exam_type == ExamType.PRE_EXAM:
-        return user_progress.get("next_available_module_id") is None
+    # if exam_type == ExamType.FINAL_EXAM:
+    #     return user_progress.get("is_final_exam_available", False)
+    # elif exam_type == ExamType.PRE_EXAM:
+    #     return user_progress.get("next_available_module_id") is None
+    # else:
+    #     next_available_exam_id = user_progress.get("next_available_exam_id")
+
+    #     if next_available_exam_id is None:
+    #         return False
+
+    #     if exam_id == next_available_exam_id:
+    #         return True
+
+    #     return False
+
+    current_progress = user_progress.get("current_progress")
+    exam_index = get_lesson_index(exam_id, "exam")
+    if current_progress == exam_index:
+        return True
     else:
-        next_available_exam_id = user_progress.get("next_available_exam_id")
-
-        if next_available_exam_id is None:
-            return False
-
-        if exam_id == next_available_exam_id:
-            return True
-
         return False

@@ -8,6 +8,7 @@ from services.course import (
     update_progress_after_lesson_completion,
 )
 from supabase import Client
+from utils.course_content import get_lesson_index, get_next_lesson_index
 
 
 async def get_course_details_controller(course_id: int, supabase: Client):
@@ -80,31 +81,51 @@ async def get_lesson_details_controller(
         # If lesson is successfully accessed, update user progress
         # Only update if this is a new lesson (not already completed)
 
-        should_update_progress = await should_update_lesson_progress(
-            lesson_id, student_user, supabase
+        # should_update_progress = await should_update_lesson_progress(
+        #     lesson_id, student_user, supabase
+        # )
+
+        # if should_update_progress:
+        #     update_result = await update_progress_after_lesson_completion(
+        #         activity_id=activity_id,
+        #         user_id=student_user.id,
+        #         user_role=student_user.role,
+        #         completed_lesson_id=lesson_id,
+        #         supabase=supabase,
+        #     )
+
+        #     # Add progress update info to the response
+        #     if "success" in update_result:
+        #         result["progress_updated"] = True
+        #         result["progress_message"] = "Progress updated successfully"
+        #     else:
+        #         result["progress_updated"] = False
+        #         result["progress_message"] = "Progress update failed"
+
+        # return result
+
+        update_result = await update_progress_after_lesson_completion(
+            activity_id=activity_id,
+            user_id=student_user.id,
+            user_role=student_user.role,
+            completed_lesson_id=lesson_id,
+            supabase=supabase,
+            lesson_id=lesson_id,
         )
 
-        if should_update_progress:
-            update_result = await update_progress_after_lesson_completion(
-                activity_id=activity_id,
-                user_id=student_user.id,
-                user_role=student_user.role,
-                completed_lesson_id=lesson_id,
-                supabase=supabase,
-            )
-
-            # Add progress update info to the response
-            if "success" in update_result:
-                result["progress_updated"] = True
-                result["progress_message"] = "Progress updated successfully"
-            else:
-                result["progress_updated"] = False
-                result["progress_message"] = "Progress update failed"
+        # Add progress update info to the response
+        if "success" in update_result:
+            result["progress_updated"] = True
+            result["progress_message"] = "Progress updated successfully"
+        else:
+            result["progress_updated"] = False
+            result["progress_message"] = "Progress update failed"
 
         return result
-
     except Exception as e:
-        return {"error": f"Error in lesson controller: {str(e)}"}
+        raise HTTPException(
+            status_code=500, detail=f"Error in lesson controller: {str(e)}"
+        )
 
 
 async def should_update_lesson_progress(
