@@ -16,3 +16,4 @@ class LessonResponse(BaseModel):
     assets: List[AssetResponse]
     created_at: datetime
     activity_id: int | None = None
+    is_activity: bool = False

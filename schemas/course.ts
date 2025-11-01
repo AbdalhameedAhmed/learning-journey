@@ -30,6 +30,7 @@ export interface Activity {
 
 export interface Lesson extends LessonHeader {
   assets: Asset[];
+  is_activity: boolean;
 }
 
 export interface LessonResponse {

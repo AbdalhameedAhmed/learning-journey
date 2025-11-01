@@ -34,7 +34,6 @@ export default function AssetResource({ lessonId }: { lessonId: number }) {
 
   const assetsTypes = new Array(...new Set(assets.map((asset) => asset.type)));
 
-
   const { selectedType, setSelectedType, setSelectedAssetIndex } =
     useActiveAssetContext();
 
@@ -57,6 +56,7 @@ export default function AssetResource({ lessonId }: { lessonId: number }) {
   }, [assets, selectedType]);
 
   if (isPending) return <Spinner />;
+  console.log({ lesson });
 
   if (lesson && isErrorResponse(lesson)) {
     return <p className="p-4 text-xl text-red-600">{lesson.error}</p>;
@@ -84,21 +84,22 @@ export default function AssetResource({ lessonId }: { lessonId: number }) {
   return (
     <div className="flex h-full w-full flex-col gap-12">
       <div className="flex items-center gap-4">
-        {assetsTypes.map((type, index) => (
-          <button
-            onClick={() => handleAssetTypeChange(type, index)}
-            className={clsx(
-              "border-primary dark:border-dark-primary text-text-small text-text dark:text-dark-text cursor-pointer rounded-lg border px-4 py-1 disabled:cursor-not-allowed disabled:opacity-50",
-              {
-                "bg-primary dark:bg-dark-primary text-text-small text-white":
-                  selectedType === type,
-              },
-            )}
-            key={type}
-          >
-            {arabicAssetType(type)}
-          </button>
-        ))}
+        {!lesson?.lesson.is_activity &&
+          assetsTypes.map((type, index) => (
+            <button
+              onClick={() => handleAssetTypeChange(type, index)}
+              className={clsx(
+                "border-primary dark:border-dark-primary text-text-small text-text dark:text-dark-text cursor-pointer rounded-lg border px-4 py-1 disabled:cursor-not-allowed disabled:opacity-50",
+                {
+                  "bg-primary dark:bg-dark-primary text-text-small text-white":
+                    selectedType === type,
+                },
+              )}
+              key={type}
+            >
+              {arabicAssetType(type)}
+            </button>
+          ))}
       </div>
       {!selectedType ||
         (filteredAssets.length === 0 && assets.length > 0 && (
