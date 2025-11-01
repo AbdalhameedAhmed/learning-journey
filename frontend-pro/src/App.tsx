@@ -1,23 +1,24 @@
 import GuestOnlyRoute from "@/components/authorization/GuestOnlyRoute";
 import RoleBasedRoute from "@/components/authorization/RoleBasedRoute";
+import Layout from "@/components/Layout";
+import { ActiveAssetContextProvider } from "@/context/ActiveAssetContext/ActiveAssetProvider";
 import DashboardPage from "@/pages/admin/DashboardPage";
 import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
-import LandingPage from "@/pages/pro/LandingPage";
 import NotFoundPage from "@/pages/NotFoundPage";
+import ContactUsPage from "@/pages/pro/ContactUsPage";
 import ContentPage from "@/pages/pro/ContentPage";
 import CourseDetails from "@/pages/pro/CourseDetails";
 import GoalsPage from "@/pages/pro/GoalsPage";
 import HomePage from "@/pages/pro/HomePage";
 import InstructionsPage from "@/pages/pro/InstructionsPage";
+import LandingPage from "@/pages/pro/LandingPage";
+import PreExam from "@/pages/pro/PreExam";
 import ProfilePage from "@/pages/pro/ProfilePage";
 import UnauthorizedPage from "@/pages/UnauthorizedPage";
 import { UserRole } from "@schemas/User";
 import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
-import Layout from "./components/Layout";
-import PreExam from "./pages/pro/PreExam";
-import { ActiveAssetContextProvider } from "./context/ActiveAssetContext/ActiveAssetProvider";
 
 const App = () => {
   return (
@@ -47,6 +48,7 @@ const App = () => {
             <Route path="/goals" element={<GoalsPage />} />
             <Route path="/content-map" element={<ContentPage />} />
             <Route path="/pre-exam" element={<PreExam />} />
+            <Route path="/contact-us" element={<ContactUsPage />} />
           </Route>
         </Route>
 
