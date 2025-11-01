@@ -80,21 +80,22 @@ export default function AssetResource({ lessonId }: { lessonId: number }) {
   return (
     <div className="flex h-full w-full flex-col gap-12">
       <div className="flex items-center gap-4">
-        {assetsTypes.map((type) => (
-          <button
-            onClick={() => handleAssetTypeChange(type)}
-            className={clsx(
-              "border-primary dark:border-dark-primary text-text-small text-text dark:text-dark-text cursor-pointer rounded-lg border px-4 py-1 disabled:cursor-not-allowed disabled:opacity-50",
-              {
-                "bg-primary dark:bg-dark-primary text-text-small text-white":
-                  selectedType === type,
-              },
-            )}
-            key={type}
-          >
-            {arabicAssetType(type)}
-          </button>
-        ))}
+        {!lesson?.lesson.is_activity &&
+          assetsTypes.map((type, index) => (
+            <button
+              onClick={() => handleAssetTypeChange(type)}
+              className={clsx(
+                "border-primary dark:border-dark-primary text-text-small text-text dark:text-dark-text cursor-pointer rounded-lg border px-4 py-1 disabled:cursor-not-allowed disabled:opacity-50",
+                {
+                  "bg-primary dark:bg-dark-primary text-text-small text-white":
+                    selectedType === type,
+                },
+              )}
+              key={type}
+            >
+              {arabicAssetType(type)}
+            </button>
+          ))}
       </div>
       {!selectedType ||
         (filteredAssets.length === 0 && assets.length > 0 && (

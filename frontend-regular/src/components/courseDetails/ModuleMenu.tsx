@@ -1,5 +1,6 @@
+import { courseContent } from "@/constants/courseContent";
 import { useGetMe } from "@/hooks/auth/useGetMe";
-import type { Course, ExamHeader, LessonHeader } from "@schemas/course";
+import type { Course, ExamHeader } from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
 import { X } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
@@ -9,8 +10,8 @@ import ModuleTab from "./ModuleTab";
 interface ModuleMenuProps {
   openedModule: number | undefined;
   courseDetails: Course | undefined;
-  activeLesson: LessonHeader | undefined;
-  setActiveLessonHandler: (lesson: LessonHeader) => void;
+  activeLessonId: number | undefined;
+  setActiveLessonHandler: (lessonId: number) => void;
   activeExam: ExamHeader | undefined;
   setActiveExamHandler: (exam: ExamHeader, examType: ExamType) => void;
   setOpendModule: Dispatch<SetStateAction<number | undefined>>;
@@ -21,7 +22,7 @@ interface ModuleMenuProps {
 const ModuleMenu = ({
   openedModule,
   courseDetails,
-  activeLesson,
+  activeLessonId,
   setActiveLessonHandler,
   activeExam,
   setActiveExamHandler,
@@ -87,24 +88,24 @@ const ModuleMenu = ({
         </button>
 
         <div className="flex w-full flex-col gap-4 pt-10 text-center lg:pt-10">
-          {courseDetails?.modules?.map((module) => {
-            return (
-              <ModuleTab
-                key={module.id}
-                module={module}
-                activeLesson={activeLesson}
-                setActiveLessonHandler={setActiveLessonHandler}
-                activeExam={activeExam}
-                setActiveExamHandler={setActiveExamHandler}
-                openedModule={openedModule}
-                setOpendModule={setOpendModule}
-                nextAvailableLessonId={nextAvailableLessonId}
-                nextAvailableModuleId={nextAvailableModuleId}
-                nextAvailableExamId={nextAvailableExamId}
-                isFinalExamAvailable={isFinalExamAvailable}
-                courseCompleted={courseCompleted}
-              />
-            );
+          {courseContent.map((content, index) => {
+            if (content.type === "module") {
+              return (
+                <ModuleTab
+                  key={content.id}
+                  module={content}
+                  moduleIndex={index}
+                  activeLessonId={activeLessonId}
+                  setActiveLessonHandler={setActiveLessonHandler}
+                  activeExam={activeExam}
+                  setActiveExamHandler={setActiveExamHandler}
+                  openedModule={openedModule}
+                  setOpendModule={setOpendModule}
+                  nextAvailableModuleId={nextAvailableModuleId}
+                  nextAvailableExamId={nextAvailableExamId}
+                />
+              );
+            }
           })}
           {/* Final-exam */}
           <HeaderButton

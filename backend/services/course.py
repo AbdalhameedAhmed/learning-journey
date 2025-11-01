@@ -315,6 +315,7 @@ async def get_lesson_with_validation(
             assets=assets,
             created_at=lesson_dict["created_at"],
             activity_id=lesson_dict["activity_id"],
+            is_activity=lesson_dict["is_activity"]
         )
 
         # Return lesson data

@@ -4,7 +4,7 @@ import ExamArea from "@/components/Exam/ExamArea";
 import Spinner from "@/components/Spinner";
 import { useGetMe } from "@/hooks/auth/useGetMe";
 import { useGetCourseDetails } from "@/hooks/courseContent/useGetCourseDetails";
-import type { ExamHeader, LessonHeader } from "@schemas/course";
+import type { ExamHeader } from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
 import { Menu } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -14,7 +14,7 @@ import AssetsViewerFooter from "../../components/courseDetails/AssetsViewerFoote
 export default function CourseDetails() {
   const courseId = useParams().courseId;
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeLesson, setActiveLesson] = useState<LessonHeader>();
+  const [activeLessonId, setActiveLessonId] = useState<number>();
   const [activeExam, setActiveExam] = useState<ExamHeader>();
   const [openedModule, setOpendModule] = useState<number>();
   const [examType, setExamType] = useState<ExamType>();
@@ -23,11 +23,9 @@ export default function CourseDetails() {
   const { me } = useGetMe();
 
   const didNotSubmitPreExam =
-    me?.current_progress_data.completed_modules &&
-    me.current_progress_data.completed_modules.length === 0 &&
     !me?.current_progress_data.is_final_exam_available &&
-    me.current_progress_data.next_available_module_id === null &&
-    me.current_progress_data.next_available_exam_id === null;
+    me?.current_progress_data.next_available_lesson_id === null &&
+    me?.current_progress_data.next_available_exam_id === null;
 
   useEffect(() => {
     if (!courseDetails) return;
@@ -39,7 +37,7 @@ export default function CourseDetails() {
       for (const module of courseDetails.modules) {
         const lesson = module.lessons.find((l) => l.id === parseInt(lessonId));
         if (lesson) {
-          setActiveLesson(lesson);
+          setActiveLessonId(lesson.id);
           setOpendModule(module.id);
           setActiveExam(undefined);
           break;
@@ -53,7 +51,7 @@ export default function CourseDetails() {
       if (exam) {
         setActiveExam(exam);
         setExamType(ExamType.FINAL_EXAM);
-        setActiveLesson(undefined);
+        setActiveLessonId(undefined);
 
         if (exam.module_id) {
           setOpendModule(exam.module_id);
@@ -68,7 +66,7 @@ export default function CourseDetails() {
         if (quiz) {
           setActiveExam(quiz);
           setExamType(ExamType.QUIZ);
-          setActiveLesson(undefined);
+          setActiveLessonId(undefined);
           setOpendModule(module.id);
           break;
         }
@@ -80,7 +78,7 @@ export default function CourseDetails() {
         if (lesson?.activity) {
           setActiveExam(lesson.activity);
           setExamType(ExamType.ACTIVITY);
-          setActiveLesson(undefined);
+          setActiveLessonId(undefined);
           setOpendModule(module.id);
           break;
         }
@@ -88,16 +86,16 @@ export default function CourseDetails() {
     }
   }, [courseDetails, searchParams]);
 
-  function setActiveLessonHandler(lesson: LessonHeader) {
-    setActiveLesson(lesson);
+  function setActiveLessonHandler(lessonId: number) {
+    setActiveLessonId(lessonId);
     setActiveExam(undefined);
-    setSearchParams({ lessonId: String(lesson.id) }, { replace: true });
+    setSearchParams({ lessonId: String(lessonId) }, { replace: true });
     setIsMenuOpen(false);
   }
 
   function setActiveExamHandler(exam: ExamHeader, examType: ExamType) {
     setActiveExam(exam);
-    setActiveLesson(undefined);
+    setActiveLessonId(undefined);
     setExamType(examType);
     setSearchParams({ examId: String(exam.id) }, { replace: true });
     setIsMenuOpen(false);
@@ -124,7 +122,7 @@ export default function CourseDetails() {
       <ModuleMenu
         openedModule={openedModule}
         courseDetails={courseDetails}
-        activeLesson={activeLesson}
+        activeLessonId={activeLessonId}
         setActiveLessonHandler={setActiveLessonHandler}
         activeExam={activeExam}
         setActiveExamHandler={setActiveExamHandler}
@@ -135,7 +133,7 @@ export default function CourseDetails() {
 
       <div className="flex h-full flex-1 flex-col items-center justify-center gap-12 overflow-auto p-4">
         <div className="mt-16 flex w-full flex-1 items-center justify-center lg:mt-0">
-          {activeLesson && <AssetResource lessonId={activeLesson.id} />}
+          {activeLessonId && <AssetResource lessonId={activeLessonId} />}
           {activeExam && examType && (
             <ExamArea
               examId={activeExam?.id}
@@ -157,7 +155,7 @@ export default function CourseDetails() {
               </Link>
             </div>
           ) : (
-            !activeLesson &&
+            !activeLessonId &&
             !activeExam && (
               <div className="flex h-screen items-center justify-center">
                 <p className="text-text dark:text-dark-text text-text-large font-semibold">
@@ -167,9 +165,9 @@ export default function CourseDetails() {
             )
           )}
         </div>
-        {activeLesson && (
+        {activeLessonId && (
           <AssetsViewerFooter
-            lessonId={activeLesson.id}
+            lessonId={activeLessonId}
             setActiveLessonHandler={setActiveLessonHandler}
             setActiveExamHandler={setActiveExamHandler}
             courseDetails={courseDetails}

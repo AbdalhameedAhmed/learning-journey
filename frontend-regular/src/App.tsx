@@ -10,6 +10,7 @@ import { UserRole } from "@schemas/User";
 import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
 import Layout from "./components/Layout";
+import ContactUsPage from "./pages/regular/ContactUsPage";
 import ContentPage from "./pages/regular/ContentPage";
 import CourseDetails from "./pages/regular/CourseDetails";
 import GoalsPage from "./pages/regular/GoalsPage";
@@ -39,6 +40,7 @@ const App = () => {
             <Route path="/goals" element={<GoalsPage />} />
             <Route path="/content-map" element={<ContentPage />} />
             <Route path="/pre-exam" element={<PreExam />} />
+            <Route path="/contact-us" element={<ContactUsPage />} />
           </Route>{" "}
         </Route>
 

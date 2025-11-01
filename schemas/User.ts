@@ -24,4 +24,5 @@ export interface IProgress {
   next_available_activity_id: number | null;
   course_completed?: boolean;
   completed_at?: Date;
+  current_progress: number | null;
 }

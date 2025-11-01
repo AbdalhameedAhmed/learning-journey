@@ -173,6 +173,14 @@ export default function Navbar() {
           >
             <span>المقرر</span>
           </NavLink>
+          <NavLink
+            to="/contact-us"
+            className={({ isActive }) =>
+              isActive ? "text-text flex items-center" : "flex items-center"
+            }
+          >
+            <span>تواصل معنا</span>
+          </NavLink>
         </div>
 
         <div ref={searchContainerRef} className="relative z-20">
@@ -351,6 +359,17 @@ export default function Navbar() {
               }
             >
               <span>المقرر</span>
+            </NavLink>
+            <NavLink
+              to="/contact-us"
+              onClick={closeDrawer}
+              className={({ isActive }) =>
+                isActive
+                  ? "text-primary rounded-md bg-white px-3 py-3 font-bold"
+                  : "hover:text-primary rounded-md px-3 py-3 font-bold text-white transition-colors hover:bg-white"
+              }
+            >
+              <span>تواصل معنا</span>
             </NavLink>
           </div>
 
