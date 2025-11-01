@@ -45,7 +45,7 @@ export interface ExamHeader {
   id: number;
   course_id?: number;
   module_id?: number;
-  created_at: Date;
+  created_at?: Date;
 }
 
 export interface Asset {

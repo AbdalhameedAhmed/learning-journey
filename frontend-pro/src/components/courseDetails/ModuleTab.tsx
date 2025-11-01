@@ -1,15 +1,25 @@
+import { courseContent } from "@/constants/courseContent";
+import { useGetMe } from "@/hooks/auth/useGetMe";
 import { useGetFavorites } from "@/hooks/courseContent/useGetFavorites";
-import type { ExamHeader, LessonHeader, Module } from "@schemas/course";
+import type { ExamHeader } from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
 import clsx from "clsx";
 import { Heart, Lock } from "lucide-react";
-import { Fragment, type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import HeaderButton from "./HeaderButton";
+
+interface Module {
+  id: number;
+  type: string;
+  name: string;
+  firstOrder: number;
+}
 
 type ModuleTabProps = {
   module: Module;
-  activeLesson: LessonHeader | undefined;
-  setActiveLessonHandler: (lesson: LessonHeader) => void;
+  moduleIndex: number;
+  activeLessonId: number | undefined;
+  setActiveLessonHandler: (lesson: number) => void;
   activeExam: ExamHeader | undefined;
   setActiveExamHandler: (exam: ExamHeader, examType: ExamType) => void;
   openedModule: number | undefined;
@@ -20,20 +30,20 @@ type ModuleTabProps = {
 
 export default function ModuleTab({
   module,
-  activeLesson,
+  moduleIndex,
+  activeLessonId,
   setActiveLessonHandler,
   activeExam,
   setActiveExamHandler,
   openedModule,
   setOpendModule,
-  nextAvailableModuleId,
 }: ModuleTabProps) {
   const { favorites } = useGetFavorites();
+  const { me } = useGetMe();
 
   const isModuleLocked =
-    nextAvailableModuleId === null ||
-    (typeof nextAvailableModuleId === "number" &&
-      module.id > nextAvailableModuleId);
+    me?.current_progress_data.current_progress === null ||
+    me!.current_progress_data.current_progress < module.firstOrder;
 
   const isLessonFavorited = (lessonId: number) => {
     return favorites?.some((fav) => fav.lesson_id === lessonId) || false;
@@ -62,113 +72,91 @@ export default function ModuleTab({
           },
         )}
       >
-        {module.lessons.map((lesson) => {
-          const isLessonLocked = isModuleLocked;
-          const isFavorited = isLessonFavorited(lesson.id);
+        {(() => {
+          const elements = [];
 
-          const handleLessonClick = () => {
-            if (!isLessonLocked) {
-              setActiveLessonHandler(lesson);
+          for (let i = moduleIndex + 1; i < courseContent.length; i++) {
+            const content = courseContent[i];
+
+            if (content.type === "module") {
+              break;
             }
-          };
 
-          const handleQuizClick = () => {
-            if (!isModuleLocked && lesson.activity_id) {
-              setActiveExamHandler(
-                {
-                  id: lesson.activity_id,
-                  created_at: new Date(),
-                },
-                ExamType.ACTIVITY,
+            if (content.type === "lesson" || content.type === "activity") {
+              const isLessonLocked = isModuleLocked;
+              const isFavorited = isLessonFavorited(content.id);
+
+              const handleLessonClick = () => {
+                if (!isLessonLocked) {
+                  setActiveLessonHandler(content.id);
+                }
+              };
+
+              elements.push(
+                <div className="relative" key={i}>
+                  <p
+                    className={clsx(
+                      "border-primary dark:border-dark-primary text-text-tiny text-text dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
+                      {
+                        "cursor-pointer": !isLessonLocked,
+                        "cursor-not-allowed opacity-50": isLessonLocked,
+                        "bg-primary dark:bg-dark-primary text-white":
+                          activeLessonId === content.id && !isLessonLocked,
+                      },
+                    )}
+                    onClick={handleLessonClick}
+                  >
+                    <span className="flex-1 text-center">{content.name}</span>
+                    {isLessonLocked && (
+                      <Lock size={14} className="text-gray-400" />
+                    )}
+                  </p>
+
+                  {isFavorited && content.type === "lesson" && (
+                    <div className="absolute top-1/2 left-2 -translate-y-1/2">
+                      <Heart
+                        size={14}
+                        className="fill-red-500 text-red-500 drop-shadow-sm"
+                      />
+                    </div>
+                  )}
+                </div>,
               );
-            }
-          };
+            } else if (content.type === "exam") {
+              const isQuizLocked = isModuleLocked;
 
-          return (
-            <Fragment key={lesson.id}>
-              <div className="relative">
-                <p
-                  className={clsx(
-                    "border-primary dark:border-dark-primary text-text-tiny text-text dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
-                    {
-                      "cursor-pointer": !isLessonLocked,
-                      "cursor-not-allowed opacity-50": isLessonLocked,
-                      "bg-primary dark:bg-dark-primary text-white":
-                        activeLesson?.id === lesson.id && !isLessonLocked,
-                    },
-                  )}
-                  onClick={handleLessonClick}
-                >
-                  <span className="flex-1 text-center">{lesson.name}</span>
-                  {isLessonLocked && (
-                    <Lock size={14} className="text-gray-400" />
-                  )}
-                </p>
+              const handleQuizClick = () => {
+                if (!isQuizLocked) {
+                  setActiveExamHandler(
+                    { id: content.id, module_id: content.module_id },
+                    ExamType.QUIZ,
+                  );
+                }
+              };
 
-                {isFavorited && (
-                  <div className="absolute top-1/2 left-2 -translate-y-1/2">
-                    <Heart
-                      size={14}
-                      className="fill-red-500 text-red-500 drop-shadow-sm"
-                    />
-                  </div>
-                )}
-              </div>
-              {lesson.activity_id && lesson.activity && (
+              elements.push(
                 <p
-                  key={lesson.activity.id}
+                  key={content.id}
                   className={clsx(
                     "border-primary dark:border-dark-primary text-text text-text-tiny dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
                     {
-                      "cursor-pointer": !isModuleLocked,
-                      "cursor-not-allowed opacity-50": isModuleLocked,
+                      "cursor-pointer": !isQuizLocked,
+                      "cursor-not-allowed opacity-50": isQuizLocked,
                       "bg-primary dark:bg-dark-primary text-white":
-                        activeExam?.id === lesson.activity_id &&
-                        !isModuleLocked,
+                        activeExam?.id === content.id && !isQuizLocked,
                     },
                   )}
                   onClick={handleQuizClick}
                 >
-                  <span className="flex-1 text-center">
-                    {lesson.activity.name}
-                  </span>
-                  {isModuleLocked && (
-                    <Lock size={14} className="text-gray-400" />
-                  )}
-                </p>
-              )}
-            </Fragment>
-          );
-        })}
-
-        {module.quizzes.map((quiz) => {
-          const isQuizLocked = isModuleLocked;
-
-          const handleQuizClick = () => {
-            if (!isQuizLocked) {
-              setActiveExamHandler(quiz, ExamType.QUIZ);
+                  <span className="flex-1 text-center">اختبار</span>
+                  {isQuizLocked && <Lock size={14} className="text-gray-400" />}
+                </p>,
+              );
             }
-          };
+          }
 
-          return (
-            <p
-              key={quiz.id}
-              className={clsx(
-                "border-primary dark:border-dark-primary text-text text-text-tiny dark:text-dark-text flex items-center justify-between rounded-2xl border px-4 py-1",
-                {
-                  "cursor-pointer": !isQuizLocked,
-                  "cursor-not-allowed opacity-50": isQuizLocked,
-                  "bg-primary dark:bg-dark-primary text-white":
-                    activeExam?.id === quiz.id && !isQuizLocked,
-                },
-              )}
-              onClick={handleQuizClick}
-            >
-              <span className="flex-1 text-center">اختبار</span>
-              {isQuizLocked && <Lock size={14} className="text-gray-400" />}
-            </p>
-          );
-        })}
+          return elements;
+        })()}
       </div>
     </div>
   );

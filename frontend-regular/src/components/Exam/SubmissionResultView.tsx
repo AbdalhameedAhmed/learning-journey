@@ -13,7 +13,7 @@ const SubmissionResultView = ({
   setActiveExamHandler,
 }: {
   result: ExamSubmissionResult;
-  setActiveLessonHandler: (lesson: LessonHeader) => void;
+  setActiveLessonHandler?: (lessonId: number) => void;
   setActiveExamHandler: (exam: ExamHeader, examType: ExamType) => void;
 }) => {
   const [showDetails, setShowDetails] = useState(false);

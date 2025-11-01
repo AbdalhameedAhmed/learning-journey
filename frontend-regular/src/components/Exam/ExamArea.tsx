@@ -1,6 +1,6 @@
 import { useGetExam } from "@/hooks/courseContent/useGetExam";
 import { useSubmitExam } from "@/hooks/courseContent/useSubmitExam";
-import type { ErrorResponse, ExamHeader, LessonHeader } from "@schemas/course";
+import type { ErrorResponse, ExamHeader } from "@schemas/course";
 import {
   ExamType,
   type AlreadySubmittedResponse,
@@ -23,7 +23,7 @@ const ExamArea = ({
 }: {
   examId: number;
   examType: ExamType;
-  setActiveLessonHandler?: (lesson: LessonHeader) => void;
+  setActiveLessonHandler?: (lessonId: number) => void;
   setActiveExamHandler?: (exam: ExamHeader, examType: ExamType) => void;
 }) => {
   const navigate = useNavigate();
