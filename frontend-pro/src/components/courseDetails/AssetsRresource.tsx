@@ -1,5 +1,8 @@
+import { useActiveAssetContext } from "@/context/ActiveAssetContext/useActiveAsset";
 import { useGetLesson } from "@/hooks/courseContent/useGetLesson";
 import type { Asset, ErrorResponse, LessonResponse } from "@schemas/course";
+import clsx from "clsx";
+import { useEffect, useMemo } from "react";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "../../../node_modules/swiper/modules/navigation.css";
@@ -7,8 +10,6 @@ import "../../../node_modules/swiper/modules/pagination.css";
 import "../../../node_modules/swiper/swiper.css";
 import Spinner from "../Spinner";
 import VideoViewer from "./VideoViewer";
-import { useEffect, useMemo, useState } from "react";
-import clsx from "clsx";
 
 export default function AssetResource({ lessonId }: { lessonId: number }) {
   const { lesson, isPending } = useGetLesson(lessonId);
@@ -32,18 +33,21 @@ export default function AssetResource({ lessonId }: { lessonId: number }) {
   );
 
   const assetsTypes = new Array(...new Set(assets.map((asset) => asset.type)));
-  const [selectedType, setSelectedType] = useState<string | undefined>(
-    assetsTypes[0],
-  );
+
+
+  const { selectedType, setSelectedType, setSelectedAssetIndex } =
+    useActiveAssetContext();
 
   useEffect(() => {
     if (isLessonResponse(lesson)) {
-      setSelectedType(lesson.lesson.assets[0].type);
+      setSelectedType(lesson?.lesson.assets[0].type);
+      setSelectedAssetIndex(0);
     }
-  }, [lesson]);
+  }, [lesson, setSelectedAssetIndex, setSelectedType]);
 
-  function handleAssetTypeChange(type: string) {
+  function handleAssetTypeChange(type: string, index: number) {
     setSelectedType(type);
+    setSelectedAssetIndex(index);
   }
 
   const filteredAssets = useMemo(() => {
@@ -80,9 +84,9 @@ export default function AssetResource({ lessonId }: { lessonId: number }) {
   return (
     <div className="flex h-full w-full flex-col gap-12">
       <div className="flex items-center gap-4">
-        {assetsTypes.map((type) => (
+        {assetsTypes.map((type, index) => (
           <button
-            onClick={() => handleAssetTypeChange(type)}
+            onClick={() => handleAssetTypeChange(type, index)}
             className={clsx(
               "border-primary dark:border-dark-primary text-text-small text-text dark:text-dark-text cursor-pointer rounded-lg border px-4 py-1 disabled:cursor-not-allowed disabled:opacity-50",
               {

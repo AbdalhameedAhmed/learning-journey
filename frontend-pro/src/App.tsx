@@ -17,6 +17,7 @@ import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
 import Layout from "./components/Layout";
 import PreExam from "./pages/pro/PreExam";
+import { ActiveAssetContextProvider } from "./context/ActiveAssetContext/ActiveAssetProvider";
 
 const App = () => {
   return (
@@ -34,7 +35,14 @@ const App = () => {
           <Route element={<Layout />}>
             <Route path="/home" element={<HomePage />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/course/:courseId" element={<CourseDetails />} />
+            <Route
+              path="/course/:courseId"
+              element={
+                <ActiveAssetContextProvider>
+                  <CourseDetails />
+                </ActiveAssetContextProvider>
+              }
+            />
             <Route path="/instructions" element={<InstructionsPage />} />
             <Route path="/goals" element={<GoalsPage />} />
             <Route path="/content-map" element={<ContentPage />} />

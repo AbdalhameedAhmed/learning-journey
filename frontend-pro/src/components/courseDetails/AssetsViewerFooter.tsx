@@ -1,13 +1,14 @@
+import { useActiveAssetContext } from "@/context/ActiveAssetContext/useActiveAsset";
 import { useGetFavorites } from "@/hooks/courseContent/useGetFavorites";
 import { useGetLesson } from "@/hooks/courseContent/useGetLesson";
 import { useToggleFavorite } from "@/hooks/courseContent/useToggleFavorite";
 import type {
   Asset,
   Course,
+  ErrorResponse,
   ExamHeader,
   LessonHeader,
   LessonResponse,
-  ErrorResponse,
 } from "@schemas/course";
 import { ExamType } from "@schemas/Exam";
 import clsx from "clsx";
@@ -34,9 +35,11 @@ export default function AssetsViewerFooter({
 }: AssetsViewerFooterProps) {
   const [searchParams] = useSearchParams();
   const { lesson } = useGetLesson(lessonId);
-
   const { favorites } = useGetFavorites();
   const { toggleFavorite, isPending: isTogglePending } = useToggleFavorite();
+  const { selectedType, selectedAssetIndex } = useActiveAssetContext();
+
+  console.log({ selectedType });
 
   const isCurrentLessonFavorited = lessonId
     ? favorites?.some((fav) => fav.lesson_id === lessonId)
@@ -302,19 +305,24 @@ export default function AssetsViewerFooter({
         </button>
 
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => {
-              // download asset from cloudinary
-              if (assets)
-                window.open(
-                  assets[0].url.replace("/upload", "/upload/fl_attachment"),
-                  "_blank",
-                );
-            }}
-            className="cursor-pointer"
-          >
-            <HardDriveDownload className="text-text dark:text-dark-text" />
-          </button>
+          {selectedType !== "text" && selectedAssetIndex !== null && (
+            <button
+              onClick={() => {
+                // download asset from cloudinary
+                if (assets)
+                  window.open(
+                    assets[selectedAssetIndex].url.replace(
+                      "/upload",
+                      "/upload/fl_attachment",
+                    ),
+                    "_blank",
+                  );
+              }}
+              className="cursor-pointer"
+            >
+              <HardDriveDownload className="text-text dark:text-dark-text" />
+            </button>
+          )}
           <button
             onClick={handleToggleFavorite}
             disabled={isTogglePending}
