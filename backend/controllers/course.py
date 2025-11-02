@@ -71,7 +71,7 @@ async def get_lesson_details_controller(
             user_progress=student_user.current_progress_data,
             supabase=supabase,
         )
-
+        print(result, "🔥🔥🔥")
         activity_id = result["lesson"]["activity_id"]
 
         # If there's an error, return it immediately
@@ -123,9 +123,7 @@ async def get_lesson_details_controller(
 
         return result
     except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Error in lesson controller: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Error in lesson controller: {e}")
 
 
 async def should_update_lesson_progress(

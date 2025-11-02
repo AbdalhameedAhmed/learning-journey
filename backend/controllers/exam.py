@@ -19,6 +19,7 @@ from services.exam import (
     update_progress_after_exam,
 )
 from supabase import Client
+from utils.course_content import get_lesson_index
 
 
 async def create_exam_controller(exam_data: PostExamRequest, supabase: Client) -> Any:
@@ -130,10 +131,14 @@ async def validate_pro_user_getting_exam(
     exam_data: dict, progress_data: dict, exam_type: ExamType, supabase: Client
 ) -> Any:
     module_id = exam_data["module_id"]
+    exam_id = exam_data["id"]
+    exam_index = get_lesson_index(exam_id, "exam")
+    current_progress = progress_data.get("current_progress")
+
     next_available_module_id = progress_data.get("next_available_module_id")
-    next_available_exam_id = progress_data.get("next_available_exam_id")
-    is_final_exam_available = progress_data.get("is_final_exam_available", False)
-    next_available_activity_id = progress_data.get("next_available_activity_id")
+    # next_available_exam_id = progress_data.get("next_available_exam_id")
+    # is_final_exam_available = progress_data.get("is_final_exam_available", False)
+    # next_available_activity_id = progress_data.get("next_available_activity_id")
 
     if exam_type == ExamType.PRE_EXAM:
         # Pre-exam: must be course-level exam and no progress yet
@@ -144,7 +149,7 @@ async def validate_pro_user_getting_exam(
 
     elif exam_type == ExamType.QUIZ:
         # Quiz: match the next available exam ID
-        if exam_data["id"] == next_available_exam_id:
+        if exam_index and current_progress and exam_index <= current_progress:
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {
@@ -152,12 +157,17 @@ async def validate_pro_user_getting_exam(
             }
     elif exam_type == ExamType.FINAL_EXAM:
         # Final exam: must be course-level exam and final exam available
-        if not module_id and is_final_exam_available:
+        if progress_data.get("is_final_exam_available", False):
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {"error": "الامتحان النهائي غير متاح بعد. أكمل جميع الوحدات أولاً."}
     elif exam_type == ExamType.ACTIVITY:
-        return await get_exam_and_questions_by_id(exam_data["id"], supabase)
+        if exam_index and current_progress and exam_index <= current_progress:
+            return await get_exam_and_questions_by_id(exam_data["id"], supabase)
+        else:
+            return {
+                "error": "للوصول إلى هذا الامتحان، يرجى استكمال الدروس والوحدات السابقة أولاً."
+            }
 
     return {"error": "نوع الامتحان غير صالح"}
 
@@ -166,10 +176,13 @@ async def validate_regular_user_getting_exam(
     exam_data: dict, progress_data: dict, exam_type: ExamType, supabase: Client
 ) -> Any:
     module_id = exam_data["module_id"]
+    current_progress = progress_data.get("current_progress")
+    exam_id = exam_data["id"]
+    exam_index = get_lesson_index(exam_id, "exam")
     next_available_lesson_id = progress_data.get("next_available_lesson_id")
-    next_available_exam_id = progress_data.get("next_available_exam_id")
-    is_final_exam_available = progress_data.get("is_final_exam_available", False)
-    next_available_activity_id = progress_data.get("next_available_activity_id")
+    # next_available_exam_id = progress_data.get("next_available_exam_id")
+    # is_final_exam_available = progress_data.get("is_final_exam_available", False)
+    # next_available_activity_id = progress_data.get("next_available_activity_id")
 
     if exam_type == ExamType.PRE_EXAM:
         # Pre-exam: must be course-level exam and no progress yet
@@ -180,7 +193,7 @@ async def validate_regular_user_getting_exam(
 
     elif exam_type == ExamType.QUIZ:
         # Quiz: match the next available exam ID
-        if exam_data["id"] == next_available_exam_id:
+        if exam_index == current_progress:
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {
@@ -188,12 +201,12 @@ async def validate_regular_user_getting_exam(
             }
     elif exam_type == ExamType.FINAL_EXAM:
         # Final exam: must be course-level exam and final exam available
-        if not module_id and is_final_exam_available:
+        if progress_data.get("is_final_exam_available", False):
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {"error": "الامتحان النهائي غير متاح بعد. أكمل جميع الوحدات أولاً."}
     elif exam_type == ExamType.ACTIVITY:
-        if exam_data["id"] == next_available_activity_id:
+        if exam_index == current_progress:
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {

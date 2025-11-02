@@ -132,7 +132,7 @@ async def is_lesson_available(
 ) -> Tuple[bool, str]:
     current_progress = user_progress.get("current_progress")
     lesson_index = get_lesson_index(lesson["id"], "lesson")
-
+    print(current_progress, lesson_index, "🚨🚨")
     if lesson_index is None:
         return False, "الدرس غير موجود"
 
@@ -271,7 +271,10 @@ async def update_progress_after_lesson_completion(
 
     if next_lesson_index is not None and lesson_index == current_progress:
         progress_data["current_progress"] = next_lesson_index
-
+    print(
+        next_lesson_index,
+        "🚀🚀",
+    )
     # Save progress
     supabase.table("users").update({"current_progress_data": progress_data}).eq(
         "id", user_id
@@ -315,7 +318,7 @@ async def get_lesson_with_validation(
             assets=assets,
             created_at=lesson_dict["created_at"],
             activity_id=lesson_dict["activity_id"],
-            is_activity=lesson_dict["is_activity"]
+            is_activity=lesson_dict["is_activity"],
         )
 
         # Return lesson data

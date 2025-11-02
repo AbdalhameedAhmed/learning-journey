@@ -219,8 +219,13 @@ async def update_progress_after_exam(
         #     return {"error": "Unknown exam type"}
 
         next_lesson_index = get_next_lesson_index(exam_id, "exam")
-        if not next_lesson_index:
+        if not next_lesson_index and exam_type != ExamType.PRE_EXAM:
             progress_data["is_final_exam_available"] = True
+        elif exam_type == ExamType.PRE_EXAM:
+            if user_role == UserRole.pro:
+                progress_data["current_progress"] = 6
+            else:
+                progress_data["current_progress"] = 0
         else:
             if user_role == UserRole.regular:
                 progress_data["current_progress"] = next_lesson_index
@@ -230,7 +235,9 @@ async def update_progress_after_exam(
                     progress_data["current_progress"] = exam["next_exam_index"]
                 else:
                     progress_data["current_progress"] = next_lesson_index
-
+        supabase.table("users").update({"current_progress_data": progress_data}).eq(
+            "id", user_id
+        ).execute()
         return {"success": True}
 
     except Exception as e:
@@ -382,7 +389,9 @@ async def is_exam_allowed_by_progress(
 
     current_progress = user_progress.get("current_progress")
     exam_index = get_lesson_index(exam_id, "exam")
-    if current_progress == exam_index:
+    if current_progress == exam_index or (
+        not exam_index and user_progress.get("is_final_exam_available", False)
+    ):
         return True
     else:
         return False
