@@ -32,38 +32,8 @@ const ModuleMenu = ({
 }: ModuleMenuProps) => {
   const { me } = useGetMe();
   const progressData = me?.current_progress_data;
-  const nextAvailableLessonId = progressData?.next_available_lesson_id;
-  const nextAvailableExamId = progressData?.next_available_exam_id;
   const isFinalExamAvailable = progressData?.is_final_exam_available;
   const courseCompleted = progressData?.course_completed;
-
-  // Calculate next available module ID based on next available lesson
-  const getNextAvailableModuleId = () => {
-    if (!courseDetails || typeof nextAvailableLessonId != "number") return null;
-
-    for (const module of courseDetails.modules) {
-      // Check if this module contains the next available lesson
-      const hasNextLesson = module.lessons.some(
-        (lesson) => lesson.id === nextAvailableLessonId,
-      );
-      if (hasNextLesson) {
-        return module.id;
-      }
-
-      // Check if this module has any lessons that come after the next available lesson
-      // This handles the case where we need to find which module should be unlocked next
-      const hasFutureLessons = module.lessons.some(
-        (lesson) => lesson.id >= nextAvailableLessonId,
-      );
-      if (hasFutureLessons) {
-        return module.id;
-      }
-    }
-
-    return null;
-  };
-
-  const nextAvailableModuleId = getNextAvailableModuleId();
 
   return (
     <>
@@ -101,8 +71,6 @@ const ModuleMenu = ({
                   setActiveExamHandler={setActiveExamHandler}
                   openedModule={openedModule}
                   setOpendModule={setOpendModule}
-                  nextAvailableModuleId={nextAvailableModuleId}
-                  nextAvailableExamId={nextAvailableExamId}
                 />
               );
             }

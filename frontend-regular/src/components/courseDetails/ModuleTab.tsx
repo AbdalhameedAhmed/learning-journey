@@ -11,7 +11,7 @@ interface Module {
   id: number;
   type: string;
   name: string;
-  firstOrder: number;
+  firstOrder?: number;
 }
 
 type ModulTabProps = {
@@ -39,7 +39,8 @@ export default function ModuleTab({
 
   const isModuleLocked =
     me?.current_progress_data.current_progress === null ||
-    me!.current_progress_data.current_progress < module.firstOrder;
+    (module.firstOrder &&
+      me!.current_progress_data.current_progress < module.firstOrder);
 
   // Handler for the module title button
   const handleHeaderClick = () => {
@@ -53,7 +54,7 @@ export default function ModuleTab({
       <HeaderButton
         onClick={handleHeaderClick}
         title={module.name}
-        disabled={isModuleLocked}
+        disabled={!!isModuleLocked}
       ></HeaderButton>
       <div
         className={clsx(
@@ -77,7 +78,8 @@ export default function ModuleTab({
             if (content.type === "lesson" || content.type === "activity") {
               const isLessonLocked =
                 me?.current_progress_data.current_progress === null ||
-                me!.current_progress_data.current_progress < content.order;
+                (content.order &&
+                  me!.current_progress_data.current_progress < content.order);
 
               const handleLessonClick = () => {
                 if (!isLessonLocked) {
@@ -100,9 +102,9 @@ export default function ModuleTab({
                     onClick={handleLessonClick}
                   >
                     <span className="flex-1 text-center">{content.name}</span>
-                    {isLessonLocked && (
+                    {isLessonLocked ? (
                       <Lock size={14} className="text-gray-400" />
-                    )}
+                    ) : null}
                   </p>
                 </div>,
               );
@@ -110,7 +112,8 @@ export default function ModuleTab({
               const isQuizLocked =
                 isModuleLocked ||
                 me?.current_progress_data.current_progress === null ||
-                me!.current_progress_data.current_progress < content.order;
+                (content.order &&
+                  me!.current_progress_data.current_progress < content.order);
 
               const handleQuizClick = () => {
                 if (!isQuizLocked) {
@@ -135,7 +138,7 @@ export default function ModuleTab({
                   )}
                   onClick={handleQuizClick}
                 >
-                  <span className="flex-1 text-center">اختبار</span>
+                  <span className="flex-1 text-center">{content.name}</span>
                   {isQuizLocked && <Lock size={14} className="text-gray-400" />}
                 </p>,
               );

@@ -6,13 +6,13 @@ const SubmissionSummary = ({
   shouldShowReviewData,
   handleToggleDetails,
   goToNextModuleChild,
-  getNextModuleChild,
+  isNextEnable,
 }: {
   result: ExamSubmissionResult;
   shouldShowReviewData: boolean | null | undefined;
   handleToggleDetails: () => void;
   goToNextModuleChild: () => void;
-  getNextModuleChild: () => Record<string, unknown> | null | undefined;
+  isNextEnable: boolean;
 }) => {
   const statusClasses = result.passed
     ? "bg-green-100 border-green-500 text-green-800"
@@ -80,7 +80,7 @@ const SubmissionSummary = ({
             مراجعة الإجابات الصحيحة
           </button>
           <button
-            disabled={!getNextModuleChild()}
+            disabled={!isNextEnable}
             onClick={goToNextModuleChild}
             className="bg-primary dark:bg-dark-primary mt-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg px-6 py-3 font-bold text-white shadow-md transition-all duration-200 hover:opacity-90 disabled:opacity-60"
           >

@@ -23,11 +23,7 @@ export default function CourseDetails() {
   const { me } = useGetMe();
 
   const didNotSubmitPreExam =
-    me?.current_progress_data.completed_modules &&
-    me.current_progress_data.completed_modules.length === 0 &&
-    !me?.current_progress_data.is_final_exam_available &&
-    me.current_progress_data.next_available_module_id === null &&
-    me.current_progress_data.next_available_exam_id === null;
+    me?.current_progress_data.current_progress == null;
 
   useEffect(() => {
     if (!courseDetails) return;

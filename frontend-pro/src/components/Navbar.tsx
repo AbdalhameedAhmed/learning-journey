@@ -16,9 +16,10 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
+import { courseContentWithModules } from "@/constants/courseContent";
 
 interface SearchResult {
-  type: "lesson" | "activity";
+  type: "lesson" | "exam" | "activity";
   id: number;
   name: string;
   moduleName: string;
@@ -35,6 +36,8 @@ export default function Navbar() {
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const { me, isPending } = useGetMe();
+  const currentProgress = me?.current_progress_data?.current_progress;
+
   const { logout } = useLogout();
   const navigate = useNavigate();
   const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -53,49 +56,50 @@ export default function Navbar() {
   };
 
   const searchResults = useMemo((): SearchResult[] => {
-    if (!search.trim() || !courseDetails) return [];
+    if (!search.trim() || !courseContentWithModules) return [];
 
     const results: SearchResult[] = [];
     const searchTerm = search.toLowerCase();
 
     const modulesToSearch =
       selectedModuleId === "all"
-        ? courseDetails.modules
-        : courseDetails.modules.filter(
+        ? courseContentWithModules
+        : courseContentWithModules.filter(
             (module) => String(module.id) === selectedModuleId,
           );
 
     modulesToSearch.forEach((module) => {
-      const isModuleLocked =
-        nextAvailableModuleIdRef.current === null ||
-        (typeof nextAvailableModuleIdRef.current === "number" &&
-          module.id > nextAvailableModuleIdRef.current);
-
-      module.lessons.forEach((lesson) => {
-        if (lesson.name.toLowerCase().includes(searchTerm)) {
+      module.items.forEach((item) => {
+        if (
+          item.name.toLowerCase().includes(searchTerm) &&
+          (item.type === "lesson" || item.type === "activity")
+        ) {
           results.push({
-            type: "lesson",
-            id: lesson.id,
-            name: lesson.name,
+            type: item.type,
+            id: item.id,
+            name: item.name,
             moduleName: module.name,
-            courseId: courseDetails.id,
-            isAvailable: !isModuleLocked,
+            courseId: 1,
+            isAvailable: !!(currentProgress && item.order <= currentProgress),
           });
         }
-        if (lesson.activity?.name.toLowerCase().includes(searchTerm)) {
+        if (
+          item.name.toLowerCase().includes(searchTerm) &&
+          item.type === "exam"
+        ) {
           results.push({
-            type: "activity",
-            id: lesson.activity_id!,
-            name: lesson.activity.name,
+            type: "exam",
+            id: item.id,
+            name: item.name,
             moduleName: module.name,
-            courseId: courseDetails.id,
-            isAvailable: !isModuleLocked,
+            courseId: 1,
+            isAvailable: !!(currentProgress && item.order <= currentProgress),
           });
         }
       });
     });
     return results;
-  }, [search, courseDetails, selectedModuleId]);
+  }, [search, selectedModuleId, currentProgress]);
 
   const closeDrawer = () => {
     setIsDrawerOpen(false);
@@ -270,11 +274,14 @@ export default function Navbar() {
                           className="flex w-full items-center justify-between gap-2 px-4 py-2 text-right"
                           onClick={() => {
                             if (result.isAvailable) {
-                              if (result.type === "lesson") {
+                              if (
+                                result.type === "lesson" ||
+                                result.type === "activity"
+                              ) {
                                 navigate(
                                   `/course/${result.courseId}?lessonId=${String(result.id)}`,
                                 );
-                              } else if (result.type === "activity") {
+                              } else if (result.type === "exam") {
                                 navigate(
                                   `/course/${result.courseId}?examId=${String(result.id)}`,
                                 );
@@ -287,8 +294,12 @@ export default function Navbar() {
                           <div>
                             <p className="font-semibold">{result.name}</p>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                              {result.type === "lesson" ? "درس" : "نشاط"} في{" "}
-                              {result.moduleName}
+                              {result.type === "lesson"
+                                ? "درس"
+                                : result.type === "activity"
+                                  ? "نشاط"
+                                  : "اختبار"}
+                              في {result.moduleName}
                             </p>
                           </div>
                           {!result.isAvailable && (

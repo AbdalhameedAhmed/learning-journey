@@ -6,7 +6,7 @@ const ContactUsPage = () => {
       <img
         src={contactUsImage}
         alt="تواصل معنا"
-        className="h-full w-full object-contain"
+        className="h-full w-full object-cover"
       />
     </div>
   );
