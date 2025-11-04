@@ -31,7 +31,7 @@ const App = () => {
         </Route>
 
         {/* REGULAR-only routes */}
-        <Route element={<RoleBasedRoute allowedRoles={[UserRole.REGULAR]} />}>
+        {/* <Route element={<RoleBasedRoute allowedRoles={[UserRole.REGULAR]} />}> */}
           <Route element={<Layout />}>
             <Route path="/home" element={<HomePage />} />
             <Route path="/profile" element={<ProfilePage />} />
@@ -42,7 +42,7 @@ const App = () => {
             <Route path="/pre-exam" element={<PreExam />} />
             <Route path="/contact-us" element={<ContactUsPage />} />
           </Route>{" "}
-        </Route>
+        {/* </Route> */}
 
         {/* ADMIN-only routes */}
         <Route element={<RoleBasedRoute allowedRoles={[UserRole.ADMIN]} />}>

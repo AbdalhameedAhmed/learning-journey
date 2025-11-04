@@ -36,7 +36,7 @@ const homeCardItems = [
   },
   {
     image: examImage,
-    title: "الامتحان القبلي",
+    title: "اﻹختبار القبلي",
     to: "/pre-exam?courseId=1",
   },
 ];
