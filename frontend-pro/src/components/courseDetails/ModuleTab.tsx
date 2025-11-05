@@ -57,6 +57,8 @@ export default function ModuleTab({
     }
   };
 
+  console.log(openedModule, "xd");
+
   return (
     <div>
       <HeaderButton
@@ -68,8 +70,7 @@ export default function ModuleTab({
         className={clsx(
           "flex max-h-[0px] w-full flex-col gap-2 overflow-hidden px-6 transition-all duration-300",
           {
-            "mt-2 max-h-[1000px]":
-              !isModuleLocked && openedModule === module.id,
+            "mt-2 max-h-[1000px]": openedModule === module.id,
           },
         )}
       >
@@ -108,19 +109,19 @@ export default function ModuleTab({
                     onClick={handleLessonClick}
                   >
                     <span className="flex-1 text-center">{content.name}</span>
-                    {isLessonLocked && (
+                    {isLessonLocked ? (
                       <Lock size={14} className="text-gray-400" />
-                    )}
+                    ) : null}
                   </p>
 
-                    {isFavorited && content.type === "lesson" ? (
+                  {isFavorited && content.type === "lesson" ? (
                     <div className="absolute top-1/2 left-2 -translate-y-1/2">
                       <Heart
                         size={14}
                         className="fill-red-500 text-red-500 drop-shadow-sm"
                       />
                     </div>
-                  ):null}
+                  ) : null}
                 </div>,
               );
             } else if (content.type === "exam") {
@@ -150,7 +151,9 @@ export default function ModuleTab({
                   onClick={handleQuizClick}
                 >
                   <span className="flex-1 text-center">{content.name}</span>
-                  {isQuizLocked && <Lock size={14} className="text-gray-400" />}
+                  {isQuizLocked ? (
+                    <Lock size={14} className="text-gray-400" />
+                  ) : null}
                 </p>,
               );
             }
