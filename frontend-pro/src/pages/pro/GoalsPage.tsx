@@ -51,7 +51,7 @@ const GoalsPage = () => {
     <div className="h-[calc(100vh-4rem)] w-screen overflow-hidden bg-white p-2">
       <img
         src={goalsImage}
-        alt="الاهداف"
+        alt="الأهداف"
         className="h-full w-full object-contain"
       />
     </div>

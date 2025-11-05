@@ -155,12 +155,17 @@ const LandingPage = () => {
             {/* Text Content - Order changes on medium screens */}
             <div className="order-2 flex w-full flex-col gap-4 text-center lg:order-1 lg:w-auto lg:pr-50 lg:text-right">
               {/* Main Text */}
-              <p className="relative z-10 text-xl text-gray-700 sm:text-2xl lg:text-3xl dark:text-gray-300">
-                ابدأ اليوم رحلة تعلمك فكل إنجاز صغير يقودك لنجاح أكبر ....
+              <p className="relative z-10 text-[14px] text-center font-bold text-gray-700 sm:text-2xl lg:text-3xl dark:text-gray-300">
+                مقرر
               </p>
-              <p className="text-lg sm:text-xl lg:text-2xl">
-                مقرر بيئات التعلم الإلكترونية المستوى الرابع قسم تكنولوجيا
-                التعليم العام الدراسي (٢٠٢٦/٢٠٢٥)
+              <p className="relative z-10 text-xl text-center text-gray-700 sm:text-2xl lg:text-3xl dark:text-gray-300">
+                بيئات التعلم الإلكترونية
+              </p>
+              <p className="relative z-10 text-xl text-center text-gray-700 sm:text-2xl lg:text-3xl dark:text-gray-300">
+                المستوى الرابع
+              </p>
+              <p className="relative z-10 text-xl text-center text-gray-700 sm:text-2xl lg:text-3xl dark:text-gray-300">
+                العام الدراسي (٢٠٢٦/٢٠٢٥)
               </p>
             </div>
 

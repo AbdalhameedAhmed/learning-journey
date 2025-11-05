@@ -31,7 +31,7 @@ const ProfilePage = () => {
     const errors: Partial<ProfileFormValues> = {};
 
     if (!values.first_name?.trim()) {
-      errors.first_name = "الاسم الاول مطلوب";
+      errors.first_name = "الاسم الأول مطلوب";
     }
 
     if (!values.last_name?.trim()) {
@@ -81,7 +81,7 @@ const ProfilePage = () => {
                   htmlFor="first_name"
                   className="text-text text-text-small block font-medium"
                 >
-                  الاسم الاول
+                  الاسم الأول
                 </label>
                 <Field
                   name="first_name"

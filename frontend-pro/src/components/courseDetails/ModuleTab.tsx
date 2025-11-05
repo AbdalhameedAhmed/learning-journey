@@ -113,14 +113,14 @@ export default function ModuleTab({
                     )}
                   </p>
 
-                  {isFavorited && content.type === "lesson" && (
+                   {isFavorited && content.type === "lesson" ? (
                     <div className="absolute top-1/2 left-2 -translate-y-1/2">
                       <Heart
                         size={14}
                         className="fill-red-500 text-red-500 drop-shadow-sm"
                       />
                     </div>
-                  )}
+                  ):null}
                 </div>,
               );
             } else if (content.type === "exam") {
