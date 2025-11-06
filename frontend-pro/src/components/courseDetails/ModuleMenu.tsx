@@ -64,7 +64,7 @@ const ModuleMenu = ({
             if (content.type === "module") {
               return (
                 <ModuleTab
-                  key={content.id}
+                  key={content.id + index}
                   module={content}
                   moduleIndex={index}
                   activeLessonId={activeLessonId}
@@ -81,7 +81,7 @@ const ModuleMenu = ({
           })}
           {/* Final-exam */}
           <HeaderButton
-            title="الامتحان البعدي"
+            title="الإختبار البعدي"
             disabled={!isFinalExamAvailable && !courseCompleted}
             onClick={() => {
               setActiveExamHandler(

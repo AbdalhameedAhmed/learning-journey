@@ -54,7 +54,7 @@ async def get_exam_controller(
     exam_response = supabase.table("exams").select("*").eq("id", exam_id).execute()
 
     if not exam_response.data:
-        return {"error": "الامتحان غير موجود"}
+        return {"error": "الاختبار غير موجود"}
 
     exam_data = exam_response.data[0]
     progress_data = student_user.current_progress_data
@@ -100,7 +100,7 @@ async def get_exam_controller(
                     "total_questions": submission["total_questions"],
                     "correct_answers": submission["correct_answers"],
                     "passed": submission["passed"],
-                    "message": "عرض نتائج الامتحان السابق.",
+                    "message": "عرض نتائج الاختبار السابق.",
                     "next_available_exam_id": progress_data.get(
                         "next_available_exam_id"
                     ),
@@ -124,7 +124,7 @@ async def get_exam_controller(
             exam_data, progress_data, exam_type, supabase
         )
     else:
-        return {"error": "دور المستخدم غير صالح للوصول إلى الامتحان"}
+        return {"error": "دور المستخدم غير صالح للوصول إلى الاختبار"}
 
 
 async def validate_pro_user_getting_exam(
@@ -153,23 +153,23 @@ async def validate_pro_user_getting_exam(
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {
-                "error": "للوصول إلى هذا الامتحان، يرجى استكمال الدروس والوحدات السابقة أولاً."
+                "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة أولاً."
             }
     elif exam_type == ExamType.FINAL_EXAM:
         # Final exam: must be course-level exam and final exam available
         if progress_data.get("is_final_exam_available", False):
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
-            return {"error": "الامتحان النهائي غير متاح بعد. أكمل جميع الوحدات أولاً."}
+            return {"error": "الاختبار النهائي غير متاح بعد. أكمل جميع الوحدات أولاً."}
     elif exam_type == ExamType.ACTIVITY:
         if exam_index and current_progress and exam_index <= current_progress:
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {
-                "error": "للوصول إلى هذا الامتحان، يرجى استكمال الدروس والوحدات السابقة أولاً."
+                "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة أولاً."
             }
 
-    return {"error": "نوع الامتحان غير صالح"}
+    return {"error": "نوع الاختبار غير صالح"}
 
 
 async def validate_regular_user_getting_exam(
@@ -197,23 +197,23 @@ async def validate_regular_user_getting_exam(
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {
-                "error": "للوصول إلى هذا الامتحان، يرجى استكمال الدروس والوحدات السابقة أولاً."
+                "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة أولاً."
             }
     elif exam_type == ExamType.FINAL_EXAM:
         # Final exam: must be course-level exam and final exam available
         if progress_data.get("is_final_exam_available", False):
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
-            return {"error": "الامتحان النهائي غير متاح بعد. أكمل جميع الوحدات أولاً."}
+            return {"error": "الاختبار النهائي غير متاح بعد. أكمل جميع الوحدات أولاً."}
     elif exam_type == ExamType.ACTIVITY:
         if exam_index == current_progress:
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {
-                "error": "للوصول إلى هذا الامتحان، يرجى استكمال الدروس والوحدات السابقة أولاً."
+                "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة أولاً."
             }
 
-    return {"error": "نوع الامتحان غير صالح"}
+    return {"error": "نوع الاختبار غير صالح"}
 
 
 async def submit_exam_controller(
@@ -233,7 +233,7 @@ async def submit_exam_controller(
         )
 
         if existing_submission:
-            return {"error": "تم تقديم الامتحان بالفعل. لا يمكنك تقديمه مرة أخرى."}
+            return {"error": "تم تقديم الاختبار بالفعل. لا يمكنك تقديمه مرة أخرى."}
 
         if submission_data.exam_type != ExamType.ACTIVITY:
             # 2. Check if exam is allowed based on progress data
@@ -245,7 +245,7 @@ async def submit_exam_controller(
 
             if not is_exam_allowed:
                 return {
-                    "error": "للوصول إلى هذا الامتحان، يرجى استكمال الدروس والوحدات السابقة أولاً."
+                    "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة أولاً."
                 }
 
         # 2. Calculate score with detailed results
@@ -305,4 +305,4 @@ async def submit_exam_controller(
         )
 
     except Exception as e:
-        return {"error": f"خطأ في تقديم الامتحان: {str(e)}"}
+        return {"error": f"خطأ في تقديم الاختبار: {str(e)}"}

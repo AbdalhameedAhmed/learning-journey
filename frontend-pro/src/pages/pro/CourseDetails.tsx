@@ -36,7 +36,6 @@ export default function CourseDetails() {
         const lesson = module.lessons.find((l) => l.id === parseInt(lessonId));
         if (lesson) {
           setActiveLessonId(lesson.id);
-          setOpendModule(module.id);
           setActiveExam(undefined);
           break;
         }

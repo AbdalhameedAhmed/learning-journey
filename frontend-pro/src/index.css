@@ -22,9 +22,6 @@
   --text-text-tiny: calc(var(--text-text-normal) * var(--text-tiny-ratio));
 }
 
-::-webkit-scrollbar {
-  display: none;
-}
 
 .swiper-button-next,
 .swiper-button-prev {

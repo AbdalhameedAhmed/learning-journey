@@ -28,7 +28,7 @@ export default function Sidebar({
 
         <div className={menuItemClass} onClick={() => setActiveView("exams")}>
           <NotepadText size={16} />
-          تقارير الامتحانات
+          تقارير اﻹختبارات
         </div>
       </nav>
 
