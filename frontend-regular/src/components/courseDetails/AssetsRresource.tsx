@@ -99,7 +99,7 @@ export default function AssetResource({ lessonId }: { lessonId: number }) {
       </div>
       {!selectedType ||
         (filteredAssets.length === 0 && assets.length > 0 && (
-          <p>اختار نوغ الدرس</p>
+          <p>اختار نوع الدرس</p>
         ))}
       {filteredAssets[0]?.type === "video" && (
         <VideoViewer key={filteredAssets[0].id} url={filteredAssets[0].url} />

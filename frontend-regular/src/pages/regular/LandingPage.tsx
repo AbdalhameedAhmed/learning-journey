@@ -153,19 +153,22 @@ const LandingPage = () => {
         <div className="relative z-10 px-4 pt-20 sm:px-6 lg:pt-40">
           <div className="flex w-full flex-col items-center justify-between lg:flex-row">
             {/* Text Content - Order changes on medium screens */}
-            <div className="order-2 flex w-full flex-col gap-4 text-center lg:order-1 lg:w-auto lg:pr-50 lg:text-right">
+            <div className="order-2 flex w-full flex-col gap-4 text-center lg:order-1 lg:w-auto lg:pr-50 lg:text-center">
               {/* Main Text */}
-              <p className="relative z-10 text-[14px] text-center font-bold text-gray-700 sm:text-2xl lg:text-3xl dark:text-gray-300">
+              <p className="relative z-100 text-[40px] text-center  font-bold text-gray-700  dark:text-gray-300">
                 مقرر
               </p>
-              <p className="relative z-10 text-xl text-center text-gray-700 sm:text-2xl lg:text-3xl dark:text-gray-300">
+              <p className="relative z-10  text-[40px] text-center font-bold text-gray-700 dark:text-gray-300">
                 بيئات التعلم الإلكترونية
               </p>
-              <p className="relative z-10 text-xl text-center text-gray-700 sm:text-2xl lg:text-3xl dark:text-gray-300">
+              <p className="relative z-10 text-[40px] text-center font-bold text-gray-700  dark:text-gray-300">
                 المستوى الرابع
               </p>
-              <p className="relative z-10 text-xl text-center text-gray-700 sm:text-2xl lg:text-3xl dark:text-gray-300">
+              <p className="relative z-10  text-[22px] text-center text-gray-700 dark:text-gray-300">
                 العام الدراسي (٢٠٢٦/٢٠٢٥)
+              </p>
+              <p className=" text-[44px] text-start text-gray-700 dark:text-gray-300">
+                اطمح, تعلم, تقدم..
               </p>
             </div>
 

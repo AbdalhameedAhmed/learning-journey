@@ -113,7 +113,7 @@ export default function ModuleTab({
                     )}
                   </p>
 
-                   {isFavorited && content.type === "lesson" ? (
+                    {isFavorited && content.type === "lesson" ? (
                     <div className="absolute top-1/2 left-2 -translate-y-1/2">
                       <Heart
                         size={14}

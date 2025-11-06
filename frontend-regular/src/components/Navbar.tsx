@@ -197,10 +197,10 @@ export default function Navbar() {
                             <p className="font-semibold">{result.name}</p>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
                               {result.type === "lesson"
-                                ? "درس"
+                                ? "درس "
                                 : result.type === "activity"
-                                  ? "نشاط"
-                                  : "اختبار"}
+                                  ? "نشاط "
+                                  : "اختبار "}
                               في {result.moduleName}
                             </p>
                           </div>

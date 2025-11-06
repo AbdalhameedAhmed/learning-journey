@@ -102,9 +102,9 @@ export default function ModuleTab({
                     onClick={handleLessonClick}
                   >
                     <span className="flex-1 text-center">{content.name}</span>
-                    {isLessonLocked ? (
+                     {isLessonLocked ? (
                       <Lock size={14} className="text-gray-400" />
-                    ) : null}
+                    ):null}
                   </p>
                 </div>,
               );
