@@ -38,6 +38,7 @@ const SubmissionResultView = ({
     child: ExamHeader | undefined;
   } | null {
     if (!courseDetails) return null;
+    console.log({ courseDetails });
     // activity case
     for (const module of courseDetails.modules) {
       for (const lesson of module.lessons) {
@@ -46,6 +47,15 @@ const SubmissionResultView = ({
             type: ExamType.ACTIVITY,
             child: lesson.activity,
           };
+        }
+
+        for (const quiz of module.quizzes) {
+          if (quiz.id === examId) {
+            return {
+              type: ExamType.QUIZ,
+              child: quiz,
+            };
+          }
         }
       }
     }
@@ -82,7 +92,7 @@ const SubmissionResultView = ({
     const examId = searchParams.get("examId");
     if (!examId) return;
     const next = getNextCourseChild(+examId);
-    console.log(next);
+    console.log({ next });
     if (next && (next.type === "lesson" || next.type === "activity")) {
       setActiveLessonHandler(next.id);
     } else if (next && next.type === "exam") {
