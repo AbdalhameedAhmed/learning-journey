@@ -70,16 +70,16 @@ export default function CourseDetails() {
       }
 
       /* Handling Activity */
-      for (const module of courseDetails.modules) {
-        const lesson = module.lessons.find((l) => l.activity_id === examIdNum);
-        if (lesson?.activity) {
-          setActiveExam(lesson.activity);
-          setExamType(ExamType.ACTIVITY);
-          setActiveLessonId(undefined);
-          setOpendModule(module.id);
-          break;
-        }
-      }
+      // for (const module of courseDetails.modules) {
+      //   const lesson = module.lessons.find((l) => l.activity_id === examIdNum);
+      //   if (lesson?.activity) {
+      //     setActiveExam(lesson.activity);
+      //     setExamType(ExamType.ACTIVITY);
+      //     setActiveLessonId(undefined);
+      //     setOpendModule(module.id);
+      //     break;
+      //   }
+      // }
     }
   }, [courseDetails, searchParams]);
 
