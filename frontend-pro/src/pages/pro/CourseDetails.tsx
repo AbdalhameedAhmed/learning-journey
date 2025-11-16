@@ -28,8 +28,12 @@ export default function CourseDetails() {
   useEffect(() => {
     if (!courseDetails) return;
 
+    console.log("useEffect in course details page ✌️");
+
     const lessonId = searchParams.get("lessonId");
     const examId = searchParams.get("examId");
+
+    console.log({ lessonId, examId });
 
     if (lessonId) {
       for (const module of courseDetails.modules) {
@@ -41,11 +45,17 @@ export default function CourseDetails() {
         }
       }
     } else if (examId) {
+      console.log("found examId", { examId });
       const examIdNum = parseInt(examId);
+
+      console.log({ courseDetails });
 
       /* Handling final-exam */
       const exam = courseDetails.exams.find((exam) => exam.id === examIdNum);
+      console.log({ exam });
       if (exam) {
+        console.log("is exma");
+        console.log(exam.module_id);
         setActiveExam(exam);
         setExamType(ExamType.FINAL_EXAM);
         setActiveLessonId(undefined);
@@ -60,7 +70,10 @@ export default function CourseDetails() {
       /* Handling Quizzes */
       for (const module of courseDetails.modules) {
         const quiz = module.quizzes.find((q) => q.id === examIdNum);
+        console.log({ quiz });
         if (quiz) {
+          console.log("found quiz");
+          console.log({ module });
           setActiveExam(quiz);
           setExamType(ExamType.QUIZ);
           setActiveLessonId(undefined);
@@ -70,16 +83,18 @@ export default function CourseDetails() {
       }
 
       /* Handling Activity */
-      for (const module of courseDetails.modules) {
-        const lesson = module.lessons.find((l) => l.activity_id === examIdNum);
-        if (lesson?.activity) {
-          setActiveExam(lesson.activity);
-          setExamType(ExamType.ACTIVITY);
-          setActiveLessonId(undefined);
-          setOpendModule(module.id);
-          break;
-        }
-      }
+      // console.log("trying to find activity..")
+      // for (const module of courseDetails.modules) {
+      //   const lesson = module.lessons.find((l) => l.activity_id === examIdNum);
+      //   if (lesson?.activity) {
+      //     console.log('found activity',lesson.activity)
+      //     setActiveExam(lesson.activity);
+      //     setExamType(ExamType.ACTIVITY);
+      //     setActiveLessonId(undefined);
+      //     setOpendModule(module.id);
+      //     break;
+      //   }
+      // }
     }
   }, [courseDetails, searchParams]);
 

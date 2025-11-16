@@ -10,7 +10,7 @@ export const useGetCourseDetails = (courseId: string | undefined) => {
   } = useQuery<Course>({
     queryKey: ["courseDetails", courseId],
     queryFn: async () => {
-      return await apiReq("GET", `/courses/${courseId}`);
+      return await apiReq("GET", `/courses/1`);
     },
     retry: false,
     staleTime: 1000 * 60 * 5, // 5 minutes

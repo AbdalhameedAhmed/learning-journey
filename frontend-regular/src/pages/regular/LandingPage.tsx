@@ -133,7 +133,7 @@ const LandingPage = () => {
 
         <Link
           to="/login"
-          className="relative z-10 flex items-center gap-2 rounded-lg border-2 border-gray-800 bg-white px-4 py-2 font-semibold text-gray-800 transition-colors hover:bg-gray-50 sm:px-6 sm:py-3 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
+          className="relative z-10 flex items-center gap-2 rounded-lg border-2 border-gray-800 bg-white px-4 py-2 font-semibold whitespace-nowrap text-gray-800 transition-colors hover:bg-gray-50 sm:px-6 sm:py-3 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
         >
           <User size={18} className="sm:size-5" />
           تسجيل دخول
@@ -151,7 +151,7 @@ const LandingPage = () => {
 
         {/* Content Container */}
         <div className="relative z-10 px-4 pt-20 sm:px-6 lg:pt-40">
-          <div className="flex w-full flex-col items-center justify-between lg:flex-row">
+          <div className="-mt-20 flex w-full flex-col items-center justify-between lg:flex-row">
             {/* Text Content - Order changes on medium screens */}
             <div className="relative flex min-h-[700px] w-full justify-center text-center lg:w-1/2">
               {/* Centered content */}

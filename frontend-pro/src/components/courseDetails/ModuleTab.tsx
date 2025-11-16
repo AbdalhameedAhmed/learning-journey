@@ -57,7 +57,7 @@ export default function ModuleTab({
     }
   };
 
-  console.log(openedModule, "xd");
+  console.log(openedModule, "openedModule");
 
   return (
     <div>
