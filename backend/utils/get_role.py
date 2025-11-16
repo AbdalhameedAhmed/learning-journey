@@ -9,7 +9,7 @@ def get_role_via_origin(origin):
         role = UserRole.pro
     elif origin == settings.REGULAR_ORIGIN:
         role = UserRole.regular
-
+    print(settings.REGULAR_ORIGIN, origin, "🚨🚨🚨🚨🚨🚨")
     if role is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
