@@ -4,12 +4,11 @@ from typing import Any, Dict, List
 from schemas.auth import UserRole
 from schemas.exam import ExamType
 from supabase import Client
-from utils.course_content import get_lesson_index, get_next_lesson_index, get_exam_by_id
+from utils.course_content import get_exam_by_id, get_lesson_index, get_next_lesson_index
+
 from services.course import (
-    get_exam_by_previous_lesson,
     get_first_exam_for_module,
     get_next_lesson_id,
-    is_last_activity_in_current_module,
     is_last_module,
 )
 
@@ -387,9 +386,11 @@ async def is_exam_allowed_by_progress(
 
     #     return False
 
-    current_progress = user_progress.get("current_progress")
+    current_progress: int | None = user_progress.get("current_progress")
     exam_index = get_lesson_index(exam_id, "exam")
-    if current_progress == exam_index or exam_type == ExamType.PRE_EXAM:
+    if (
+        current_progress and exam_index and current_progress >= exam_index
+    ) or exam_type == ExamType.PRE_EXAM:
         return True
     else:
         return False
