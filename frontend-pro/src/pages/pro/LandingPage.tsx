@@ -155,23 +155,26 @@ const LandingPage = () => {
             {/* Text Content - Order changes on medium screens */}
             <div className="relative flex min-h-[700px] w-full justify-center text-center lg:w-1/2">
               {/* Centered content */}
-               <div className="order-2 flex w-full flex-col gap-4 text-center p-15  lg:order-1">
-              <p className="relative z-10 text-[44px]  text-center font-bold text-[#26667f] dark:text-[#26667f]">
-                مقرر
-              </p>
-              <p className="relative z-10 text-[44px] text-center font-bold text-[#26667f] dark:text-[#26667f]">
-                بيئات التعلم الإلكترونية
-              </p>
-              <p className="relative z-10 text-[44px] text-center font-bold text-[#26667f] dark:text-[#26667f]">
-                المستوى الرابع
-              </p>
-              <p className="relative z-10 text-[40px] text-center  text-[#26667f] dark:text-[#26667f]">
-                العام الدراسي (٢٠٢٦/٢٠٢٥)
-              </p>
-            </div>
+              <div className="order-2 flex w-full flex-col gap-4 p-15 text-center lg:order-1">
+                <p className="relative bottom-35 z-10 text-center text-[44px] font-bold text-[#26667f] dark:text-[#26667f]">
+                  مقرر
+                </p>
+                <p className="relative bottom-35 z-10 text-center text-[42px] font-bold text-[#26667f] dark:text-[#26667f]">
+                  بيئات التعلم الإلكترونية
+                </p>
+                <p className="relative bottom-35 z-10 text-center text-[44px] font-bold text-[#26667f] dark:text-[#26667f]">
+                  المستوى الرابع
+                </p>
+                <p className="relative bottom-35 z-10 text-center text-[44px] font-bold text-[#26667f] dark:text-[#26667f]">
+                  قسم تكنولوجيا التعليم
+                </p>
+                <p className="relative bottom-35 z-10 text-center text-[25px] text-[#26667f] dark:text-[#26667f]">
+                  العام الدراسي (٢٠٢٦/٢٠٢٥)
+                </p>
+              </div>
 
               {/* Bottom right text */}
-              <h3 className="absolute right-5 bottom-5 text-right text-[44px] font-semibold text-[#26667f] dark:text-[#26667f]">
+              <h3 className="absolute right-5 bottom-70 text-right text-[44px] font-semibold text-[#26667f] dark:text-[#26667f]">
                 اطمح، تعلم، تقدم..
               </h3>
             </div>
@@ -181,7 +184,7 @@ const LandingPage = () => {
               <img
                 src={image}
                 alt="Learning illustration"
-                className="relative z-10 mx-auto h-auto w-full max-w-[600px] sm:max-w-[600px] lg:mx-0 lg:w-[700px] lg:pl-10"
+                className="relative bottom-35 z-10 mx-auto h-auto w-full max-w-[600px] sm:max-w-[600px] lg:mx-0 lg:w-[700px] lg:pl-10"
               />
             </div>
           </div>

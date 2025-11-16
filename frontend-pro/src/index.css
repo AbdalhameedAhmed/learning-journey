@@ -1,4 +1,7 @@
 @import "tailwindcss";
+body {
+  font-family: "Amiri", "Arial", sans-serif;
+}
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -21,7 +24,6 @@
   --text-text-small: calc(var(--text-text-normal) * var(--text-small-ratio));
   --text-text-tiny: calc(var(--text-text-normal) * var(--text-tiny-ratio));
 }
-
 
 .swiper-button-next,
 .swiper-button-prev {

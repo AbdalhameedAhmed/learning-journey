@@ -1,4 +1,8 @@
 @import "tailwindcss";
+/* Global Arabic font */
+body {
+  font-family: "Amiri", "Arial", sans-serif;
+}
 
 @custom-variant dark (&:where(.dark, .dark *));
 
