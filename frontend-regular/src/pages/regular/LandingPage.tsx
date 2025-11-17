@@ -156,25 +156,25 @@ const LandingPage = () => {
             <div className="relative flex min-h-[700px] w-full justify-center text-center lg:w-1/2">
               {/* Centered content */}
               <div className="order-2 flex w-full flex-col gap-4 text-center lg:order-1">
-                <p className="relative z-10 mr-50 text-center text-[54px] font-bold whitespace-nowrap text-[#26667f] dark:text-[#26667f]">
+                <p className="relative z-10 text-center text-4xl font-bold whitespace-nowrap text-[#26667f] lg:mr-50 lg:text-[54px] dark:text-[#26667f]">
                   مقرر
                 </p>
-                <p className="relative z-10 mr-50 text-center text-[54px] font-bold whitespace-nowrap text-[#26667f] dark:text-[#26667f]">
+                <p className="relative z-10 text-center text-4xl font-bold whitespace-nowrap text-[#26667f] lg:mr-50 lg:text-[54px] dark:text-[#26667f]">
                   بيئات التعلم الإلكترونية
                 </p>
-                <p className="relative z-10 mr-50 text-center text-[54px] font-bold whitespace-nowrap text-[#26667f] dark:text-[#26667f]">
+                <p className="relative z-10 text-center text-4xl font-bold whitespace-nowrap text-[#26667f] lg:mr-50 lg:text-[54px] dark:text-[#26667f]">
                   المستوى الرابع
                 </p>
-                <p className="relative z-10 mr-50 text-center text-[54px] font-bold whitespace-nowrap text-[#26667f] dark:text-[#26667f]">
+                <p className="relative z-10 text-center text-4xl font-bold whitespace-nowrap text-[#26667f] lg:mr-50 lg:text-[54px] dark:text-[#26667f]">
                   قسم تكنولوجيا التعليم
                 </p>
-                <p className="relative z-10 mr-50 text-center text-[40px] whitespace-nowrap text-[#26667f] dark:text-[#26667f]">
+                <p className="relative z-10 text-center text-3xl whitespace-nowrap text-[#26667f] lg:mr-50 lg:text-[40px] dark:text-[#26667f]">
                   العام الدراسي (٢٠٢٦/٢٠٢٥)
                 </p>
               </div>
 
               {/* Bottom right text */}
-              <h3 className="absolute right-5 bottom-5 text-right text-[44px] font-semibold whitespace-nowrap text-[#26667f] dark:text-[#26667f]">
+              <h3 className="absolute right-5 bottom-5 text-right text-3xl font-semibold whitespace-nowrap text-[#26667f] lg:text-[44px] dark:text-[#26667f]">
                 اطمح، تعلم، تقدم..
               </h3>
             </div>
