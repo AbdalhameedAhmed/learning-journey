@@ -152,7 +152,10 @@ export default function Navbar() {
                 type="text"
                 placeholder="بحث"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  if (!showResults) setShowResults(true);
+                }}
                 onFocus={() => setShowResults(true)}
                 onBlur={() => setTimeout(() => setShowResults(false), 200)}
                 className="w-40 px-3 py-1 text-black outline-none"
