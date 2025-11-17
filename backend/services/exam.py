@@ -389,8 +389,10 @@ async def is_exam_allowed_by_progress(
     current_progress: int | None = user_progress.get("current_progress")
     exam_index = get_lesson_index(exam_id, "exam")
     if (
-        current_progress and exam_index and current_progress >= exam_index
-    ) or exam_type == ExamType.PRE_EXAM:
+        (current_progress and exam_index and current_progress >= exam_index)
+        or exam_type == ExamType.PRE_EXAM
+        or (current_progress and user_progress.get("is_final_exam_available", False))
+    ):
         return True
     else:
         return False

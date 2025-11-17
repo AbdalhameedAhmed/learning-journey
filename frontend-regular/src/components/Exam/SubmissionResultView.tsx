@@ -12,10 +12,12 @@ const SubmissionResultView = ({
   result,
   setActiveLessonHandler,
   setActiveExamHandler,
+  withoutResults = false,
 }: {
   result: ExamSubmissionResult;
   setActiveLessonHandler: (lessonId: number) => void;
   setActiveExamHandler: (exam: ExamHeader, examType: ExamType) => void;
+  withoutResults?: boolean;
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const courseId = useParams().courseId;
@@ -38,6 +40,8 @@ const SubmissionResultView = ({
   } | null {
     if (!courseDetails) return null;
     // activity case
+    console.log(courseDetails);
+
     for (const module of courseDetails.modules) {
       for (const lesson of module.lessons) {
         if (lesson.activity && lesson.activity.id === examId) {
@@ -58,6 +62,19 @@ const SubmissionResultView = ({
         };
       }
     }
+
+    // module exams
+    for (const module of courseDetails.modules) {
+      for (const quiz of module.quizzes) {
+        if (quiz.id === examId) {
+          return {
+            type: ExamType.QUIZ,
+            child: quiz,
+          };
+        }
+      }
+    }
+
     return null;
   }
 
@@ -86,6 +103,8 @@ const SubmissionResultView = ({
       setActiveLessonHandler(next.id);
     } else if (next && next.type === "exam") {
       const exam = getExamObject(next.id);
+      console.log(exam);
+
       if (exam) {
         setActiveExamHandler(exam.child as ExamHeader, exam.type);
       }
@@ -101,10 +120,11 @@ const SubmissionResultView = ({
           handleToggleDetails={handleToggleDetails}
           goToNextModuleChild={goToNextModuleChild}
           isNextEnable={!!getNextCourseChild(examId ? +examId : -1)}
+          withoutResults={withoutResults}
         />
       )}
 
-      {shouldShowReviewData && showDetails && (
+      {shouldShowReviewData && showDetails && !withoutResults && (
         <div className="text-text mx-auto my-12 w-full max-w-3xl rounded-xl bg-white p-8 shadow-2xl dark:bg-slate-800">
           <h2 className="text-text-normal mb-6 border-b pb-4 text-lg font-bold dark:border-slate-700">
             مراجعة الإجابات

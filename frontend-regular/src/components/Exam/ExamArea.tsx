@@ -20,11 +20,13 @@ const ExamArea = ({
   examType,
   setActiveLessonHandler = () => {},
   setActiveExamHandler = () => {},
+  withoutResults = false,
 }: {
   examId: number;
   examType: ExamType;
   setActiveLessonHandler?: (lessonId: number) => void;
   setActiveExamHandler?: (exam: ExamHeader, examType: ExamType) => void;
+  withoutResults?: boolean;
 }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -166,6 +168,7 @@ const ExamArea = ({
         result={submissionResult}
         setActiveLessonHandler={setActiveLessonHandler}
         setActiveExamHandler={setActiveExamHandler}
+        withoutResults={withoutResults}
       />
     );
   }
@@ -295,6 +298,7 @@ const ExamArea = ({
         result={submissionResult}
         setActiveLessonHandler={setActiveLessonHandler}
         setActiveExamHandler={setActiveExamHandler}
+        withoutResults={withoutResults}
       />
     );
   }
