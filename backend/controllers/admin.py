@@ -17,8 +17,11 @@ async def get_users_basic_info_and_exams_controller(
 
         users_response = (
             supabase.table("users")
-            .select("id, email, first_name, last_name, current_progress_data")
+            .select(
+                "id, email, first_name, last_name, current_progress_data, profile_picture"
+            )
             .eq("role", role.value)
+            .gte("created_at", "2025-11-20 19:28:27.111248+00")
             .execute()
         )
 
@@ -44,6 +47,7 @@ async def get_users_basic_info_and_exams_controller(
             user_id = user["id"]
             progress_data = user.get("current_progress_data", {})
             completed_lessons_ids = progress_data.get("completed_lessons", [])
+            current_progress = progress_data.get("current_progress", 0)
 
             # Get user's exam submissions
             user_submissions = submissions_by_user.get(user_id, [])
@@ -86,6 +90,7 @@ async def get_users_basic_info_and_exams_controller(
                 "last_name": user.get("last_name", ""),
                 "profile_picture": user.get("profile_picture", ""),
                 "completed_lessons_ids": completed_lessons_ids,
+                "current_progress": current_progress,
                 "exam_submissions": exam_submissions,
                 "pre_exam": {
                     "has_pre_exam": has_pre_exam,
@@ -128,6 +133,7 @@ async def get_quiz_report_controller(
         .select("*,submissions!inner(*)")
         .eq("role", role.value)
         .eq("submissions.exam_id", quiz_id)
+        .gte("created_at", "2025-11-20 19:28:27.111248+00")
         .execute()
     )
 
@@ -219,6 +225,7 @@ async def get_exam_report_controller(
         .eq("role", role.value)
         .eq("submissions.exam_id", exam_id)
         .eq("submissions.exam_type", exam_type.value)
+        .gte("created_at", "2025-11-20 19:28:27.111248+00")
         .execute()
     )
 

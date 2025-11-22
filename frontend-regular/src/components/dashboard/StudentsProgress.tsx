@@ -46,7 +46,9 @@ export default function StudentsProgress({
                   {student.email}
                 </td>
                 <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
-                  {student.completed_lessons_ids.length}
+                  {typeof student.current_progress == "number"
+                    ? student.current_progress + 1
+                    : "لا يوجد"}
                 </td>
                 <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
                   {student.pre_exam.has_pre_exam ? (

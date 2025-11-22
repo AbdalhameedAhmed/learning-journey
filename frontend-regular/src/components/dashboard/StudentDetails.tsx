@@ -1,6 +1,6 @@
-import { useGetCourseDetails } from "@/hooks/courseContent/useGetCourseDetails";
+import { courseContent } from "@/constants/courseContent";
 import { useGetProgress } from "@/hooks/dashboard/useGetProgress";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, UserRound } from "lucide-react";
 
 export default function StudentDetail({
   studentId,
@@ -11,7 +11,6 @@ export default function StudentDetail({
 }) {
   const { progress } = useGetProgress();
   const student = progress?.find((student) => student.user_id === studentId);
-  const { courseDetails } = useGetCourseDetails("1");
   if (!student) {
     return (
       <div className="border-l-4 border-yellow-500 bg-yellow-100 p-4 text-yellow-700">
@@ -40,12 +39,18 @@ export default function StudentDetail({
         </button>
 
         {/* Student Header (Name & Image) */}
-        <div className="mb-10 flex items-center border-b pb-6">
-          <img
-            src={""}
-            alt={student.first_name}
-            className="ml-6 h-24 w-24 rounded-full border-4 border-blue-200 object-cover"
-          />
+        <div className="mb-10 flex items-center gap-4 border-b pb-6">
+          {!student.profile_picture ? (
+            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gray-100">
+              <UserRound className="size-12" />
+            </div>
+          ) : (
+            <img
+              src={student.profile_picture}
+              alt={student.first_name}
+              className="ml-6 h-24 w-24 rounded-full border-4 border-blue-200 object-cover"
+            />
+          )}
           <div>
             <h2 className="text-4xl font-extrabold text-gray-900">
               {student.first_name}
@@ -61,7 +66,9 @@ export default function StudentDetail({
               عدد الدروس المكتملة
             </p>
             <p className="mt-1 text-3xl font-bold text-blue-900">
-              {student.completed_lessons_ids.length}
+              {typeof student.current_progress == "number"
+                ? student.current_progress + 1
+                : "لا يوجد"}
             </p>
           </div>
           <div className="rounded-lg bg-green-50 p-4 text-center shadow-md">
@@ -95,31 +102,26 @@ export default function StudentDetail({
           تقدم الدروس
         </h3>
         <ul className="space-y-3">
-          {courseDetails?.modules.map((module) =>
-            module.lessons.map((lesson) =>
-              (() => {
-                const isCompleted = student.completed_lessons_ids.includes(
-                  lesson.id,
-                );
-                return (
-                  <li
-                    key={lesson.id}
-                    className={`flex items-center justify-between rounded-lg p-4 ${isCompleted ? "border-l-4 border-green-500 bg-green-50" : "border-l-4 border-red-500 bg-red-50"}`}
-                  >
-                    <span
-                      className={`font-medium ${isCompleted ? "text-green-800" : "text-red-800"}`}
-                    >
-                      {lesson.name}
-                    </span>
-                    <span
-                      className={`text-sm font-semibold ${isCompleted ? "text-green-600" : "text-red-600"}`}
-                    >
-                      {isCompleted ? "تمت المشاهدة" : "لم تتم المشاهدة"}
-                    </span>
-                  </li>
-                );
-              })(),
-            ),
+          {courseContent?.map((lesson) =>
+            typeof lesson.order === "number" ? (
+              <li
+                key={lesson.id}
+                className={`flex items-center justify-between rounded-lg p-4 ${lesson.order <= student.current_progress ? "border-l-4 border-green-500 bg-green-50" : "border-l-4 border-red-500 bg-red-50"}`}
+              >
+                <span
+                  className={`font-medium ${lesson.order <= student.current_progress ? "text-green-800" : "text-red-800"}`}
+                >
+                  {lesson.name}
+                </span>
+                <span
+                  className={`text-sm font-semibold ${lesson.order <= student.current_progress ? "text-green-600" : "text-red-600"}`}
+                >
+                  {lesson.order <= student.current_progress
+                    ? "تمت المشاهدة"
+                    : "لم تتم المشاهدة"}
+                </span>
+              </li>
+            ) : null,
           )}
         </ul>
       </div>

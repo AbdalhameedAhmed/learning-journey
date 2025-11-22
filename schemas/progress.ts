@@ -9,6 +9,8 @@ export interface Student {
   exam_submissions: ExamSubmission[];
   pre_exam: PreExam;
   final_exam: FinalExam;
+  current_progress: number;
+  profile_picture: string;
 }
 
 export interface PreExam {
