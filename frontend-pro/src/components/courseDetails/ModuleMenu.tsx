@@ -81,7 +81,7 @@ const ModuleMenu = ({
           })}
           {/* Final-exam */}
           <HeaderButton
-            title="الإختبار البعدي"
+            title="الاختبار البعدي"
             disabled={!isFinalExamAvailable && !courseCompleted}
             onClick={() => {
               setActiveExamHandler(

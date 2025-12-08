@@ -13,7 +13,9 @@ class Settings(BaseSettings):
     PRO_ORIGIN: str = Field(validation_alias="PRO_ORIGIN", default="")
     REGULAR_ORIGIN: str = Field(validation_alias="REGULAR_ORIGIN", default="")
 
-    CLOUDINARY_CLOUD_NAME: str = Field(validation_alias="CLOUDINARY_CLOUD_NAME", default="")
+    CLOUDINARY_CLOUD_NAME: str = Field(
+        validation_alias="CLOUDINARY_CLOUD_NAME", default=""
+    )
     CLOUDINARY_API_KEY: str = Field(validation_alias="CLOUDINARY_API_KEY", default="")
     CLOUDINARY_API_SECRET: str = Field(
         validation_alias="CLOUDINARY_API_SECRET", default=""

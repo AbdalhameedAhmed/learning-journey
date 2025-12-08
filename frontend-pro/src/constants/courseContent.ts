@@ -6,7 +6,13 @@ export const courseContent = [
   { id: 3, type: "lesson", name: "الدرس الثانى", order: 3 },
   { id: 5, type: "activity", name: "نشاط", order: 4 },
   { id: 4, type: "lesson", name: "الدرس الثالث", order: 5 },
-  { id: 17, type: "exam", name: "اختبار الوحدة الأول", order: 6, module_id: 1 },
+  {
+    id: 17,
+    type: "exam",
+    name: "اختبار الوحدة الأولى",
+    order: 6,
+    module_id: 1,
+  },
   { id: 3, type: "module", name: "الوحدة الثانية", firstOrder: 7 },
   { id: 11, type: "lesson", name: "الأهداف", order: 7 },
   { id: 12, type: "lesson", name: "الدرس الأول", order: 8 },
@@ -17,7 +23,7 @@ export const courseContent = [
   {
     id: 22,
     type: "exam",
-    name: "اختبار الوحدة الثانى",
+    name: "اختبار الوحدة الثانية",
     order: 13,
     module_id: 3,
   },
@@ -30,7 +36,7 @@ export const courseContent = [
   {
     id: 24,
     type: "exam",
-    name: "اختبار الوحدة الثالث",
+    name: "اختبار الوحدة الثالثة",
     order: 19,
     module_id: 4,
   },

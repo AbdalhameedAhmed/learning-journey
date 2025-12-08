@@ -20,11 +20,13 @@ const ExamArea = ({
   examType,
   setActiveLessonHandler = () => {},
   setActiveExamHandler = () => {},
+  withoutResults = false,
 }: {
   examId: number;
   examType: ExamType;
   setActiveLessonHandler?: (lessonId: number) => void;
   setActiveExamHandler?: (exam: ExamHeader, examType: ExamType) => void;
+  withoutResults?: boolean;
 }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -164,6 +166,7 @@ const ExamArea = ({
     return (
       <SubmissionResultView
         result={submissionResult}
+        withoutResults={withoutResults}
         setActiveLessonHandler={setActiveLessonHandler}
         setActiveExamHandler={setActiveExamHandler}
       />
@@ -191,12 +194,12 @@ const ExamArea = ({
   if (!isExamResponse(exam)) {
     return (
       <div className="text-text-normal p-8 text-center">
-        لم يتم العثور على الإختبار
+        لم يتم العثور على الاختبار
       </div>
     );
   }
 
-  if (!exam) return <div>لم يتم العثور على الإختبار</div>;
+  if (!exam) return <div>لم يتم العثور على الاختبار</div>;
 
   const findSelectedOptionId = (questionId: number): number | undefined => {
     return selectedAnswers.find((answer) => answer.question_id === questionId)
@@ -292,6 +295,7 @@ const ExamArea = ({
   if (submissionResult) {
     return (
       <SubmissionResultView
+        withoutResults={withoutResults}
         result={submissionResult}
         setActiveLessonHandler={setActiveLessonHandler}
         setActiveExamHandler={setActiveExamHandler}

@@ -16,6 +16,7 @@ export default function PreExam() {
         <ExamArea
           examId={courseDetails?.exams[0].id}
           examType={ExamType.PRE_EXAM}
+          withoutResults={true}
         />
       )}
     </div>

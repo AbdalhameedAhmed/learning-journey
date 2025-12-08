@@ -8,7 +8,7 @@ export default function Sidebar({
   setActiveView: Dispatch<SetStateAction<"dashboard" | "detail" | "exams">>;
 }) {
   const { logout } = useLogout();
-  
+
   const menuItemClass =
     "flex items-center p-3 text-white gap-1 transition-colors duration-200 cursor-pointer rounded-lg bg-blue-600 hover:bg-blue-700";
 
@@ -28,7 +28,7 @@ export default function Sidebar({
 
         <div className={menuItemClass} onClick={() => setActiveView("exams")}>
           <NotepadText size={16} />
-          تقارير الإختبارات
+          تقارير الختبارات
         </div>
       </nav>
 

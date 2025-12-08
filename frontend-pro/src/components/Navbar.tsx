@@ -44,6 +44,7 @@ export default function Navbar() {
   const filterContainerRef = useRef<HTMLDivElement>(null);
   const progressDataRef = useRef<IProgress | undefined>(undefined);
   const nextAvailableModuleIdRef = useRef<number | undefined>(null);
+  const resultsMenu = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     progressDataRef.current = me?.current_progress_data;
@@ -119,6 +120,19 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        resultsMenu.current &&
+        !resultsMenu.current.contains(event.target as Node)
+      ) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   if (isPending) return <Spinner />;
 
   return (
@@ -188,15 +202,20 @@ export default function Navbar() {
           ref={searchContainerRef}
           className="relative z-20 flex items-center"
         >
-          <div className="relative flex transform items-center rounded-2xl border-2 border-white bg-white shadow-xl">
+          <div
+            ref={resultsMenu}
+            className="relative flex transform items-center rounded-2xl border-2 border-white bg-white shadow-xl"
+          >
             <div className="flex transform items-center rounded-2xl border-2 border-white bg-white shadow-xl">
               <input
                 type="text"
                 placeholder="بحث"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  if (!showResults) setShowResults(true);
+                }}
                 onFocus={() => setShowResults(true)}
-                onBlur={() => setTimeout(() => setShowResults(false), 200)}
                 className="w-40 px-3 py-1 text-black outline-none"
               />
               <div ref={filterContainerRef} className="relative">

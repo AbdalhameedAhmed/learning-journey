@@ -12,10 +12,12 @@ const SubmissionResultView = ({
   result,
   setActiveLessonHandler,
   setActiveExamHandler,
+  withoutResults = false,
 }: {
   result: ExamSubmissionResult;
   setActiveLessonHandler: (lessonId: number) => void;
   setActiveExamHandler: (exam: ExamHeader, examType: ExamType) => void;
+  withoutResults?: boolean;
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const courseId = useParams().courseId;
@@ -107,6 +109,7 @@ const SubmissionResultView = ({
       {!showDetails && (
         <SubmissionSummary
           result={result}
+          withoutResults={withoutResults}
           shouldShowReviewData={shouldShowReviewData}
           handleToggleDetails={handleToggleDetails}
           goToNextModuleChild={goToNextModuleChild}
@@ -114,7 +117,7 @@ const SubmissionResultView = ({
         />
       )}
 
-      {shouldShowReviewData && showDetails && (
+      {shouldShowReviewData && showDetails && !withoutResults && (
         <div className="text-text mx-auto my-12 w-full max-w-3xl rounded-xl bg-white p-8 shadow-2xl dark:bg-slate-800">
           <h2 className="text-text-normal mb-6 border-b pb-4 text-lg font-bold dark:border-slate-700">
             مراجعة الإجابات

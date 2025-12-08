@@ -4,7 +4,7 @@ import { useGetMe } from "@/hooks/auth/useGetMe";
 import { useLogout } from "@/hooks/auth/useLogout";
 import clsx from "clsx";
 import { CircleUserRound, Lock, LogOut, Menu, X } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
 
@@ -25,6 +25,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const [showResults, setShowResults] = useState(false);
+  const searchMenu = useRef<HTMLDivElement>(null);
 
   const currentProgress = me?.current_progress_data?.current_progress;
 
@@ -76,6 +77,19 @@ export default function Navbar() {
   const closeDrawer = () => {
     setIsDrawerOpen(false);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchMenu.current &&
+        !searchMenu.current.contains(event.target as Node)
+      ) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   if (isPending) return <Spinner />;
 
@@ -146,15 +160,20 @@ export default function Navbar() {
           ref={searchContainerRef}
           className="relative z-20 flex items-center"
         >
-          <div className="relative flex transform items-center rounded-2xl border-2 border-white bg-white shadow-xl">
+          <div
+            ref={searchMenu}
+            className="relative flex transform items-center rounded-2xl border-2 border-white bg-white shadow-xl"
+          >
             <div className="flex transform items-center rounded-2xl border-2 border-white bg-white shadow-xl">
               <input
                 type="text"
                 placeholder="بحث"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  if (!showResults) setShowResults(true);
+                }}
                 onFocus={() => setShowResults(true)}
-                onBlur={() => setTimeout(() => setShowResults(false), 200)}
                 className="w-40 px-3 py-1 text-black outline-none"
               />
             </div>
