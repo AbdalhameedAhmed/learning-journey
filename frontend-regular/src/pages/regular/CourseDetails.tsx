@@ -142,13 +142,13 @@ export default function CourseDetails() {
           {didNotSubmitPreExam ? (
             <div className="flex h-screen flex-col items-center justify-center gap-6">
               <p className="text-text dark:text-dark-text text-text-large font-semibold">
-                يرجى إكمال الإمتحان القبلي قبل البدء في المقرر
+                يرجى إكمال الاختبار القبلي قبل البدء في المقرر
               </p>
               <Link
                 to="/pre-exam?courseId=1"
                 className="font-inherit border-primary dark:border-dark-primary bg-primary dark:bg-dark-primary dark:hover:bg-dark-primary/90 hover:bg-primary/90 text-text-small cursor-pointer rounded-full border-2 px-6 py-2 text-white transition-all duration-300 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300"
               >
-                الذهاب للإمتحان القبلي
+                الذهاب الاختبار القبلي
               </Link>
             </div>
           ) : (

@@ -194,12 +194,12 @@ const ExamArea = ({
   if (!isExamResponse(exam)) {
     return (
       <div className="text-text-normal p-8 text-center">
-        لم يتم العثور على اﻹختبار
+        لم يتم العثور على الاختبار
       </div>
     );
   }
 
-  if (!exam) return <div>لم يتم العثور على اﻹختبار</div>;
+  if (!exam) return <div>لم يتم العثور على الاختبار</div>;
 
   const findSelectedOptionId = (questionId: number): number | undefined => {
     return selectedAnswers.find((answer) => answer.question_id === questionId)
@@ -531,7 +531,7 @@ const ExamArea = ({
                 >
                   {isPendingSubmittingExam
                     ? "جاري التسليم..."
-                    : "تسليم اﻹختبار"}
+                    : "تسليم الاختبار"}
                 </button>
               ) : (
                 <button

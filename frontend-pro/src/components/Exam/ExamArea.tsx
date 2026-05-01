@@ -531,7 +531,7 @@ const ExamArea = ({
                 >
                   {isPendingSubmittingExam
                     ? "جاري التسليم..."
-                    : "تسليم اﻹختبار"}
+                    : "تسليم الاختبار"}
                 </button>
               ) : (
                 <button

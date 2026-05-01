@@ -153,20 +153,20 @@ async def validate_pro_user_getting_exam(
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {
-                "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة أولاً."
+                "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة اولًا."
             }
     elif exam_type == ExamType.FINAL_EXAM:
         # Final exam: must be course-level exam and final exam available
         if progress_data.get("is_final_exam_available", False):
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
-            return {"error": "الاختبار النهائي غير متاح بعد. أكمل جميع الوحدات أولاً."}
+            return {"error": "الاختبار النهائي غير متاح بعد. أكمل جميع الوحدات اولًا."}
     elif exam_type == ExamType.ACTIVITY:
         if exam_index and current_progress and exam_index <= current_progress:
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {
-                "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة أولاً."
+                "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة اولًا."
             }
 
     return {"error": "نوع الاختبار غير صالح"}
@@ -197,20 +197,20 @@ async def validate_regular_user_getting_exam(
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {
-                "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة أولاً."
+                "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة اولًا."
             }
     elif exam_type == ExamType.FINAL_EXAM:
         # Final exam: must be course-level exam and final exam available
         if progress_data.get("is_final_exam_available", False):
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
-            return {"error": "الاختبار النهائي غير متاح بعد. أكمل جميع الوحدات أولاً."}
+            return {"error": "الاختبار النهائي غير متاح بعد. أكمل جميع الوحدات اولًا."}
     elif exam_type == ExamType.ACTIVITY:
         if exam_index == current_progress:
             return await get_exam_and_questions_by_id(exam_data["id"], supabase)
         else:
             return {
-                "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة أولاً."
+                "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة اولًا."
             }
 
     return {"error": "نوع الاختبار غير صالح"}
@@ -245,7 +245,7 @@ async def submit_exam_controller(
 
             if not is_exam_allowed:
                 return {
-                    "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة أولاً."
+                    "error": "للوصول إلى هذا الاختبار، يرجى استكمال الدروس والوحدات السابقة اولًا."
                 }
 
         # 2. Calculate score with detailed results

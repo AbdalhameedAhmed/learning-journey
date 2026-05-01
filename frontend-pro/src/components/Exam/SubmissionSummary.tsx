@@ -35,7 +35,7 @@ const SubmissionSummary = ({
           "mb-0": withoutResults,
         })}
       >
-        تم تسليم اﻹختبار
+        تم تسليم الاختبار
       </h2>
 
       {/* Quote Section */}

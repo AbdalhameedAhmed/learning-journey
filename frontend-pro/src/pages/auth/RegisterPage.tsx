@@ -88,7 +88,7 @@ export default function RegisterPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4 dark:bg-[#002538]">
       <div className="w-full max-w-md rounded-2xl bg-white p-6 text-right shadow-2xl sm:p-10 md:max-w-3xl dark:bg-[#0c1e2b]">
         <p className="text-primary mb-4 text-center text-2xl leading-relaxed font-semibold sm:mb-6">
-          مرحباً بكم في منصة رحلة تعلم الآن يمكنكم التسجيل إلى المنصة
+          مرحبًا بكم في منصة رحلة تعلم الآن يمكنكم التسجيل إلى المنصة
         </p>
 
         <div className="mb-4 flex justify-center sm:mb-6">

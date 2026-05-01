@@ -90,7 +90,7 @@ async def check_pro_user_availability(
     if lesson_module_id == next_available_module_id:
         return True, "الدرس متاح - الوحدة الحالية"
 
-    return False, "الدرس غير متاح. أكمل الوحدة الحالية أولاً."
+    return False, "الدرس غير متاح. أكمل الوحدة الحالية اولًا."
 
 
 async def check_regular_user_availability(
@@ -112,7 +112,7 @@ async def check_regular_user_availability(
     if lesson_id == next_available_lesson_id:
         return True, "الدرس متاح - الدرس الحالي"
 
-    return False, "أكمل الدرس الحالي أولاً"
+    return False, "أكمل الدرس الحالي اولًا"
 
 
 # async def is_lesson_available(
@@ -142,7 +142,7 @@ async def is_lesson_available(
     if lesson_index <= current_progress:
         return True, "الدرس متاح"
     else:
-        return False, "الدرس غير متاح. أكمل الدروس السابقة أولاً."
+        return False, "الدرس غير متاح. أكمل الدروس السابقة اولًا."
 
     # if user_role == UserRole.pro:
     #     return await check_pro_user_availability(lesson, user_progress)
